@@ -60,4 +60,30 @@ class Sql
         else
             return false;
     }
+
+    /**
+     * MySQL更新库
+     * @param string $Mysql_Query
+     * @return bool
+     */
+    public static function UPDATE(string $Mysql_Query): bool
+    {
+        if (preg_match('/^UPDATE/', $Mysql_Query))
+            return mysqli_query(self::MySqlConn(), $Mysql_Query);
+        else
+            return false;
+    }
+
+    /**
+     * MySQL删除库
+     * @param string $Mysql_Query
+     * @return bool
+     */
+    public static function DELETE(string $Mysql_Query): bool
+    {
+        if (preg_match('/^DELETE/', $Mysql_Query))
+            return mysqli_query(self::MySqlConn(), $Mysql_Query);
+        else
+            return false;
+    }
 }

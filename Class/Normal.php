@@ -16,18 +16,31 @@ class Normal
      */
     public static function Output(int $gType, array $OtherArray = null)
     {
-        $Json_Data = [
-            'output' => self::OutputMessage($gType, 0),
-            'code' => self::OutputMessage($gType, 1),
-            'data' => [
-                'message' => self::OutputMessage($gType, 2),
-            ],
-        ];
-        if (!empty($OtherArray)) {
-            $Json_Data['data']['data'] = $OtherArray;
+        if (self::OutputMessage($gType, 1) != null) {
+            $Json_Data = [
+                'output' => self::OutputMessage($gType, 0),
+                'code' => self::OutputMessage($gType, 1),
+                'data' => [
+                    'statusCode' => $gType,
+                    'message' => self::OutputMessage($gType, 2),
+                ],
+            ];
+            if (!empty($OtherArray)) {
+                $Json_Data['data']['data'] = $OtherArray;
+            }
+            header(self::HttpStatusCode(self::OutputMessage($gType, 1)));
+        } else {
+            $Json_Data = [
+                'output' => 'DevelopError',
+                'code' => 0,
+                'data' => [
+                    'statusCode' => 0,
+                    'message' => "开发错误，请查阅",
+                ],
+            ];
+            header(self::HttpStatusCode(502));
         }
         // Json 输出
-        header(self::HttpStatusCode(self::OutputMessage($gType, 1)));
         echo json_encode($Json_Data, JSON_UNESCAPED_UNICODE);
     }
 
