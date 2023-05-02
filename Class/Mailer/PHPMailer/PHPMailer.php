@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Copyright © 2016 - 2023 筱锋xiao_lfeng. All Rights Reserved.
  * 开发开源遵循 MIT 许可，若需商用请联系开发者
@@ -931,7 +930,7 @@ class PHPMailer
      *
      * @param bool $isHtml True for HTML mode
      */
-    public function isHTML($isHtml = true)
+    public function isHTML(bool $isHtml = true)
     {
         if ($isHtml) {
             $this->ContentType = static::CONTENT_TYPE_TEXT_HTML;
