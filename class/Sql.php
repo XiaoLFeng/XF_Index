@@ -34,6 +34,7 @@ class Sql
     public static function SELECT(string $Mysql_Query): array
     {
         $CC_i = 0;
+        $Result = null;
         $Array_OutPut = [];
         if (preg_match('/^SELECT/', $Mysql_Query)) {
             $Result = mysqli_query(self::MySqlConn(), $Mysql_Query);
@@ -45,6 +46,7 @@ class Sql
                 $Array_OutPut['output'] = 'EmptyResult';
         } else
             $Array_OutPut['output'] = 'TypeError';
+        mysqli_free_result($Result);
         return $Array_OutPut;
     }
 
