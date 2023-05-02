@@ -1,8 +1,28 @@
 {
+  "Session": "xiaolfengindex",
+  "Web": {
+    "Title": "筱锋xiao_lfeng",
+    "subTitle": "不为如何，只为在茫茫人海中有自己的一片天空~",
+    "Keyword": "",
+    "Icon": "https://api.x-lf.cn/avatar/?uid=1"
+  },
   "Mysql": {
     "Host": "127.0.0.1",
     "Port": "3306",
     "Username": "Index",
     "Password": "qaq061823zcw"
+  },
+  "Smtp": {
+    "Host": "smtp.x-lf.cn",
+    "SmtpAuth": true,
+    "Username": "",
+    "Password": "",
+    "Port": 25,
+    "SecurePort": 465,
+    "User": "noreplay@x-lf.cn",
+    "Name": "筱锋个人主页"
+  },
+  "Mail": {
+    "ExpDate": 300
   }
 }
