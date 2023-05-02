@@ -1,1 +1,8 @@
+# 禁止上传的目录
 /node_modules/
+/package.json
+/package-lock.json
+/build/
+/.htaccess
+/.user.ini
+/idea/
