@@ -14,8 +14,11 @@ class SendMail
 {
     public static int $EmailType;
     public static string $EmailReceiver;
+
     private array $ConfigData;
-    public static int $ExpDate;
+    public static int $ExpTime;
+    public static string $WebTitle;
+
     private PHPMailer $Mail;
 
     /**
@@ -32,7 +35,8 @@ class SendMail
         $this->ConfigData = json_decode($Array_ConfigData, JSON_UNESCAPED_UNICODE)["Smtp"];
         fclose($FileData);
         // 参数赋予
-        self::$ExpDate = $Array_ConfigData["Mail"]['ExpDate'];
+        self::$ExpTime = $Array_ConfigData["Mail"]['ExpDate'];
+        self::$WebTitle = $Array_ConfigData["Web"]['Title'];
 
         // 类导入
         $this->Mail = new PHPMailer(true);
@@ -65,9 +69,10 @@ class SendMail
      *   - [2] 站点邮件登录
      * @param string $EmailReceiver 邮件接收方（邮箱地址）
      * @param int $EmailType 发送邮件类型
+     * @param string $OtherPush 其他备注内容，例如激活码
      * @return bool 邮件发送成功返回 true 否则返回 false
      */
-    public function PostMail(string $EmailReceiver, int $EmailType): bool
+    public function PostMail(string $EmailReceiver, int $EmailType, string $OtherPush = null): bool
     {
         self::$EmailType = $EmailType;
         self::$EmailReceiver = $EmailReceiver;
@@ -87,8 +92,8 @@ class SendMail
             $this->Mail->addAddress($EmailReceiver);
 
             // 发件编写
-            if ($EmailType == 1) $this->EmailRegister();
-            else if ($EmailType == 2) $this->EmailLogin();
+            if ($EmailType == 1) $this->EmailRegister($OtherPush);
+            else if ($EmailType == 2) $this->EmailLogin($OtherPush);
 
             $this->Mail->send();
             return true;
@@ -98,13 +103,13 @@ class SendMail
         }
     }
 
-    private function EmailRegister(): void
+    private function EmailRegister(string $Input_Code): void
     {
         $this->Mail->Subject = $this->ConfigData['Name'] . ' - 站点注册'; // 邮箱标题
         $this->Mail->Body = MailTemplate::Templates($Input_Code);
     }
 
-    private function EmailLogin()
+    private function EmailLogin(string $OtherPush)
     {
         $this->Mail->Subject = $this->ConfigData['Name'] . ' - 邮箱登录验证码'; // 邮箱标题
         $this->Mail->Body = MailTemplate::Templates($Input_Code);

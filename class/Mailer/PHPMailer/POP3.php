@@ -8,7 +8,7 @@
 namespace Mailer\PHPMailer;
 
 /**
- * PHPMailer POP-Before-SMTP Authentication Class.
+ * PHPMailer POP-Before-SMTP Authentication class.
  * Specifically for PHPMailer to use for RFC1939 POP-before-SMTP authentication.
  * 1) This class does not support APOP authentication.
  * 2) Opening and closing lots of POP3 connections can be quite slow. If you need

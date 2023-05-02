@@ -60,6 +60,38 @@ class Normal
             if ($bCode == 0) return 'Success';
             else if ($bCode == 1) return 200;
             else return "操作成功";
+        else if ($gType == 201)
+            if ($bCode == 0) return 'SuccessButEmail';
+            else if ($bCode == 1) return 200;
+            else return "操作成功但邮件发送失败";
+        else if ($gType == 300)
+            if ($bCode == 0) return 'SqlInsertFail';
+            else if ($bCode == 1) return 400;
+            else return "数据表内容插入失败";
+        else if ($gType == 310)
+            if ($bCode == 0) return 'TokenTooShort';
+            else if ($bCode == 1) return 502;
+            else return "Token长度过短";
+        else if ($gType == 311)
+            if ($bCode == 0) return 'TokenTooLong';
+            else if ($bCode == 1) return 502;
+            else return "Token长度过长";
+        else if ($gType == 400)
+            if ($bCode == 0) return 'usernameFormat';
+            else if ($bCode == 1) return 405;
+            else return "用户名格式不符合 （格式允许0-9,A-Z,a-z及_）";
+        else if ($gType == 401)
+            if ($bCode == 0) return 'emailFormat';
+            else if ($bCode == 1) return 405;
+            else return "邮箱格式不符合";
+        else if ($gType == 500)
+            if ($bCode == 0) return 'CaptchaEffective';
+            else if ($bCode == 1) return 200;
+            else return "激活码任然有效";
+        else if ($gType == 600)
+            if ($bCode == 0) return 'AlReadyUser';
+            else if ($bCode == 1) return 403;
+            else return "已经有这个用户";
         else
             return null;
     }

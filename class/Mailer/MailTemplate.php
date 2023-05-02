@@ -36,7 +36,13 @@ class MailTemplate
     private static function Register(): string
     {
         // 变量获取
-
+        $getTitle = SendMail::$WebTitle;
+        $getNowTime = self::$NowTime;
+        $getReceiver = SendMail::$EmailReceiver;
+        $getEndTime = date("Y年m月d日 H:i:s", time() + SendMail::$ExpTime);
+        $getExpTime = (double)SendMail::$ExpTime / 60;
+        $getYear = date('Y');
+        $getDomain = $_SERVER['SERVER_NAME'];
         // 结果返回
         return <<<EOF
             <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -48,26 +54,27 @@ class MailTemplate
             </head>
             <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse;border: 1px solid #cccccc;box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175)">
                 <tr>
-                    <td align="center" bgcolor="#70bbd9" style="padding: 30px 0 30px 0; font-size: 30px;">$G_TitleName</td>
+                    <td align="center" bgcolor="#70bbd9" style="padding: 30px 0 30px 0; font-size: 30px;">$getTitle</td>
                 </tr>
                 <tr>
                     <td>
                         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="padding: 30px 30px 30px 30px;">
                             <tr>
                                 <td style="padding: 10px 0px 30px 0px;color: #08212b; font-family: Arial, sans-serif; font-size: 10px;">
-                                    时间： <b>$G_Date</b>
+                                    发送时间： <b>$getNowTime</b>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="padding: 0px 0px 10px 0px;color: #000000; font-family: Arial, sans-serif; font-size: 24px;">
-                                    Dear. <a style="text-decoration: none;color: #198754;" href="mailto:$G_Email">$G_Email</a>
+                                    Dear. <a style="text-decoration: none;color: #198754;" href="mailto:$getReceiver">$getReceiver</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="padding: 0px 5px 5px 0px;color: #000000; font-family: Arial, sans-serif; font-size: 20px;">
-                                    您的验证码为：<strong>$G_Code</strong><br/>
-                                    您的验证码 <strong>$G_UseTime</strong> 分钟内有效，此验证码为 $G_TitleName 激活使用。<br/>
-                                    有效期至：$G_endTimes
+                                    <a href="$getDomain/account/activation.php"><button style="background-color: #008CBA;font-size: 16px;border-radius: 8px;">点击激活</button></a>
+                                    <br/>
+                                    您的身份激活 <strong>$getExpTime</strong> 分钟内有效，此身份激活为 <strong>账户注册</strong> 使用。<br/>
+                                    有效期至：$getEndTime
                                 </td>
                             </tr>
                         </table>
@@ -78,7 +85,7 @@ class MailTemplate
                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
                             <tr>
                                 <td style="font-family: Arial, sans-serif; font-size: 14px;">
-                                    <font style="color: grey;">&copy; 2022 - $G_Year. $G_TitleName All Rights Reserved.</font><br/>
+                                    <font style="color: grey;">&copy; 2022 - $getYear. $getTitle All Rights Reserved.</font><br/>
                                     <font style="color: grey;">本邮件为自动发出，请勿直接回复</font>
                                 </td>
                             </tr>
