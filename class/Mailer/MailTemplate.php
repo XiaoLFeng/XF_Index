@@ -5,7 +5,10 @@
  * https://www.x-lf.com/
  */
 
+
 namespace Mailer;
+
+require_once dirname(__FILE__, 3) . "/class/Mailer/SendMail.php";
 
 class MailTemplate
 {
@@ -14,10 +17,10 @@ class MailTemplate
 
     /**
      * 检查使用邮件发送模板
-     * @param string $G_code 获取后端发送来的验证码用于发送
+     * @param string|null $G_code 获取后端发送来的验证码用于发送
      * @return string|null 需要返回值，返回HTML信息给邮箱模板用于发送
      */
-    public static function Templates(string $G_code): ?string
+    public static function Templates(string $G_code = null): ?string
     {
         // 赋值给全局
         self::$GCode = $G_code;

@@ -5,26 +5,28 @@
  * https://www.x-lf.com/
  */
 
+
 namespace Mailer;
 
-use Mailer\PHPMailer\Exception;
-use Mailer\PHPMailer\PHPMailer;
+require_once dirname(__FILE__, 3) . "/class/Mailer/PHPMailer/PHPMailer.php";
+require_once dirname(__FILE__, 3) . "/class/Mailer/PHPMailer/Exception.php";
+require_once dirname(__FILE__, 3) . "/class/Mailer/PHPMailer/SMTP.php";
+require_once dirname(__FILE__, 3) . "/class/Mailer/MailTemplate.php";
 
 class SendMail
 {
     public static int $EmailType;
     public static string $EmailReceiver;
 
-    private array $ConfigData;
+    private static array $ConfigData;
     public static int $ExpTime;
     public static string $WebTitle;
-
-    private PHPMailer $Mail;
+    protected PHPMailer $Mail;
 
     /**
      * @return void 导入文件，无具体返回值
      */
-    protected function __consort()
+    public function __construct()
     {
         // 文件导入
         $Array_ConfigData = null;
@@ -32,13 +34,13 @@ class SendMail
         while (!feof($FileData))
             $Array_ConfigData .= fgetc($FileData);
         $Array_ConfigData = json_decode($Array_ConfigData, JSON_UNESCAPED_UNICODE);
-        $this->ConfigData = json_decode($Array_ConfigData, JSON_UNESCAPED_UNICODE)["Smtp"];
+        self::$ConfigData = $Array_ConfigData["Smtp"];
         fclose($FileData);
         // 参数赋予
         self::$ExpTime = $Array_ConfigData["Mail"]['ExpDate'];
         self::$WebTitle = $Array_ConfigData["Web"]['Title'];
 
-        // 类导入
+        // 导入类
         $this->Mail = new PHPMailer(true);
     }
 
@@ -76,42 +78,43 @@ class SendMail
     {
         self::$EmailType = $EmailType;
         self::$EmailReceiver = $EmailReceiver;
+
         // 尝试邮件发送
         try {
             // 服务器配置
             $this->Mail->CharSet = "UTF-8";
             $this->Mail->SMTPDebug = 0;
             $this->Mail->isSMTP();
-            $this->Mail->Host = $this->ConfigData['Host'];
-            $this->Mail->SMTPAuth = $this->ConfigData['SmtpAuth'];
-            $this->Mail->Username = $this->ConfigData['Username'];
-            $this->Mail->Password = $this->ConfigData['Password'];
+            $this->Mail->Host = self::$ConfigData['Host'];
+            $this->Mail->SMTPAuth = self::$ConfigData['SmtpAuth'];
+            $this->Mail->Username = self::$ConfigData['Username'];
+            $this->Mail->Password = self::$ConfigData['Password'];
             $this->Mail->SMTPSecure = $this->SSLCheck('Secure');
             $this->Mail->Port = $this->SSLCheck('Port');
-            $this->Mail->setFrom($this->ConfigData['User'], $this->ConfigData['Name']);
+            $this->Mail->setFrom(self::$ConfigData['User'], self::$ConfigData['Name']);
             $this->Mail->addAddress($EmailReceiver);
 
             // 发件编写
-            if ($EmailType == 1) $this->EmailRegister($OtherPush);
-            else if ($EmailType == 2) $this->EmailLogin($OtherPush);
+            if ($EmailType == 1) $this->EmailRegister();
+            else if ($EmailType == 2) $this->EmailLogin();
 
             $this->Mail->send();
             return true;
         } catch (Exception $e) {
-            //echo '邮件发送失败：', $this->Mail->ErrorInfo;
+            //echo '邮件发送失败：', $this->$this->Mail->ErrorInfo;
             return false;
         }
     }
 
-    private function EmailRegister(string $Input_Code): void
+    protected function EmailRegister(): void
     {
-        $this->Mail->Subject = $this->ConfigData['Name'] . ' - 站点注册'; // 邮箱标题
-        $this->Mail->Body = MailTemplate::Templates($Input_Code);
+        $this->Mail->Subject = self::$ConfigData['Name'] . ' - 站点注册'; // 邮箱标题
+        $this->Mail->Body = MailTemplate::Templates();
     }
 
-    private function EmailLogin(string $OtherPush)
+    protected function EmailLogin(): void
     {
-        $this->Mail->Subject = $this->ConfigData['Name'] . ' - 邮箱登录验证码'; // 邮箱标题
-        $this->Mail->Body = MailTemplate::Templates($Input_Code);
+        $this->Mail->Subject = self::$ConfigData['Name'] . ' - 邮箱登录验证码'; // 邮箱标题
+        $this->Mail->Body = MailTemplate::Templates();
     }
 }
