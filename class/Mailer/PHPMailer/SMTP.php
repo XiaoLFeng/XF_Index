@@ -1,11 +1,14 @@
 <?php
+
 /*
  * Copyright © 2016 - 2023 筱锋xiao_lfeng. All Rights Reserved.
  * 开发开源遵循 MIT 许可，若需商用请联系开发者
  * https://www.x-lf.com/
  */
 
-namespace Mailer\PHPMailer;
+namespace Mailer;
+
+use Psr\Log\LoggerInterface;
 
 /**
  * PHPMailer RFC821 SMTP email transport class.
@@ -131,7 +134,7 @@ class SMTP
      * $mail->Debugoutput = new myPsr3Logger;
      * ```
      *
-     * @var string|callable|\Psr\Log\LoggerInterface
+     * @var string|callable|LoggerInterface
      */
     public $Debugoutput = 'echo';
 
@@ -253,7 +256,7 @@ class SMTP
             return;
         }
         //Is this a PSR-3 logger?
-        if ($this->Debugoutput instanceof \Psr\Log\LoggerInterface) {
+        if ($this->Debugoutput instanceof LoggerInterface) {
             $this->Debugoutput->debug($str);
 
             return;

@@ -1,14 +1,15 @@
 <?php
+
 /*
  * Copyright © 2016 - 2023 筱锋xiao_lfeng. All Rights Reserved.
  * 开发开源遵循 MIT 许可，若需商用请联系开发者
  * https://www.x-lf.com/
  */
 
-namespace Mailer\PHPMailer;
+namespace Mailer;
 
 /**
- * PHPMailer POP-Before-SMTP Authentication class.
+ * PHPMailer POP-Before-SMTP Authentication Class.
  * Specifically for PHPMailer to use for RFC1939 POP-before-SMTP authentication.
  * 1) This class does not support APOP authentication.
  * 2) Opening and closing lots of POP3 connections can be quite slow. If you need

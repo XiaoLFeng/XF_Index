@@ -1,11 +1,15 @@
 <?php
+
 /*
  * Copyright © 2016 - 2023 筱锋xiao_lfeng. All Rights Reserved.
  * 开发开源遵循 MIT 许可，若需商用请联系开发者
  * https://www.x-lf.com/
  */
 
-namespace Mailer\PHPMailer;
+namespace Mailer;
+
+use function array_keys;
+use const PHP_VERSION_ID;
 
 /**
  * Configure PHPMailer with DSN string.
@@ -170,7 +174,7 @@ class DSNConfigurator
         unset($allowedOptions['Port']);
         unset($allowedOptions['ErrorInfo']);
 
-        $allowedOptions = \array_keys($allowedOptions);
+        $allowedOptions = array_keys($allowedOptions);
 
         foreach ($options as $key => $value) {
             if (!in_array($key, $allowedOptions)) {
@@ -215,7 +219,7 @@ class DSNConfigurator
      */
     protected function parseUrl($url)
     {
-        if (\PHP_VERSION_ID >= 50600 || false === strpos($url, '?')) {
+        if (PHP_VERSION_ID >= 50600 || false === strpos($url, '?')) {
             return parse_url($url);
         }
 
