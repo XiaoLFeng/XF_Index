@@ -27,65 +27,73 @@ class Sql
     }
 
     /**
-     * MySQL查找库
-     * @param string $Mysql_Query
+     * MySQL查找库 |
+     * [Tips] 在PHP中，Mysql查询语句一次只允许查询一次数据，不可多个代码进行连续查询
+     * @param string $Mysql_Query 输入Mysql查询语句
      * @return string[] 查找到结果返回结果
      */
     public static function SELECT(string $Mysql_Query): array
     {
         $CC_i = 0;
-        $Result = null;
         $Array_OutPut = [];
         if (preg_match('/^SELECT/', $Mysql_Query)) {
             $Result = mysqli_query(self::MySqlConn(), $Mysql_Query);
+            echo mysqli_error(self::MySqlConn());
             for (; $Result_Object = mysqli_fetch_object($Result); $CC_i++) {
                 $Array_OutPut['output'] = 'Success';
                 $Array_OutPut['data'][$CC_i] = $Result_Object;
             }
             if ($CC_i == 0)
                 $Array_OutPut['output'] = 'EmptyResult';
+            else mysqli_free_result($Result);
         } else
             $Array_OutPut['output'] = 'TypeError';
-        mysqli_free_result($Result);
+        mysqli_close(self::MySqlConn());
         return $Array_OutPut;
     }
 
     /**
      * MySQL插入库
-     * @param string $Mysql_Query
+     * @param string $Mysql_InsertQuery
      * @return bool
      */
-    public static function INSERT(string $Mysql_Query): bool
+    public static function INSERT(string $Mysql_InsertQuery): bool
     {
-        if (preg_match('/^INSERT/', $Mysql_Query))
-            return mysqli_query(self::MySqlConn(), $Mysql_Query);
-        else
+        if (preg_match('/^INSERT/', $Mysql_InsertQuery))
+            return mysqli_query(self::MySqlConn(), $Mysql_InsertQuery);
+        else {
+            mysqli_close(self::MySqlConn());
             return false;
+        }
     }
 
     /**
      * MySQL更新库
-     * @param string $Mysql_Query
+     * @param string $Mysql_UpdateQuery
      * @return bool
      */
-    public static function UPDATE(string $Mysql_Query): bool
+    public static function UPDATE(string $Mysql_UpdateQuery): bool
     {
-        if (preg_match('/^UPDATE/', $Mysql_Query))
-            return mysqli_query(self::MySqlConn(), $Mysql_Query);
-        else
+        if (preg_match('/^UPDATE/', $Mysql_UpdateQuery))
+            return mysqli_query(self::MySqlConn(), $Mysql_UpdateQuery);
+        else {
+            mysqli_close(self::MySqlConn());
             return false;
+        }
     }
 
     /**
      * MySQL删除库
-     * @param string $Mysql_Query
+     * @param string $Mysql_DeleteQuery
      * @return bool
      */
-    public static function DELETE(string $Mysql_Query): bool
+    public static function DELETE(string $Mysql_DeleteQuery): bool
     {
-        if (preg_match('/^DELETE/', $Mysql_Query))
-            return mysqli_query(self::MySqlConn(), $Mysql_Query);
-        else
+        if (preg_match('/^DELETE/', $Mysql_DeleteQuery))
+            return mysqli_query(self::MySqlConn(), $Mysql_DeleteQuery);
+        else {
+            mysqli_close(self::MySqlConn());
             return false;
+        }
     }
 }

@@ -6,6 +6,7 @@
 | 200 | Success          | 200     | 操作成功                         |
 | 201 | SuccessButEmail  | 200     | 操作成功但邮件发送失败                  |
 | 300 | SqlInsertFail    | 400     | 数据表内容插入失败                    |
+| 301 | SqlSelectFail    | 400     | 数据表内容查询失败                    |
 | 310 | TokenTooShort    | 502     | Token长度过短                    |
 | 311 | TokenTooLong     | 502     | Token长度过长                    |
 | 400 | usernameFormat   | 405     | 用户名格式不符合 （格式允许0-9,A-Z,a-z及_） |

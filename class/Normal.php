@@ -68,6 +68,10 @@ class Normal
             if ($bCode == 0) return 'SqlInsertFail';
             else if ($bCode == 1) return 400;
             else return "数据表内容插入失败";
+        else if ($gType == 301)
+            if ($bCode == 0) return 'SqlSelectFail';
+            else if ($bCode == 1) return 400;
+            else return "数据表内容查询失败";
         else if ($gType == 310)
             if ($bCode == 0) return 'TokenTooShort';
             else if ($bCode == 1) return 502;

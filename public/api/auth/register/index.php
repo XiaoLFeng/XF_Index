@@ -41,19 +41,22 @@ if ($Array_ConfigData['Session'] == $_SERVER['HTTP_SESSION']) {
                     // 创建用户
                     if (Sql::INSERT("INSERT INTO `index`.xf_user (`username`,`email`,`password`,`reg_time`,`reg_ip`) VALUES ('{$PostData['username']}','{$PostData['email']}','{$PostData['password']}','" . time() . "','" . $_SERVER['REMOTE_ADDR'] . "')")) {
                         // 生成激活码
-                        $Data_Captcha = Key::Captcha(100);
+                        $Data_Captcha = Key::Captcha(50);
                         $Data_NowTime = time();
                         // 查找是否需要重新生成激活码
-                        $AResult_UserEmailVerify = Sql::SELECT("SELECT * FROM `index`.xf_email_verify WHERE `uid`={$PostData['username']} AND `time` >= $Data_NowTime-{$Array_ConfigData['Mail']['ExpDate']}");
-                        if ($AResult_UserEmailVerify['output'] == "EmptyResult") {
-                            // 创建激活码
-                            if (Sql::INSERT("INSERT INTO `index`.xf_email_verify (`uid`, `code`, `time`) VALUES ('{$PostData['username']}','$Data_Captcha','$Data_NowTime')")) {
-                                // 邮件发送
-                                if ($ClassMailer->PostMail($PostData['email'], 1, $Data_Captcha))
-                                    Normal::Output(200);
-                                else Normal::Output(201);
-                            } else Normal::Output(300);
-                        } else Normal::Output(500);
+                        $AResult_UserData = Sql::SELECT("SELECT * FROM `index`.xf_user WHERE `username`='{$PostData['username']}' OR `email`='{$PostData['email']}'");
+                        if ($AResult_UserData['output'] == "Success") {
+                            $AResult_UserEmailVerify = Sql::SELECT("SELECT * FROM `index`.xf_email_verify WHERE `uid`='{$AResult_UserData['data'][0]->uid}' AND `time` >= " . ($Data_NowTime - $Array_ConfigData['Mail']['ExpDate']));
+                            if ($AResult_UserEmailVerify['output'] == "EmptyResult") {
+                                // 创建激活码
+                                if (Sql::INSERT("INSERT INTO `index`.xf_email_verify (`uid`, `code`, `time`) VALUES ('{$AResult_UserData['data'][0]->uid}','$Data_Captcha','$Data_NowTime')")) {
+                                    // 邮件发送
+                                    if ($ClassMailer->PostMail($PostData['email'], 1, $Data_Captcha))
+                                        Normal::Output(200);
+                                    else Normal::Output(201);
+                                } else Normal::Output(300);
+                            } else Normal::Output(500);
+                        } else Normal::Output(301);
                     } else Normal::Output(300);
                 } else Normal::Output(600);
             } else Normal::Output(401);
@@ -86,7 +89,9 @@ if ($Array_ConfigData['Session'] == $_SERVER['HTTP_SESSION']) {
                 ],
             ];
         }
+        echo json_encode($Json_Data, JSON_UNESCAPED_UNICODE);
     }
 } else {
     Normal::Output(100);
 }
+End:
