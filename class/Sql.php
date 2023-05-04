@@ -10,7 +10,7 @@ class Sql
     /**
      * @return false|mysqli
      */
-    public static function MySqlConn()
+    protected static function MySqlConn()
     {
         // 从文件获取数据
         $Array_ConfigData = null;
