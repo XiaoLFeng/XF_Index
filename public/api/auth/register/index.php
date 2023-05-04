@@ -17,7 +17,7 @@ session_start();
 include dirname(__FILE__, 5) . "/Modules/API/header.php";
 require dirname(__FILE__, 5) . "/class/Sql.php";
 require dirname(__FILE__, 5) . "/class/Token.php";
-require dirname(__FILE__, 5) . "/class/Mailer/Mailer\SendMail.php";
+require dirname(__FILE__, 5) . "/class/Mailer/SendMail.php";
 require dirname(__FILE__, 5) . "/class/Normal.php";
 require dirname(__FILE__, 5) . "/class/Key.php";
 

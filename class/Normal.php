@@ -88,6 +88,14 @@ class Normal
             if ($bCode == 0) return 'emailFormat';
             else if ($bCode == 1) return 405;
             else return "邮箱格式不符合";
+        else if ($gType == 402)
+            if ($bCode == 0) return 'userFormat';
+            else if ($bCode == 1) return 405;
+            else return "用户格式不符合";
+        else if ($gType == 403)
+            if ($bCode == 0) return 'passwordIncorrect';
+            else if ($bCode == 1) return 403;
+            else return "密码不正确";
         else if ($gType == 500)
             if ($bCode == 0) return 'CaptchaEffective';
             else if ($bCode == 1) return 200;
@@ -96,6 +104,10 @@ class Normal
             if ($bCode == 0) return 'AlReadyUser';
             else if ($bCode == 1) return 403;
             else return "已经有这个用户";
+        else if ($gType == 601)
+            if ($bCode == 0) return 'NoUser';
+            else if ($bCode == 1) return 403;
+            else return "没有这个用户";
         else
             return null;
     }
