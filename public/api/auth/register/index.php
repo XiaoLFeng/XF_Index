@@ -10,18 +10,20 @@
  * @var array $Array_ConfigData 配置文件
  */
 
+use Mailer\SendMail;
+
 session_start();
 // 引入配置
 include dirname(__FILE__, 5) . "/Modules/API/header.php";
 require dirname(__FILE__, 5) . "/class/Sql.php";
 require dirname(__FILE__, 5) . "/class/Token.php";
-require dirname(__FILE__, 5) . "/class/Mailer/SendMail.php";
+require dirname(__FILE__, 5) . "/class/Mailer/Mailer\SendMail.php";
 require dirname(__FILE__, 5) . "/class/Normal.php";
 require dirname(__FILE__, 5) . "/class/Key.php";
 
 // 类配置
 $ClassToken = new Token(40);
-$ClassMailer = new Mailer\SendMail();
+$ClassMailer = new SendMail();
 
 // 数据获取类型
 $PostData = file_get_contents('php://input');
