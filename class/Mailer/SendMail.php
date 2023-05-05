@@ -18,10 +18,11 @@ class SendMail
     public static int $EmailType;
     public static string $EmailReceiver;
 
-    private static array $ConfigData;
+    protected static array $ConfigData;
     public static int $ExpTime;
     public static string $WebTitle;
     protected PHPMailer $Mail;
+    public static string $SendMailError;
 
     /**
      * @return void 导入文件，无具体返回值
@@ -52,7 +53,7 @@ class SendMail
     private function SSLCheck(string $Smtp_Type)
     {
         if ($Smtp_Type == 'Port')
-            return $_SERVER['SERVER_PORT'] != '443' ? $this->ConfigData['Port'] : $this->ConfigData['SecurePort'];
+            return $_SERVER['SERVER_PORT'] != '443' ? self::$ConfigData['Port'] : self::$ConfigData['SecurePort'];
         elseif ($Smtp_Type == 'Secure')
             if ($_SERVER['SERVER_PORT'] != '443')
                 return 'TLS';
@@ -93,6 +94,7 @@ class SendMail
             $this->Mail->Port = $this->SSLCheck('Port');
             $this->Mail->setFrom(self::$ConfigData['User'], self::$ConfigData['Name']);
             $this->Mail->addAddress($EmailReceiver);
+            $this->Mail->isHTML(true);
 
             // 发件编写
             if ($EmailType == 1) $this->EmailRegister();
@@ -100,8 +102,8 @@ class SendMail
 
             $this->Mail->send();
             return true;
-        } catch (Exception $e) {
-            //echo '邮件发送失败：', $this->$this->Mail->ErrorInfo;
+        } catch (\Exception $e) {
+            self::$SendMailError = $this->Mail->ErrorInfo;
             return false;
         }
     }
