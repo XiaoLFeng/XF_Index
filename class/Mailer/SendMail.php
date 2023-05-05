@@ -21,8 +21,10 @@ class SendMail
     protected static array $ConfigData;
     public static int $ExpTime;
     public static string $WebTitle;
+    protected static ?string $GCode;
     protected PHPMailer $Mail;
     public static string $SendMailError;
+    public static string $getDomain;
 
     /**
      * @return void 导入文件，无具体返回值
@@ -40,6 +42,7 @@ class SendMail
         // 参数赋予
         self::$ExpTime = $Array_ConfigData["Mail"]['ExpDate'];
         self::$WebTitle = $Array_ConfigData["Web"]['Title'];
+        self::$getDomain = $Array_ConfigData["Web"]['Domain'];
 
         // 导入类
         $this->Mail = new PHPMailer(true);
@@ -79,6 +82,7 @@ class SendMail
     {
         self::$EmailType = $EmailType;
         self::$EmailReceiver = $EmailReceiver;
+        self::$GCode = $OtherPush;
 
         // 尝试邮件发送
         try {
@@ -111,7 +115,7 @@ class SendMail
     protected function EmailRegister(): void
     {
         $this->Mail->Subject = self::$ConfigData['Name'] . ' - 站点注册'; // 邮箱标题
-        $this->Mail->Body = MailTemplate::Templates();
+        $this->Mail->Body = MailTemplate::Templates(self::$GCode);
     }
 
     protected function EmailLogin(): void
