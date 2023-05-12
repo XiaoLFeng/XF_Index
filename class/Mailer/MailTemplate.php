@@ -12,8 +12,8 @@ require_once dirname(__FILE__, 3) . "/class/Mailer/SendMail.php";
 
 class MailTemplate
 {
-    private static string $GCode;
-    private static int $NowTime;
+    protected static ?string $GCode;
+    protected static string $NowTime;
 
     /**
      * 检查使用邮件发送模板
@@ -24,12 +24,11 @@ class MailTemplate
     {
         // 赋值给全局
         self::$GCode = $G_code;
-        self::$NowTime = time();
+        self::$NowTime = date("Y-m-d H:i");
 
         // 判断发送内容
         if (SendMail::$EmailType == 1) return self::Register();
-
-        return null;
+        else return null;
     }
 
     /**
@@ -45,7 +44,8 @@ class MailTemplate
         $getEndTime = date("Y年m月d日 H:i:s", time() + SendMail::$ExpTime);
         $getExpTime = (double)SendMail::$ExpTime / 60;
         $getYear = date('Y');
-        $getDomain = $_SERVER['SERVER_NAME'];
+        $getDomain = SendMail::$getDomain;
+        $GCode = self::$GCode;
         // 结果返回
         return <<<EOF
             <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -74,10 +74,15 @@ class MailTemplate
                             </tr>
                             <tr>
                                 <td style="padding: 0px 5px 5px 0px;color: #000000; font-family: Arial, sans-serif; font-size: 20px;">
-                                    <a href="$getDomain/account/activation.php"><button style="background-color: #008CBA;font-size: 16px;border-radius: 8px;">点击激活</button></a>
+                                    <a href="http://$getDomain/account/activation.php?code=$GCode" style="margin: auto;width: 50%;text-align: center;text-decoration: none;">点击激活</a>
                                     <br/>
                                     您的身份激活 <strong>$getExpTime</strong> 分钟内有效，此身份激活为 <strong>账户注册</strong> 使用。<br/>
                                     有效期至：$getEndTime
+                                    <br/>
+                                    <br/>
+                                    若链接无法点击，可直接复制 ↓
+                                    <br/>
+                                    http://$getDomain/account/activation.php?code=$GCode
                                 </td>
                             </tr>
                         </table>

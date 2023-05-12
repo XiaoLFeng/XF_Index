@@ -29,6 +29,11 @@ class Sql
     /**
      * MySQL查找库 |
      * [Tips] 在PHP中，Mysql查询语句一次只允许查询一次数据，不可多个代码进行连续查询
+     *
+     * [output] 反馈
+     *    - [Success] 查询记录成功
+     *    - [EmptyResult] 没有对应记录
+     *    - [TypeError] 类型错误，出现这个多半是自己开发的问题
      * @param string $Mysql_Query 输入Mysql查询语句
      * @return string[] 查找到结果返回结果
      */

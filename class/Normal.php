@@ -14,11 +14,15 @@ class Normal
      * @param array|null $OtherArray 其他需要附带，不属于标准Json输出内容部分
      * @return void
      */
-    public static function Output(int $gType, array $OtherArray = null)
+    public static function Output(int $gType, array $OtherArray = null, string $OtherOutput = null)
     {
         if (self::OutputMessage($gType, 1) != null) {
+            if (!empty($OtherOutput))
+                $OtherOutput = '__' . $OtherOutput;
+            else
+                $OtherOutput = null;
             $Json_Data = [
-                'output' => self::OutputMessage($gType, 0),
+                'output' => self::OutputMessage($gType, 0) . $OtherOutput,
                 'code' => self::OutputMessage($gType, 1),
                 'data' => [
                     'statusCode' => $gType,
@@ -41,6 +45,39 @@ class Normal
             header(self::HttpStatusCode(502));
         }
         // Json 输出
+        echo json_encode($Json_Data, JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * 自定义生成标标准接口输出 | 样式举例
+     *
+     * - Json
+     * - output( **$Json_Output** )
+     * - code( **$Json_Code** )
+     * - data
+     * - [data]statusCode: 999
+     * - [data]message(  **$Json_Message**  )
+     * - [data]data( **$Json_Other** )
+     * @param string $Json_Output 输出代码
+     * @param int $Json_Code
+     * @param string $Json_Message
+     * @param array $Json_Other
+     * @return void
+     */
+    public static function CustomOutput(string $Json_Output, int $Json_Code, string $Json_Message, array $Json_Other = null)
+    {
+        $Json_Data = [
+            'output' => $Json_Output,
+            'code' => $Json_Code,
+            'data' => [
+                'statusCode' => 999,
+                'message' => $Json_Message,
+            ],
+        ];
+        if (!empty($Json_Other)) {
+            $Json_Data['data']['data'] = $Json_Other;
+        }
+        header(self::HttpStatusCode($Json_Code));
         echo json_encode($Json_Data, JSON_UNESCAPED_UNICODE);
     }
 
@@ -96,6 +133,30 @@ class Normal
             if ($bCode == 0) return 'passwordIncorrect';
             else if ($bCode == 1) return 403;
             else return "密码不正确";
+        else if ($gType == 404)
+            if ($bCode == 0) return 'typeFormat';
+            else if ($bCode == 1) return 403;
+            else return "类型不正确";
+        else if ($gType == 405)
+            if ($bCode == 0) return 'blog_nameFormat';
+            else if ($bCode == 1) return 403;
+            else return "博客名字格式不符合";
+        else if ($gType == 406)
+            if ($bCode == 0) return 'blog_introduceFormat';
+            else if ($bCode == 1) return 403;
+            else return "博客描述格式不符合";
+        else if ($gType == 407)
+            if ($bCode == 0) return 'internetFormat';
+            else if ($bCode == 1) return 403;
+            else return "地址格式错误";
+        else if ($gType == 408)
+            if ($bCode == 0) return 'booleanFormat';
+            else if ($bCode == 1) return 403;
+            else return "布尔值格式错误";
+        else if ($gType == 409)
+            if ($bCode == 0) return 'blog_hostFormat';
+            else if ($bCode == 1) return 403;
+            else return "主机格式不符合";
         else if ($gType == 500)
             if ($bCode == 0) return 'CaptchaEffective';
             else if ($bCode == 1) return 200;
