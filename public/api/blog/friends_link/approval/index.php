@@ -11,6 +11,7 @@
  * @var array $Array_ConfigData 配置文件
  */
 
+
 // 引入配置
 include dirname(__FILE__, 6) . "/Modules/API/header.php";
 require dirname(__FILE__, 6) . "/class/Sql.php";
@@ -21,35 +22,40 @@ $PostData = file_get_contents('php://input');
 $PostData = json_decode($PostData, true);
 
 // 逻辑构建
-if ($Array_ConfigData['Session'] == $_SERVER['HTTP_SESSION']) {
-    // 检查用户是否登录
-    $Data_UserUID = null;
-    if (!empty($_COOKIE['user'])) {
-        $AResult_User = Sql::SELECT("SELECT * FROM `index`.xf_user WHERE `uid`={$_COOKIE['uid']}");
-        if ($AResult_User['output'] == 'Success')
-            $Data_UserUID = $AResult_User['data'][0]->uid;
-    }
-    // 检查数据是否合法
-    if (!DataCheck()) {
-        // 检查数据库内是否有数据
-        $AResult_BlogLink = Sql::SELECT("SELECT * FROM `index`.xf_blog_link WHERE `name`='{$PostData['blog_name']}' OR `owner_email`='{$PostData['user_email']}' OR `url`='{$PostData['blog_url']}'");
-        if ($AResult_BlogLink['output'] == 'EmptyResult') {
-            // 没有数据执行插入
-            if (Sql::INSERT("INSERT INTO `index`.xf_blog_link (`name`, `url`, `owner_email`, `introduce`, `icon`, `rss_judge`, `rss`, `serverhost`, `adv`, `blog_ssl`, `location`, `sel_color`, `deleted`) VALUES ('{$PostData['blog_name']}','{$PostData['blog_url']}','{$PostData['user_email']}','{$PostData['blog_introduce']}','{$PostData['blog_icon']}','{$PostData['blog_rss_judge']}','{$PostData['blog_rss']}','{$PostData['blog_host']}',{$PostData['blog_adv_judge']},{$PostData['blog_ssl_judge']},0,0,0)")) {
-                // 插入成功返回结果
-                Normal::Output(200);
-            } else Normal::Output(300);
-        } else {
-            // 检查博客主要数据是否重复
-            if ($AResult_BlogLink['data'][0]['owner_email'] == $PostData['user_email']) {
-                Normal::CustomOutput('UserEmailDuplication', 403, '用户邮箱与数据库重复');
-            } else if ($AResult_BlogLink['data'][0]['name'] == $PostData['blog_name']) {
-                Normal::CustomOutput('BlogNameDuplication', 403, '博客名字与数据库重复');
-            } else if ($AResult_BlogLink['data'][0]['url'] == $PostData['blog_url'])
-                Normal::CustomOutput('BlogUrlDuplication', 403, '博客地址与数据库重复');// 数据库信息查询不正确
-        }
-    }
-} else Normal::Output(100); // SESSION是否合法
+if ($Array_ConfigData['Session'] == $_SERVER['SESSION']) {
+    // 检查用户
+    if (empty($PostData['user']) && preg_match('/^[0-9]+$/', $PostData['user'])) {
+        // 检查用户是否在数据库内且为管理员
+        $AResult_User = Sql::SELECT("SELECT * FROM `index`.xf_user WHERE `uid`='{$PostData['user']}'");
+        if ($AResult_User == 'Success') {
+            if ($AResult_User['data'][0]['permission'] == 1) {
+                // 审批是否通过（审批不通过直接删除，而非修改退回），检查数据是否存在
+                $AResult_Blog = Sql::SELECT("SELECT * FROM `index`.xf_blog_link WHERE `id`='{$PostData['blog_id']}'");
+                if ($AResult_Blog['output'] == 'Success') {
+                    if ($PostData['check']) {
+                        // 检查数据
+                        if (!DataCheck()) {
+                            // 数据检查通过，上传数据并通过位置
+                            if (preg_match('/^[0-9]{1,4}/', $PostData['blog_location'])) {
+                                // 修改数据
+                                if (Sql::UPDATE("UPDATE `index`.xf_blog_link SET `owner_email`='{$PostData['user_email']}',`name`='{$PostData['blog_name']}',`url`='{$PostData['blog_url']}',`introduce`='{$PostData['blog_introduce']}',`icon`='{$PostData['blog_icon']}',`rss_judge`='{$PostData['blog_rss_judge']}',`rss`='{$PostData['blog_rss']}',`serverhost`='{$PostData['blog_host']}',`adv`='{$PostData['blog_adv_judge']}',`blog_ssl`='{$PostData['blog_ssl_judge']}',`location`='{$PostData['blog_location']}',`sel_color`={$PostData['blog_color']} WHERE `id`='{$PostData['blog_id']}'")) {
+                                    Normal::Output(200);
+                                } else Normal::Output(302);
+                            } else Normal::Output(410); // 添加位置错误
+                        }
+                    } else {
+                        // 删除数据
+                        if (Sql::DELETE("DELETE FROM `index`.xf_blog_link WHERE `id`='{$PostData['blog_id']}'"))
+                            Normal::Output(200);
+                        else Normal::Output(303, null, "Blog"); // 数据库删除失败
+                    }
+                } else Normal::Output(301, null, "Blog"); // 数据库查询失败
+            } else Normal::Output(701); // 管理员权限拒绝
+        } else if ($AResult_User == 'EmptyResult') {
+            Normal::Output(601); // 没有这个用户
+        } else Normal::Output(301, null, "User"); // 数据库查询失败
+    } else Normal::Output(402); // 用户格式不正确
+} else Normal::Output(100); // 通讯密钥错误
 
 /**
  * @return false|void 返回结果为错误Json，否则返回false表示检查完成
@@ -60,7 +66,7 @@ function DataCheck()
     if (preg_match('/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/', $PostData['user_email'])) {
         if (preg_match('/^[一-龥0-9A-Za-z_\']+$/', $PostData['blog_name'])) {
             if (preg_match('/^[一-龥0-9A-Za-z_\']+$/', $PostData['blog_introduce'])) {
-                if (preg_match('/^[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/', $PostData['blog_url'])) {
+                if (preg_match('/[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/', $PostData['blog_url'])) {
                     if (preg_match('/^http://([\w-]+\.)+[\w-]+(/[\w-./?%&=]*)?$/', $PostData['blog_icon'])) {
                         if ((string)$PostData['blog_ssl_judge'] == "true" || (string)$PostData['blog_ssl_judge'] == "false") {
                             if ((string)$PostData['blog_adv_judge'] == "true" || (string)$PostData['blog_adv_judge'] == "false") {

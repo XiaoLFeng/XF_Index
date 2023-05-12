@@ -38,20 +38,25 @@ if ($Array_ConfigData['Session'] == $_SERVER['HTTP_SESSION']) {
             Normal::CustomOutput('Success', 200, '操作成功', $AResult_Blog['data']);
         } else if ($AResult_Blog['output'] == 'EmptyResult') {
             Normal::CustomOutput('EmptyResult', 200, '没有数据');
-        } else Normal::Output(301);
+        } else Normal::Output(301, null, "Blog");
     } else if ($GetData['type'] == 1) { // 特定数据查询(一定查询)
         if (empty($GetData['search']) && empty($GetData['link'])) { // 查找数据库
             $AResult_Blog = Sql::SELECT("SELECT * FROM `index`.xf_blog_link WHERE `name` = '{$GetData['search']}' OR `url` = '{$GetData['link']}' $Data_UserSee");
             if ($AResult_Blog['output'] == 'Success') {
                 Normal::CustomOutput('Success', 200, '操作成功', $AResult_Blog['data']);
-            } else Normal::Output(301);
+            } else Normal::Output(301, null, "Blog");
         } else Normal::Output(501);
     } else if ($GetData['type'] == 2) { // 模糊查询
         if (!empty($GetData['search'])) {// 查询数据库
             $AResult_Blog = Sql::SELECT("SELECT * FROM `index`.xf_blog_link WHERE `owner_email` LIKE '%{$GetData['search']}%' OR `name` LIKE '%{$GetData['search']}%' OR `url` LIKE '%{$GetData['search']}%' $Data_UserSee");
             if ($AResult_Blog['output'] == 'Success') {
                 Normal::CustomOutput('Success', 200, '操作成功', $AResult_Blog['data']);
-            } else Normal::Output(301);
+            } else Normal::Output(301, null, "Blog");
         } else Normal::Output(501);
+    } else if ($GetData['type'] == 3) { // 需要审批对象
+        $AResult_Blog = Sql::SELECT("SELECT * FROM `index`.xf_blog_link WHERE `location`=0");
+        if ($AResult_Blog['output'] == 'Success') {
+            Normal::CustomOutput('Success', 200, '操作成功', $AResult_Blog['data']);
+        } else Normal::Output(301, null, "Blog");
     } else Normal::Output(404);
 } else Normal::Output(100);
