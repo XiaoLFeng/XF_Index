@@ -5,6 +5,11 @@
  * https://www.x-lf.com/
  */
 
+/**
+ * 标准Json输出及HTTP状态码输出类
+ * @author 筱锋xiao_lfeng
+ * @version 1.0.2-beta
+ */
 class Normal
 {
 
@@ -12,6 +17,7 @@ class Normal
      * Json标准输出部分
      * @param int $gType 输入数字类型输出不同的段落格式
      * @param array|null $OtherArray 其他需要附带，不属于标准Json输出内容部分
+     * @param string|null $OtherOutput 其他数据，会拼接在output后面使用 __ 分割
      * @return void
      */
     public static function Output(int $gType, array $OtherArray = null, string $OtherOutput = null)
@@ -55,27 +61,44 @@ class Normal
      * - output( **$Json_Output** )
      * - code( **$Json_Code** )
      * - data
-     * - [data]statusCode: 999
-     * - [data]message(  **$Json_Message**  )
-     * - [data]data( **$Json_Other** )
-     * @param string $Json_Output 输出代码
-     * @param int $Json_Code
-     * @param string $Json_Message
-     * @param array $Json_Other
-     * @return void
+     * - [data] statusCode( **$Json_ReturnCode=999** )
+     * - [data] message(  **$Json_Message**  )
+     * - [data] data( **$Json_Other=null** )
+     *
+     * $Json_ReturnCode 默认为 999 可自定义其他 Code 代码，但不可与现有代码重复
+     * @param string $Json_Output 输出代码示例
+     * @param int $Json_Code 输出HTTP状态码
+     * @param string $Json_Message 中文提示码
+     * @param array|null $Json_Other 输出data内容
+     * @param int $Json_ReturnCode 输出自定义code值
+     * @return void 直接 echo json_encode 无需返回值
      */
-    public static function CustomOutput(string $Json_Output, int $Json_Code, string $Json_Message, array $Json_Other = null)
+    public static function CustomOutput(string $Json_Output, int $Json_Code, string $Json_Message, array $Json_Other = null, int $Json_ReturnCode = 999)
     {
-        $Json_Data = [
-            'output' => $Json_Output,
-            'code' => $Json_Code,
-            'data' => [
-                'statusCode' => 999,
-                'message' => $Json_Message,
-            ],
-        ];
-        if (!empty($Json_Other)) {
-            $Json_Data['data']['data'] = $Json_Other;
+        // 检查自定义代码是否重复
+        if (!empty(self::OutputMessage($Json_ReturnCode, 1))) {
+            // 进行操作
+            $Json_Data = [
+                'output' => self::OutputMessage(800, 0),
+                'code' => self::OutputMessage(800, 1),
+                'data' => [
+                    'statusCode' => 800,
+                    'message' => self::OutputMessage(800, 2),
+                ],
+            ];
+        } else {
+            // 进行操作
+            $Json_Data = [
+                'output' => $Json_Output,
+                'code' => $Json_Code,
+                'data' => [
+                    'statusCode' => $Json_ReturnCode,
+                    'message' => $Json_Message,
+                ],
+            ];
+            if (!empty($Json_Other)) {
+                $Json_Data['data']['data'] = $Json_Other;
+            }
         }
         header(self::HttpStatusCode($Json_Code));
         echo json_encode($Json_Data, JSON_UNESCAPED_UNICODE);
@@ -109,6 +132,14 @@ class Normal
             if ($bCode == 0) return 'SqlSelectFail';
             else if ($bCode == 1) return 400;
             else return "数据表内容查询失败";
+        else if ($gType == 302)
+            if ($bCode == 0) return 'SqlUpdateFail';
+            else if ($bCode == 1) return 400;
+            else return "数据表内容修改失败";
+        else if ($gType == 303)
+            if ($bCode == 0) return 'SqlDeleteFail';
+            else if ($bCode == 1) return 400;
+            else return "数据表内容删除失败";
         else if ($gType == 310)
             if ($bCode == 0) return 'TokenTooShort';
             else if ($bCode == 1) return 502;
@@ -157,18 +188,46 @@ class Normal
             if ($bCode == 0) return 'blog_hostFormat';
             else if ($bCode == 1) return 403;
             else return "主机格式不符合";
+        else if ($gType == 410)
+            if ($bCode == 0) return 'blog_location';
+            else if ($bCode == 1) return 403;
+            else return "添加位置错误";
         else if ($gType == 500)
             if ($bCode == 0) return 'CaptchaEffective';
             else if ($bCode == 1) return 200;
+            else return "激活码任然有效";
+        else if ($gType == 501)
+            if ($bCode == 0) return 'ParameterLack';
+            else if ($bCode == 1) return 403;
             else return "激活码任然有效";
         else if ($gType == 600)
             if ($bCode == 0) return 'AlReadyUser';
             else if ($bCode == 1) return 403;
             else return "已经有这个用户";
         else if ($gType == 601)
+            if ($bCode == 0) return 'ConsolePermissionDenied';
+            else if ($bCode == 1) return 403;
+            else return "后端权限拒绝";
+        else if ($gType == 700)
+            if ($bCode == 0) return 'AdminPermissionDenied';
+            else if ($bCode == 1) return 403;
+            else return "管理员权限拒绝";
+        else if ($gType == 701)
+            if ($bCode == 0) return 'UserPermissionDenied';
+            else if ($bCode == 1) return 403;
+            else return "用户权限拒绝";
+        else if ($gType == 702)
+            if ($bCode == 0) return 'PermissionDenied';
+            else if ($bCode == 1) return 403;
+            else return "权限拒绝";
+        else if ($gType == 703)
             if ($bCode == 0) return 'NoUser';
             else if ($bCode == 1) return 403;
             else return "没有这个用户";
+        else if ($gType == 800)
+            if ($bCode == 0) return 'CodeRepeat';
+            else if ($bCode == 1) return 403;
+            else return "序号重复，拒绝定义此序号（开发定义错误，请查阅开发文档）";
         else
             return null;
     }
