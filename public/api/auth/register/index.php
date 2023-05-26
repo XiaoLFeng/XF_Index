@@ -6,6 +6,13 @@
  */
 
 /**
+ * 此页面为注册页面
+ * 用户执行注册操作，成功执行操作后软件会发送验证码给邮箱，需要引导用户进入（registerCheck 模块）进行下一步验证操作
+ * <p>
+ * 激活码为 50 位固定字符，其合法性规定按照下列正则表达式确定
+ *
+ * @author 筱锋xiao_lfeng
+ * @since v1.0.0-Alpha
  * @var Array $Json_Data 最终数据编译输出
  * @var array $Array_ConfigData 配置文件
  */
@@ -55,45 +62,41 @@ if ($Array_ConfigData['Session'] == $_SERVER['HTTP_SESSION']) {
                                     // 邮件发送
                                     if ($ClassMailer->PostMail($PostData['email'], 1, $Data_Captcha))
                                         Normal::Output(200);
-                                    else Normal::Output(201);
-                                } else Normal::Output(300);
-                            } else Normal::Output(500);
-                        } else Normal::Output(301);
-                    } else Normal::Output(300);
-                } else Normal::Output(600);
-            } else Normal::Output(401);
-        } else Normal::Output(400);
+                                    else {
+                                        Normal::Output(201);
+                                    }
+                                } else {
+                                    Normal::Output(300);
+                                }
+                            } else {
+                                Normal::Output(500);
+                            }
+                        } else {
+                            Normal::Output(301);
+                        }
+                    } else {
+                        Normal::Output(300);
+                    }
+                } else {
+                    Normal::Output(600);
+                }
+            } else {
+                Normal::Output(401);
+            }
+        } else {
+            Normal::Output(400);
+        }
     } else {
         // 数据库查找用户是否存在
         $AResult_User = Sql::SELECT("SELECT * FROM `index`.xf_user WHERE `uid`='{$_COOKIE['user']}'");
         if ($AResult_User['output'] == 'Success') {
-            $Json_Data = [
-                'output' => "AlReadyLogin",
-                'code' => 403,
-                'data' => [
-                    'message' => "您已登录",
-                ],
-            ];
+            Normal::CustomOutput("AlReadyLogin", 403, "您已登录");
         } else if ($AResult_User['output'] == 'EmptyResult') {
-            $Json_Data = [
-                'output' => "IllegalLogin",
-                'code' => 403,
-                'data' => [
-                    'message' => "非法登录",
-                ],
-            ];
+            Normal::CustomOutput("IllegalLogin", 403, "非法登录");
         } else {
-            $Json_Data = [
-                'output' => $AResult_User['output'],
-                'code' => 403,
-                'data' => [
-                    'message' => "数据库搜索类型错误",
-                ],
-            ];
+            Normal::CustomOutput($AResult_User['output'], 403, "数据库搜索类型错误");
         }
-        echo json_encode($Json_Data, JSON_UNESCAPED_UNICODE);
     }
 } else {
     Normal::Output(100);
 }
-End:

@@ -6,6 +6,10 @@
  */
 
 /**
+ * 此页面为用户登录页面
+ *
+ * @author 筱锋xiao_lfeng
+ * @since v1.0.0-Aplha
  * @var Array $Json_Data 最终数据编译输出
  * @var array $Array_ConfigData 配置文件
  */
@@ -42,8 +46,18 @@ if ($Array_ConfigData['Session'] == $_SESSION['HTTP_SESSION']) {
                 if (Sql::UPDATE("UPDATE `index`.xf_user SET `login_time`='" . time() . "',`login_ip`='" . $_SERVER['REMOTE_ADDR'] . "' WHERE `username`='{$PostData['user']}' OR `email`='{$PostData['user']}'")) {
                     // 输出结果
                     Normal::Output(200);
-                } else Normal::Output(300);
-            } else Normal::Output(403);
-        } else Normal::Output(601);
-    } else Normal::Output(402);
-} else Normal::Output(100);
+                } else {
+                    Normal::Output(300);
+                }
+            } else {
+                Normal::Output(403);
+            }
+        } else {
+            Normal::Output(601);
+        }
+    } else {
+        Normal::Output(402);
+    }
+} else {
+    Normal::Output(100);
+}
