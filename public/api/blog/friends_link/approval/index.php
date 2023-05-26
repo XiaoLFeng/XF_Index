@@ -7,6 +7,14 @@
 
 
 /**
+ * 此页面为博客审核页面
+ * 用户发起博客友链提交后，在此页面进行审核
+ * <p>
+ * 审核由博主进行审核，该页面为提交内容以及表单处理，处理结果存入数据库并返回邮件给用户
+ *
+ * @author 筱锋xiao_lfeng
+ * @since v1.0.0-Alpha
+ * @version v1.0.0-Beta
  * @var array $Json_Data 最终数据编译输出
  * @var array $Array_ConfigData 配置文件
  */
@@ -58,7 +66,11 @@ if ($Array_ConfigData['Session'] == $_SERVER['SESSION']) {
 } else Normal::Output(100); // 通讯密钥错误
 
 /**
+ * 正则表达式检查用户信息
+ *
  * @return false|void 返回结果为错误Json，否则返回false表示检查完成
+ * @author 筱锋xiao_lfeng
+ * @since v1.0.0-Alpha
  */
 function DataCheck()
 {
