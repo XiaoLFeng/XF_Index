@@ -41,30 +41,36 @@ if ($Array_ConfigData['Session'] == $_SERVER['HTTP_SESSION']) { /* 检查通讯�
                     $AResult_Code = Sql::SELECT("SELECT * FROM `index`.`xf_email_verify` WHERE `code`='{$GetData['code']}'");
                     // check sql data not empty
                     if ($AResult_Code['output'] = "Success") {
-                        if ($_COOKIE['user'] == $AResult_Code['data']->uid) {
-                            // update this user info in sql (update xf_user.email_verify)
-                            if (Sql::UPDATE("UPDATE `index`.xf_user SET `email_verify`=1 WHERE `uid`='{$_COOKIE['user']}'")) {
-                                // delete the email_verify
-                                if (Sql::DELETE("DELETE FROM `index`.xf_email_verify WHERE `id`='{$AResult_Code['data']->id}'")) {
-                                    Normal::Output(200);
+                        // check this verify code have effective
+                        if ($AResult_Code['data']->time + $Array_ConfigData['Mail']['ExpDate'] > time()) {
+                            if ($_COOKIE['user'] == $AResult_Code['data']->uid) {
+                                // update this user info in sql (update xf_user.email_verify)
+                                if (Sql::UPDATE("UPDATE `index`.xf_user SET `email_verify`=1 WHERE `uid`='{$_COOKIE['user']}'")) {
+                                    // delete the email_verify
+                                    if (Sql::DELETE("DELETE FROM `index`.xf_email_verify WHERE `id`='{$AResult_Code['data']->id}'")) {
+                                        Normal::Output(200);
+                                    } else {
+                                        Normal::Output(303);
+                                    }
                                 } else {
-                                    Normal::Output(303);
+                                    Normal::Output(302);
                                 }
                             } else {
-                                Normal::Output(302);
+                                Normal::CustomOutput("codeNotYour", 403, "这个验证码不是你");
                             }
                         } else {
-                            Normal::CustomOutput("CodeNotYour", 403, "这个验证码不是你");
+                            Sql::DELETE("DELETE FROM `index`.xf_email_verify WHERE `id`='{$AResult_Code['data']->id}'");
+                            Normal::CustomOutput("codeIsDisEffective", 403, "验证码已过期");
                         }
                     } else {
                         // SqlSelectFail__CodeEmpty
-                        Normal::Output(301, null, "CodeEmpty");
+                        Normal::Output(301, null, "codeEmpty");
                     }
                 } else {
-                    Normal::CustomOutput("CodeFormat", 403, "激活码格式错误");
+                    Normal::CustomOutput("codeFormat", 403, "激活码格式错误");
                 }
             } else {
-                Normal::CustomOutput("NoCode", 403, "请提供激活码");
+                Normal::CustomOutput("noCode", 403, "请提供激活码");
             }
         } else {
             // userFormat
