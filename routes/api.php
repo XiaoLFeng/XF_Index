@@ -5,7 +5,10 @@
  * https://www.x-lf.com/
  */
 
+use App\Http\Controllers\Authme;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +22,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::prefix('api')->group(function () {
+    Route::prefix('auth')->group(function () {
+        Route::post('login',[Authme::class,'Login'])->name('api.auth.login');
+        Route::post('register',[Authme::class,'Register'])->name('api.auth.register');
+        Route::match(['get','post'],'logout',function () {
+            Auth::logout();
+            return Response::redirectTo('');
+        })->name('logout');
+    });
 });

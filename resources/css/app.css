@@ -4,3 +4,6 @@
  * https://www.x-lf.com/
  */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

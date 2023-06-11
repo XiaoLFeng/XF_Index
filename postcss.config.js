@@ -4,5 +4,9 @@
  * https://www.x-lf.com/
  */
 
-require('./bootstrap');
-import 'flowbite';
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}
