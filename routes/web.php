@@ -5,6 +5,7 @@
  * https://www.x-lf.com/
  */
 
+use App\Http\Controllers\Console\Dashboard;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
@@ -25,9 +26,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::prefix('console')->middleware('auth')->group(function () {
-    Route::get('dashboard', function () {
-        return view('console.dashboard');
-    })->name('console.dashboard');
+    Route::get('dashboard', [Dashboard::class,'ViewDashboard'])->name('console.dashboard');
 });
 
 Route::prefix('auth')->group(function () {
