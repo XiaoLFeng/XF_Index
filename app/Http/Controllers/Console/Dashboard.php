@@ -24,6 +24,7 @@ class Dashboard extends Controller
             'userName' => Auth::user()->username,
             'userEmail' => Auth::user()->email,
             'userLinkId' => Auth::user()->linkId,
+            'userIcon' => Auth::user()->icon,
         ];
     }
 
