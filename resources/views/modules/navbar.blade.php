@@ -3,7 +3,7 @@
         <div class="flex lg:flex-1">
             <a href="#" class="-m-1.5 p-1.5">
                 <span class="sr-only">Your Company</span>
-                <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                <img class="h-8 w-auto" src="{{ asset('images/logo.jpg') }}"
                      alt="">
             </a>
         </div>
@@ -19,11 +19,11 @@
             </button>
         </div>
         <div class="hidden lg:flex lg:gap-x-12">
-            <a href="#" class="text-sm font-semibold leading-6 text-gray-900">
+            <a href="{{ route('home') }}" class="text-sm font-semibold leading-6 text-gray-900">
                 <i class="bi bi-house"></i>
                 <span class="flex-1 ml-1 whitespace-nowrap">首页</span>
             </a>
-            <a href="#" class="text-sm font-semibold leading-6 text-gray-900">
+            <a href="{{ route('function.link') }}" class="text-sm font-semibold leading-6 text-gray-900">
                 <i class="bi bi-link-45deg"></i>
                 <span class="flex-1 ml-1 whitespace-nowrap">友链</span>
             </a>
@@ -52,7 +52,7 @@
                     <div id="userDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                         <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
                             <li>
-                                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                <a href="{{ route('console.dashboard') }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                     <i class="bi bi-person-rolodex"></i>
                                     <span class="flex-1 ml-3 whitespace-nowrap">管理员</span>
                                 </a>
