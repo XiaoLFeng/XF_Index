@@ -8,10 +8,10 @@
 namespace App\Http\Controllers\Console;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Index;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Dashboard extends Controller
@@ -20,12 +20,8 @@ class Dashboard extends Controller
 
     public function __construct()
     {
-        $this->data = [
-            'userName' => Auth::user()->username,
-            'userEmail' => Auth::user()->email,
-            'userLinkId' => Auth::user()->linkId,
-            'userIcon' => Auth::user()->icon,
-        ];
+        $data = new Index();
+        $this->data = $data->data;
     }
 
     protected function ViewDashboard(): Factory|View|Application
