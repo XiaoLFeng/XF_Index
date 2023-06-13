@@ -6,7 +6,8 @@
  */
 
 use App\Http\Controllers\Console\Dashboard;
-use App\Http\Controllers\Console\Index;
+use App\Http\Controllers\Function\Link;
+use App\Http\Controllers\Index;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,17 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [Index::class,'ViewIndex'])->name('home');
+Route::get('about',[Index::class,'ViewAboutMe'])->name('about');
+
+Route::prefix('function')->group(function () {
+    Route::get('link',[Link::class,'ViewLink'])->name('function.link');
+    Route::get('sponsor',function () {
+        return view('function.sponsor');
+    })->name('function.sponsor');
+    Route::get('music',function () {
+        return view('function.music');
+    })->name('function.music');
+});
 
 Route::prefix('console')->middleware('auth')->group(function () {
     Route::get('dashboard', [Dashboard::class,'ViewDashboard'])->name('console.dashboard');
