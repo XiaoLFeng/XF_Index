@@ -30,7 +30,7 @@
                     @if($valueLink->blogLocation == $valueSort->id)
                         <a href="{{ $valueLink->blogUrl }}" target="_blank">
                             <div
-                                class="flex p-2 bg-white border border-grey-200 rounded-lg shadow-lg sm:p-4 dark:bg-gray-800 dark:border-gray-700 grid-cols-2 m-1">
+                                class="flex p-2 hover:bg-gray-100 bg-white border border-grey-200 rounded-lg shadow-lg sm:p-4 dark:bg-gray-800 dark:border-gray-700 grid-cols-2 m-1">
                                 <img id="Lazy"
                                      class="w-16 h-16 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500 me-2 sm:me-4"
                                      src="{{ asset('images/avatar.png') }}" data-src="{{ $valueLink->blogIcon }}"
