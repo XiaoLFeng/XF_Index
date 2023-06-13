@@ -6,6 +6,7 @@
  */
 
 use App\Http\Controllers\Console\Dashboard;
+use App\Http\Controllers\Console\Index;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
@@ -21,9 +22,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [Index::class,'ViewIndex'])->name('home');
 
 Route::prefix('console')->middleware('auth')->group(function () {
     Route::get('dashboard', [Dashboard::class,'ViewDashboard'])->name('console.dashboard');
