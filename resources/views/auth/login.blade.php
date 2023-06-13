@@ -70,7 +70,7 @@
             dataType: "json",
             success: function (returnData) {
                 if (returnData.output === "Success") {
-                    window.location.href = '{{ route('console.dashboard') }}'
+                    window.location.href = '{{ route('home') }}'
                 } else {
                     window.alert("错误！")
                 }
