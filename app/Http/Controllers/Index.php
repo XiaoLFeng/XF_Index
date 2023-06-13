@@ -20,31 +20,30 @@ class Index extends Controller
 
     public function __construct()
     {
+        $this->data = [
+            'webTitle' => empty($tempStorage = DB::table('info')->find(1)->data) ? '未定义标题' : $tempStorage,
+            'webDescription' => empty($tempStorage = DB::table('info')->find(2)->data) ? '未定义副标题' : $tempStorage,
+            'webSubTitle' => empty($tempStorage = DB::table('info')->find(3)->data) ? '未定义小标题' : $tempStorage,
+            'webSubTitleDescription' => empty($tempStorage = DB::table('info')->find(4)->data) ? '未定义小标题内容' : $tempStorage,
+            'webIcon' => empty($tempStorage = DB::table('info')->find(5)->data) ? asset('images/logo.jpg') : $tempStorage,
+            'webHeader' => DB::table('info')->find(7)->data,
+            'webFooter' => DB::table('info')->find(8)->data,
+            'webKeyword' => empty($tempStorage = DB::table('info')->find(6)->data) ? '筱锋,凌中的锋雨,xiao_lfeng' : $tempStorage,
+            'sqlAuthor' => empty($tempStorage = DB::table('info')->find(12)->data) ? '筱锋xiao_lfeng' : $tempStorage,
+            'sqlCopyRightYear' => DB::table('info')->find(13)->data,
+            'sqlIcp' => DB::table('info')->find(10)->data,
+            'sqlGongan' => DB::table('info')->find(11)->data,
+            'sqlBlog' => DB::table('info')->find(14)->data,
+        ];
+        if (!empty($this->data['sqlGongan'])) {
+            preg_match('/[0-9]+/', $this->data['sqlGongan'], $data);
+            $this->data = array_merge($this->data, ['GonganCode' => $data[0]]);
+        }
         if (Auth::check()) {
-            $this->data = [
-                'webTitle' => empty($tempStorage = DB::table('info')->find(1)->data) ? '未定义标题' : $tempStorage,
-                'webDescription' => empty($tempStorage = DB::table('info')->find(2)->data) ? '未定义副标题' : $tempStorage,
-                'webSubTitle' => empty($tempStorage = DB::table('info')->find(3)->data) ? '未定义小标题' : $tempStorage,
-                'webSubTitleDescription' => empty($tempStorage = DB::table('info')->find(4)->data) ? '未定义小标题内容' : $tempStorage,
-                'webIcon' => empty($tempStorage = DB::table('info')->find(5)->data) ? asset('images/logo.jpg') : $tempStorage,
-                'webHeader' => DB::table('info')->find(7)->data,
-                'webFooter' => DB::table('info')->find(8)->data,
-                'webKeyword' => empty($tempStorage = DB::table('info')->find(6)->data) ? '筱锋,凌中的锋雨,xiao_lfeng' : $tempStorage,
+            $this->data = array_merge($this->data,[
                 'userName' => Auth::user()->username,
                 'userEmail' => Auth::user()->email,
-                'userIcon' => Auth::user()->icon,
-                'sqlAuthor' => empty($tempStorage = DB::table('info')->find(12)->data) ? '筱锋xiao_lfeng' : $tempStorage,
-                'sqlCopyRightYear' => DB::table('info')->find(13)->data,
-                'sqlIcp' => DB::table('info')->find(10)->data,
-                'sqlGongan' => DB::table('info')->find(11)->data,
-                'sqlBlog' => DB::table('info')->find(14)->data,
-            ];
-            if (!empty($this->data['sqlGongan'])) {
-                preg_match('/[0-9]+/', $this->data['sqlGongan'], $data);
-                $this->data = array_merge($this->data, ['GonganCode' => $data[0]]);
-            }
-        } else {
-            $this->data = array();
+                'userIcon' => Auth::user()->icon]);
         }
     }
 
