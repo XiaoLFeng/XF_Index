@@ -28,6 +28,7 @@ Route::get('about',[Index::class,'ViewAboutMe'])->name('about');
 
 Route::prefix('function')->group(function () {
     Route::get('link',[Link::class,'ViewLink'])->name('function.link');
+    Route::get('make-friend',[Link::class,'ViewMakeFriend'])->name('function.make-friend');
     Route::get('sponsor',function () {
         return view('function.sponsor');
     })->name('function.sponsor');

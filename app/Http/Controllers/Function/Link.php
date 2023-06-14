@@ -32,6 +32,12 @@ class Link extends Controller
         return view('function.link',$this->data);
     }
 
+    protected function ViewMakeFriend(): Factory|View|Application
+    {
+        $this->data['webSubTitle'] = '添加友链';
+        return view('function.make-friend',$this->data);
+    }
+
     private function GetFriendsLink(array &$data): void
     {
         $data['blogLink'] = DB::table('blog_link')->whereNotIn('blog_link.blogLocation',[0])->get()->toArray();
