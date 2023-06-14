@@ -28,8 +28,6 @@ class CreateBlogLinkTable extends Migration
             $table->boolean('blogRssJudge')->default(0);
             $table->text('blogRSS')->nullable();
             $table->string('blogServerHost')->nullable();
-            $table->boolean('blogAdvJudge')->default(0);
-            $table->boolean('blogSecurityJudge')->default(1);
             $table->unsignedInteger('blogLocation')->default(0);
             $table->unsignedInteger('blogSetColor')->default(0);
             $table->timestamps();

@@ -21,6 +21,7 @@ class CreateBlogSortTable extends Migration
         Schema::create('blog_sort', function (Blueprint $table) {
             $table->id();
             $table->integer('sort')->comment('排序（数字越小权限越大）');
+            $table->boolean('userAble')->default(0)->comment('允许用户选择位置');
             $table->string('title')->comment('标题');
             $table->text('description')->comment('描述')->nullable();
         });
