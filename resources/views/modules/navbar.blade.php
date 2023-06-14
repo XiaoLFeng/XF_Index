@@ -3,8 +3,7 @@
         <div class="flex lg:flex-1">
             <a href="#" class="-m-1.5 p-1.5">
                 <span class="sr-only">Your Company</span>
-                <img class="h-8 w-auto" src="{{ asset('images/logo.jpg') }}"
-                     alt="">
+                <img class="h-8 w-auto rounded-full" src="{{ asset('images/logo.jpg') }}" alt="">
             </a>
         </div>
         <div class="flex lg:hidden">
@@ -27,11 +26,11 @@
                 <i class="bi bi-link-45deg"></i>
                 <span class="flex-1 ml-1 whitespace-nowrap">友链</span>
             </a>
-            <a href="#" class="text-sm font-semibold leading-6 text-gray-900">
+            <a href="{{ route('function.sponsor') }}" class="text-sm font-semibold leading-6 text-gray-900">
                 <i class="bi bi-piggy-bank"></i>
                 <span class="flex-1 ml-1 whitespace-nowrap">赞助</span>
             </a>
-            <a href="#" class="text-sm font-semibold leading-6 text-gray-900">
+            <a href="{{ route('function.music') }}" class="text-sm font-semibold leading-6 text-gray-900">
                 <i class="bi bi-music-note"></i>
                 <span class="flex-1 ml-1 whitespace-nowrap">音乐</span>
             </a>
