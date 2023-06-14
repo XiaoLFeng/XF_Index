@@ -44,13 +44,16 @@ Route::prefix('console')->middleware('auth')->group(function () {
 Route::prefix('auth')->group(function () {
     Route::redirect('','auth/login');
     Route::get('login', function () {
-        return view('auth.login');
+        $data = (new Index())->data;
+        return view('auth.login',$data);
     })->name('login');
     Route::get('register',function () {
-        return view('auth.register');
+        $data = (new Index())->data;
+        return view('auth.register',$data);
     })->name('register');
     Route::get('forgotpassword',function () {
-        return view('auth.forgotpassword');
+        $data = (new Index())->data;
+        return view('auth.forgotpassword',$data);
     })->name('forgotpassword');
     Route::match(['get','post'],'logout',function () {
         Auth::logout();
