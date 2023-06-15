@@ -9,7 +9,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersTable extends Migration
+class CreateBlogSortTable extends Migration
 {
     /**
      * Run the migrations.
@@ -18,13 +18,12 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('blog_sort', function (Blueprint $table) {
             $table->id();
-            $table->string('username',40);
-            $table->string('email',100)->unique();
-            $table->string('password',255);
-            $table->rememberToken();
-            $table->timestamps();
+            $table->integer('sort')->comment('排序（数字越小权限越大）');
+            $table->boolean('userAble')->default(0)->comment('允许用户选择位置');
+            $table->string('title')->comment('标题');
+            $table->text('description')->comment('描述')->nullable();
         });
     }
 
@@ -35,6 +34,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('blog_sort');
     }
 }

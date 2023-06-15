@@ -5,6 +5,9 @@
  * https://www.x-lf.com/
  */
 
+use App\Http\Controllers\Console\Dashboard;
+use App\Http\Controllers\Function\Link;
+use App\Http\Controllers\Index;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
@@ -20,26 +23,37 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [Index::class,'ViewIndex'])->name('home');
+Route::get('about',[Index::class,'ViewAboutMe'])->name('about');
+
+Route::prefix('function')->group(function () {
+    Route::get('link',[Link::class,'ViewLink'])->name('function.link');
+    Route::get('make-friend',[Link::class,'ViewMakeFriend'])->name('function.make-friend');
+    Route::get('sponsor',function () {
+        return view('function.sponsor');
+    })->name('function.sponsor');
+    Route::get('music',function () {
+        return view('function.music');
+    })->name('function.music');
+});
 
 Route::prefix('console')->middleware('auth')->group(function () {
-    Route::get('dashboard', function () {
-        return view('console.dashboard');
-    })->name('console.dashboard');
+    Route::get('dashboard', [Dashboard::class,'ViewDashboard'])->name('console.dashboard');
 });
 
 Route::prefix('auth')->group(function () {
     Route::redirect('','auth/login');
     Route::get('login', function () {
-        return view('auth.login');
+        $data = (new Index())->data;
+        return view('auth.login',$data);
     })->name('login');
     Route::get('register',function () {
-        return view('auth.register');
+        $data = (new Index())->data;
+        return view('auth.register',$data);
     })->name('register');
     Route::get('forgotpassword',function () {
-        return view('auth.forgotpassword');
+        $data = (new Index())->data;
+        return view('auth.forgotpassword',$data);
     })->name('forgotpassword');
     Route::match(['get','post'],'logout',function () {
         Auth::logout();

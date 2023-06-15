@@ -9,7 +9,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersTable extends Migration
+class UpdateBlogLinkTable extends Migration
 {
     /**
      * Run the migrations.
@@ -18,13 +18,8 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('username',40);
-            $table->string('email',100)->unique();
-            $table->string('password',255);
-            $table->rememberToken();
-            $table->timestamps();
+        Schema::table('blog_link', function (Blueprint $table) {
+            $table->boolean('blogAddType')->default(0)->after('blogLocation');
         });
     }
 
@@ -35,6 +30,8 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('blog_link', function (Blueprint $table) {
+            //
+        });
     }
 }

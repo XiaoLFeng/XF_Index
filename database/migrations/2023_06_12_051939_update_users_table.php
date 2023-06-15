@@ -19,7 +19,8 @@ class UpdateUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->rememberToken();
+            $table->integer('linkId')->unique()->nullable()->default(null)->after('remember_token');
+            $table->string('icon')->default('https://api.x-lf.cn/avatar/?uid=1')->after('remember_token');
         });
     }
 

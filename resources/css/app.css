@@ -4,6 +4,7 @@
  * https://www.x-lf.com/
  */
 
+@import url("https://npm.akass.cn/bootstrap-icons@1.10.0/font/bootstrap-icons.css");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
