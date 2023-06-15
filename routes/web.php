@@ -6,7 +6,8 @@
  */
 
 use App\Http\Controllers\Console\Dashboard;
-use App\Http\Controllers\Function\Link;
+use App\Http\Controllers\Console\Link as ConsoleLink;
+use App\Http\Controllers\Function\Link as UserLink;
 use App\Http\Controllers\Index;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
@@ -27,8 +28,8 @@ Route::get('/', [Index::class,'ViewIndex'])->name('home');
 Route::get('about',[Index::class,'ViewAboutMe'])->name('about');
 
 Route::prefix('function')->group(function () {
-    Route::get('link',[Link::class,'ViewLink'])->name('function.link');
-    Route::get('make-friend',[Link::class,'ViewMakeFriend'])->name('function.make-friend');
+    Route::get('link',[UserLink::class,'ViewLink'])->name('function.link');
+    Route::get('make-friend',[UserLink::class,'ViewMakeFriend'])->name('function.make-friend');
     Route::get('sponsor',function () {
         return view('function.sponsor');
     })->name('function.sponsor');
@@ -39,6 +40,11 @@ Route::prefix('function')->group(function () {
 
 Route::prefix('console')->middleware('auth')->group(function () {
     Route::get('dashboard', [Dashboard::class,'ViewDashboard'])->name('console.dashboard');
+    Route::prefix('friends-link')->group(function () {
+        Route::redirect('list','list/1');
+        Route::get('list',[ConsoleLink::class,'ViewList'])->name('console.friends-link.list');
+        Route::get('check',[ConsoleLink::class,'ViewCheck'])->name('console.friends-link.check');
+    });
 });
 
 Route::prefix('auth')->group(function () {

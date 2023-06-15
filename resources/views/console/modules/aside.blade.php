@@ -11,7 +11,7 @@
                 </a>
             </li>
             <li>
-                <a href="#"
+                <a href="{{ route('console.dashboard') }}"
                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                     <i class="bi bi-layout-sidebar-inset"></i>
                     <span class="ml-3">概况</span>
@@ -27,16 +27,18 @@
                 </button>
                 <ul id="dropdown-example" class="hidden py-2 space-y-2">
                     <li>
-                        <a href="#"
-                           class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Products</a>
+                        <a href="{{ route('console.friends-link.list') }}"
+                           class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+                            <i class="bi bi-list-task"></i>
+                            <span class="ml-3">列表管理</span>
+                        </a>
                     </li>
                     <li>
-                        <a href="#"
-                           class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Billing</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                           class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Invoice</a>
+                        <a href="#{{ route('console.friends-link.check') }}"
+                           class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+                            <i class="bi bi-cloud-check"></i>
+                            <span class="ml-3">待审核</span>
+                        </a>
                     </li>
                 </ul>
             </li>
