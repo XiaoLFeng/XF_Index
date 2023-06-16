@@ -29,6 +29,7 @@ class Link extends Controller
 
     protected function ViewList(Request $request): Factory|View|Application|RedirectResponse
     {
+        $this->data['request'] = $request;
         $dataMarge = [
             'blogFriendsTotal' => DB::table('blog_link')
                 ->whereNotIn('blog_link.blogLocation', [0])
@@ -59,11 +60,10 @@ class Link extends Controller
                 'unactive' => 'px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white',
             ];
             $this->data['blogCount'] = ceil($this->data['blogCount']/10);
+            if ($this->data['request']->page > $this->data['blogCount']-1) return Response::redirectTo(route('console.friends-link.list'));
         } else {
             $this->data['blog'] = DB::select("SELECT * FROM xf_index.blog_link WHERE blogName LIKE '%$request->search%' OR blogUrl LIKE '%$request->search%' ORDER BY id");
         }
-        $this->data['request'] = $request;
-        if ($this->data['request']->page > $this->data['blogCount']-1) return Response::redirectTo(route('console.friends-link.list'));
         $this->data = array_merge($this->data, $dataMarge);
         return view('console.friends-link.list', $this->data);
     }
