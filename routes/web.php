@@ -44,6 +44,8 @@ Route::prefix('console')->middleware('auth')->group(function () {
         Route::redirect('list','list/1');
         Route::get('list',[ConsoleLink::class,'ViewList'])->name('console.friends-link.list');
         Route::get('check',[ConsoleLink::class,'ViewCheck'])->name('console.friends-link.check');
+        Route::get('edit/{page}',[ConsoleLink::class,'ViewEdit'])->name('console.friends-link.edit');
+        Route::get('add',[ConsoleLink::class,'ViewAdd'])->name('console.friends-link.add');
     });
 });
 
