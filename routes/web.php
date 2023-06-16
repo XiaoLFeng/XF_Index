@@ -51,6 +51,8 @@ Route::prefix('console')->middleware('auth')->group(function () {
             return $ConsoleLink->ViewEdit($request,$userId);
         })->name('console.friends-link.edit');
         Route::get('add',[ConsoleLink::class,'ViewAdd'])->name('console.friends-link.add');
+        Route::get('sort',[ConsoleLink::class,'ViewSort'])->name('console.friends-link.sort');
+        Route::get('color',[ConsoleLink::class,'ViewColor'])->name('console.friends-link.color');
     });
 });
 

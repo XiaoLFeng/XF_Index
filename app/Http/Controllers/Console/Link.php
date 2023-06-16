@@ -35,6 +35,14 @@ class Link extends Controller
         $this->data['blog'] = [
             $resultBlog,
         ];
+        $this->data['blogSort'] = DB::table('blog_sort')
+            ->orderBy('sort')
+            ->get()
+            ->toArray();
+        $this->data['blogColor'] = DB::table('blog_color')
+            ->orderBy('id')
+            ->get()
+            ->toArray();
         // 没有查询到执行删除
         if ($this->data['blog'][0] == null) return Response::redirectTo(route('console.friends-link.list'));
         return view('console.friends-link.edit', $this->data);
@@ -89,5 +97,15 @@ class Link extends Controller
     protected function ViewAdd(Request $request): Factory|View|Application
     {
         return view('console.friends-link.add', $this->data);
+    }
+
+    protected function ViewSort(): Factory|View|Application
+    {
+        return view('console.friends-link.sort',$this->data);
+    }
+
+    protected function ViewColor(): Factory|View|Application
+    {
+        return view('concole.friends-link.color',$this->data);
     }
 }
