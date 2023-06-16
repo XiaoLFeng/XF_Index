@@ -9,6 +9,7 @@ use App\Http\Controllers\Console\Dashboard;
 use App\Http\Controllers\Console\Link as ConsoleLink;
 use App\Http\Controllers\Function\Link as UserLink;
 use App\Http\Controllers\Index;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
@@ -44,7 +45,11 @@ Route::prefix('console')->middleware('auth')->group(function () {
         Route::redirect('list','list/1');
         Route::get('list',[ConsoleLink::class,'ViewList'])->name('console.friends-link.list');
         Route::get('check',[ConsoleLink::class,'ViewCheck'])->name('console.friends-link.check');
-        Route::get('edit/{page}',[ConsoleLink::class,'ViewEdit'])->name('console.friends-link.edit');
+        Route::get('edit/{userId}',function ($userId) {
+            $ConsoleLink = new ConsoleLink();
+            $request = new Request();
+            return $ConsoleLink->ViewEdit($request,$userId);
+        })->name('console.friends-link.edit');
         Route::get('add',[ConsoleLink::class,'ViewAdd'])->name('console.friends-link.add');
     });
 });
