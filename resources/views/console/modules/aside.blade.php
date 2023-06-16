@@ -40,6 +40,13 @@
                             <span class="ml-3">待审核</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('console.friends-link.add') }}"
+                           class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+                            <i class="bi bi-person-plus"></i>
+                            <span class="ml-3">添加友链</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li>
