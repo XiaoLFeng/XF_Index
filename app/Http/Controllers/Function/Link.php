@@ -12,8 +12,13 @@ use App\Http\Controllers\Index;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Response;
+use Nette\Schema\ValidationException;
 
 class Link extends Controller
 {
@@ -25,17 +30,102 @@ class Link extends Controller
         $this->data = $data->data;
     }
 
-    protected function ViewLink(Request $request): Factory|View|Application
+    protected function viewLink(Request $request): Factory|View|Application
     {
         $this->data['webSubTitle'] = '友链';
         $this->GetFriendsLink($this->data);
         return view('function.link',$this->data);
     }
 
-    protected function ViewMakeFriend(): Factory|View|Application
+    protected function viewMakeFriend(): Factory|View|Application
     {
         $this->data['webSubTitle'] = '添加友链';
         return view('function.make-friend',$this->data);
+    }
+
+    public function apiCustomAdd(Request $request): JsonResponse
+    {
+        // 检查数据
+        try {
+            $request->validate([
+                'userEmail' => 'required|email',
+                'userServerHost' => 'required|string',
+                'userBlog' => 'required|string',
+                'userUrl' => 'required|string',
+                'userDescription' => 'required|string',
+                'userIcon' => 'required|string',
+                'checkRssJudge' => 'boolean',
+                'userRss' => 'string',
+                'userLocation' => 'required|int',
+                'userSelColor' => 'required|int'
+            ]);
+
+            // 检查数据
+            if (empty($request->checkRssJudge)) {
+                $request->checkRssJudge = 0;
+            }
+
+            // 根据数据库检查邮箱用户是否已存在
+            $resultBlog = DB::table('blog_link')
+                ->where([
+                    ['blogOwnEmail','=',$request->userEmail,'or'],
+                    ['blogName','=',$request->userBlog,'or'],
+                    ['blogUrl','=',$request->userUrl,'or']
+                ])->get()->toArray();
+
+            if (empty($resultBlog)) {
+                // 数据写入数据库
+                $insertData = DB::table('blog_link')
+                    ->insert([
+                        'blogOwnEmail' => $request->userEmail,
+                        'blogUrl' => $request->userUrl,
+                        'blogName' => $request->userBlog,
+                        'blogDescription' => $request->userDescription,
+                        'blogIcon' => $request->userIcon,
+                        'blogRssJudge' => $request->checkRssJudge,
+                        'blogRSS' => $request->userRss,
+                        'blogUserLocation' => $request->userLocation,
+                        'blogSetColor' => $request->userSelColor,
+                    ]);
+                if ($insertData) {
+                    // 邮件发送系统
+                    Mail::send('mail.link-custom-add',$request->toArray(),function (Message $mail) {
+                        global $request;
+                        $mail->from(env('MAIL_USERNAME'),env('APP_NAME'));
+                        $mail->to($request->userEmail);
+                        $mail->subject(env('APP_NAME').'-友链等待审核通知');
+                    });
+                    // 消息成功通知
+                    $returnData = [
+                        'output' => 'Success',
+                        'code' => 200,
+                        'data' => [
+                            'message' => '您已成功申请',
+                        ],
+                    ];
+                }
+            } else {
+                $returnData = [
+                    'output' => 'AlreadyUser',
+                    'code' => 403,
+                    'data' => [
+                        'message' => '已有此用户，您是否已在本博客注册过',
+                    ],
+                ];
+            }
+        } catch (ValidationException $exception) {
+            $errors = $exception->validator->errors();
+            $returnData = [
+                'output' => 'DataFormatError',
+                'code' => 403,
+                'data' => [
+                    'message' => '输入内容有错误',
+                    'error' => $errors,
+                ],
+            ];
+        }
+
+        return Response::json($returnData,$returnData['code']);
     }
 
     private function GetFriendsLink(array &$data): void
