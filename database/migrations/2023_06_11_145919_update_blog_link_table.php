@@ -28,6 +28,10 @@ class UpdateBlogLinkTable extends Migration
                 ->nullable()
                 ->after('blogUserLocation')
                 ->comment('绑定已注册用户');
+            $table->string('blogRemark')
+                ->nullable()
+                ->after('blogForUser')
+                ->comment('博客备注信息');
         });
     }
 
