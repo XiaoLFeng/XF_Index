@@ -57,7 +57,8 @@ class Link extends Controller
                 'checkRssJudge' => 'boolean',
                 'userRss' => 'string',
                 'userLocation' => 'required|int',
-                'userSelColor' => 'required|int'
+                'userSelColor' => 'required|int',
+                'userRemark' => 'required|string',
             ]);
 
             // 检查数据
@@ -86,6 +87,7 @@ class Link extends Controller
                         'blogRSS' => $request->userRss,
                         'blogUserLocation' => $request->userLocation,
                         'blogSetColor' => $request->userSelColor,
+                        'blogRemark' => $request->userRemark,
                     ]);
                 if ($insertData) {
                     // 邮件发送系统
