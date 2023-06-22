@@ -6,6 +6,7 @@
  */
 
 use App\Http\Controllers\Authme;
+use App\Http\Controllers\Function\Link;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
@@ -26,13 +27,22 @@ Route::middleware('auth')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('api')->group(function () {
-    Route::prefix('auth')->group(function () {
-        Route::post('login',[Authme::class,'Login'])->name('api.auth.login');
-        Route::post('register',[Authme::class,'Register'])->name('api.auth.register');
-        Route::match(['get','post'],'logout',function () {
-            Auth::logout();
-            return Response::redirectTo('');
-        })->name('logout');
+// 登陆类
+Route::prefix('auth')->group(function () {
+    Route::post('login',[Authme::class,'Login'])->name('api.auth.login');
+    Route::post('register',[Authme::class,'Register'])->name('api.auth.register');
+    Route::match(['get','post'],'logout',function () {
+        Auth::logout();
+        return Response::redirectTo('');
+    })->name('logout');
+});
+
+// 友链类
+Route::prefix('link')->group(function () {
+    Route::prefix('console')->group(function () {
+
+    });
+    Route::prefix('custom')->group(function () {
+        Route::post('add',[Link::class,'apiCustomAdd']);
     });
 });
