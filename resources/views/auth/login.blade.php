@@ -46,7 +46,7 @@
             <div>
                 <button type="submit"
                         class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                        onclick="user_change()">
+                        onclick="buttonLogin()">
                     登录
                 </button>
             </div>
@@ -63,22 +63,22 @@
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/jquery.js') }}"></script>
 <script type="text/javascript">
-    function user_change() {
-        $.ajax({
-            async: true,
-            method: "POST",
-            data: $('#FormData').serialize(),
-            url: '{{ route('api.auth.login') }}',
-            dataType: "json",
-            success: function (returnData) {
-                if (returnData.output === "Success") {
-                    window.location.href = '{{ route('home') }}'
-                } else {
-                    window.alert("错误！")
-                }
+function buttonLogin() {
+    $.ajax({
+        async: true,
+        method: "POST",
+        data: $('#FormData').serialize(),
+        url: '{{ route('api.auth.login') }}',
+        dataType: "json",
+        success: function (returnData) {
+            if (returnData.output === "Success") {
+                window.location.href = '{{ route('home') }}'
+            } else {
+                window.alert("错误！")
             }
-        });
-    }
+        }
+    });
+}
 </script>
 {!! $webFooter !!}
 </html>
