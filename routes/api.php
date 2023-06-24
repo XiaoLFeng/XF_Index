@@ -43,6 +43,6 @@ Route::prefix('link')->group(function () {
 
     });
     Route::prefix('custom')->group(function () {
-        Route::post('add',[Link::class,'apiCustomAdd']);
+        Route::post('add',[Link::class,'apiCustomAdd'])->name('api.link.custom.add');
     });
 });
