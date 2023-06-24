@@ -18,7 +18,7 @@ use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
-use Nette\Schema\ValidationException;
+use Illuminate\Support\Facades\Validator;
 
 class Link extends Controller
 {
@@ -45,22 +45,41 @@ class Link extends Controller
 
     public function apiCustomAdd(Request $request): JsonResponse
     {
+        /** @var array $returnData Json的 return 返回值 */
+        /** @var Validator $dataCheck 数据判断 */
+        /** @var array $errorInfo 错误信息 */
         // 检查数据
-        try {
-            $request->validate([
-                'userEmail' => 'required|email',
-                'userServerHost' => 'required|string',
-                'userBlog' => 'required|string',
-                'userUrl' => 'required|string',
-                'userDescription' => 'required|string',
-                'userIcon' => 'required|string',
-                'checkRssJudge' => 'boolean',
-                'userRss' => 'string',
-                'userLocation' => 'required|int',
-                'userSelColor' => 'required|int',
-                'userRemark' => 'required|string',
-            ]);
+        $dataCheck = Validator::make($request->all(),[
+            'userEmail' => 'required|email',
+            'userServerHost' => 'required|string',
+            'userBlog' => 'required|string',
+            'userUrl' => 'required|string',
+            'userDescription' => 'required|string',
+            'userIcon' => 'required|string',
+            'checkRssJudge' => 'boolean',
+            'userRss' => 'string',
+            'userLocation' => 'required|int',
+            'userSelColor' => 'required|int',
+            'userRemark' => 'required|string',
+        ]);
 
+        // 检查发现错误
+        if ($dataCheck->fails()) {
+            $errorType = array_keys($dataCheck->failed());
+            $i = 0;
+            foreach ($dataCheck->failed() as $valueData) {
+                $errorInfo[$errorType[$i]] = array_keys($valueData);
+                $i++;
+            }
+            $returnData = [
+                'output' => 'DataFormatError',
+                'code' => 403,
+                'data' => [
+                    'message' => '输入内容有错误',
+                    'error' => $errorInfo,
+                ],
+            ];
+        } else {
             // 检查数据
             if (empty($request->checkRssJudge)) {
                 $request->checkRssJudge = 0;
@@ -115,16 +134,6 @@ class Link extends Controller
                     ],
                 ];
             }
-        } catch (ValidationException $exception) {
-            $errors = $exception->validator->errors();
-            $returnData = [
-                'output' => 'DataFormatError',
-                'code' => 403,
-                'data' => [
-                    'message' => '输入内容有错误',
-                    'error' => $errors,
-                ],
-            ];
         }
 
         return Response::json($returnData,$returnData['code']);
