@@ -31,12 +31,21 @@ Route::get('about',[Index::class,'ViewAboutMe'])->name('about');
 Route::prefix('function')->group(function () {
     Route::get('link',[UserLink::class, 'viewLink'])->name('function.link');
     Route::get('make-friend',[UserLink::class, 'viewMakeFriend'])->name('function.make-friend');
+    Route::get('edit-search',[UserLink::class, 'viewSearchFriends'])->name('function.edit-search');
+    Route::get('edit-friend',[UserLink::class, 'viewEditFriend'])->name('function.edit-friend');
     Route::get('sponsor',function () {
         return view('function.sponsor');
     })->name('function.sponsor');
     Route::get('music',function () {
         return view('function.music');
     })->name('function.music');
+});
+
+Route::prefix('account')->middleware('auth')->group(function () {
+    Route::prefix('friend')->group(function () {
+        Route::get('link')->name('account.friend.link');
+        Route::get('edit')->name('account.friend.edit');
+    });
 });
 
 Route::prefix('console')->middleware('auth')->group(function () {
