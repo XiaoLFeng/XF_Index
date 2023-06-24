@@ -34,7 +34,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#{{ route('console.friends-link.check') }}"
+                        <a href="{{ route('console.friends-link.check') }}"
                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
                             <i class="bi bi-cloud-check"></i>
                             <span class="ml-3">待审核</span>

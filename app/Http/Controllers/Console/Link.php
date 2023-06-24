@@ -91,6 +91,11 @@ class Link extends Controller
 
     protected function ViewCheck(Request $request): Factory|View|Application
     {
+        // 检查是否存在含有未在本站分配位置
+        $this->data['blog'] = DB::table('blog_link')
+            ->whereIn('blog_link.blogLocation',[0])
+            ->get()
+            ->toArray();
         return view('console.friends-link.check', $this->data);
     }
 
@@ -106,6 +111,11 @@ class Link extends Controller
 
     protected function ViewColor(): Factory|View|Application
     {
-        return view('concole.friends-link.color',$this->data);
+        return view('console.friends-link.color',$this->data);
+    }
+
+    protected function apiConsoleAdd() {
+        // 检查数据
+
     }
 }

@@ -20,6 +20,18 @@ class UpdateBlogLinkTable extends Migration
     {
         Schema::table('blog_link', function (Blueprint $table) {
             $table->boolean('blogAddType')->default(0)->after('blogLocation');
+            $table->unsignedInteger('blogUserLocation')
+                ->default(0)
+                ->after('blogSetColor')
+                ->comment('用户期望位置');
+            $table->unsignedBigInteger('blogForUser')
+                ->nullable()
+                ->after('blogUserLocation')
+                ->comment('绑定已注册用户');
+            $table->string('blogRemark')
+                ->nullable()
+                ->after('blogForUser')
+                ->comment('博客备注信息');
         });
     }
 
