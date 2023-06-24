@@ -134,6 +134,111 @@ class Link extends Controller
         return Response::json($returnData, $returnData['code']);
     }
 
+    public function apiCustomSearch(Request $request): JsonResponse
+    {
+        /** @var array $returnData Json的 return 返回值 */
+        if (!empty($request->location_search)) {
+            if ($request->searchType == 'all') {
+                $resultData = DB::table('blog_link')
+                    ->where([
+                        ['blogName', 'LIKE', '%' . $request->location_search . '%', 'or'],
+                        ['blogUrl', 'LIKE', '%' . $request->location_search . '%', 'or'],
+                        ['blogOwnEmail', 'LIKE', '%' . $request->location_search . '%', 'or']])
+                    ->select('blogName','blogUrl','blogDescription','blogIcon')
+                    ->orderBy('id')
+                    ->get()
+                    ->toArray();
+                if (!empty($resultData)) {
+                    $returnData = [
+                        'output' => 'Success',
+                        'code' => 200,
+                        'data' => [
+                            'message' => '数据输出成功',
+                            'data' => $resultData,
+                        ],
+                    ];
+                } else {
+                    $returnData = [
+                        'output' => 'NoData',
+                        'code' => 200,
+                        'data' => [
+                            'message' => '没有数据',
+                        ],
+                    ];
+                }
+            } else {
+                if ($request->searchType == 'blogName') {
+                    $resultData = DB::table('blog_link')
+                        ->where([['blogName', 'LIKE', '%' . $request->location_search . '%']])
+                        ->select('blogName','blogUrl','blogDescription','blogIcon')
+                        ->orderBy('id')
+                        ->get()
+                        ->toArray();
+                    if (!empty($resultData)) {
+                        $returnData = [
+                            'output' => 'Success',
+                            'code' => 200,
+                            'data' => [
+                                'message' => '数据输出成功',
+                                'data' => $resultData,
+                            ],
+                        ];
+                    } else {
+                        $returnData = [
+                            'output' => 'NoData',
+                            'code' => 200,
+                            'data' => [
+                                'message' => '没有数据',
+                            ],
+                        ];
+                    }
+                } elseif ($request->searchType == 'blogUrl') {
+                    $resultData = DB::table('blog_link')
+                        ->where([['blogUrl', 'LIKE', '%' . $request->location_search . '%']])
+                        ->select('blogName','blogUrl','blogDescription','blogIcon')
+                        ->orderBy('id')
+                        ->get()
+                        ->toArray();
+                    if (!empty($resultData)) {
+                        $returnData = [
+                            'output' => 'Success',
+                            'code' => 200,
+                            'data' => [
+                                'message' => '数据输出成功',
+                                'data' => $resultData,
+                            ],
+                        ];
+                    } else {
+                        $returnData = [
+                            'output' => 'NoData',
+                            'code' => 200,
+                            'data' => [
+                                'message' => '没有数据',
+                            ],
+                        ];
+                    }
+                } else {
+                    $returnData = [
+                        'output' => 'TypeError',
+                        'code' => 403,
+                        'data' => [
+                            'message' => '类型错误请检查',
+                        ],
+                    ];
+                }
+            }
+        } else {
+            $returnData = [
+                'output' => 'SearchEmpty',
+                'code' => 403,
+                'data' => [
+                    'message' => '搜索为空，请输入内容',
+                ],
+            ];
+        }
+        return Response::json($returnData,$returnData['code']);
+    }
+
     protected function viewLink(Request $request): Factory|View|Application
     {
         $this->data['webSubTitle'] = '友链';
