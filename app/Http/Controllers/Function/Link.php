@@ -30,34 +30,22 @@ class Link extends Controller
         $this->data = $data->data;
     }
 
-    protected function viewLink(Request $request): Factory|View|Application
-    {
-        $this->data['webSubTitle'] = '友链';
-        $this->GetFriendsLink($this->data);
-        return view('function.link',$this->data);
-    }
-
-    protected function viewMakeFriend(): Factory|View|Application
-    {
-        $this->data['webSubTitle'] = '添加友链';
-        return view('function.make-friend',$this->data);
-    }
-
     public function apiCustomAdd(Request $request): JsonResponse
     {
         /** @var array $returnData Json的 return 返回值 */
         /** @var Validator $dataCheck 数据判断 */
         /** @var array $errorInfo 错误信息 */
+        /** @var array $errorSingle 输出单个错误信息 */
         // 检查数据
-        $dataCheck = Validator::make($request->all(),[
+        $dataCheck = Validator::make($request->all(), [
             'userEmail' => 'required|email',
             'userServerHost' => 'required|string',
             'userBlog' => 'required|string',
-            'userUrl' => 'required|string',
+            'userUrl' => 'required|regex:#[a-zA-z]+://[^\s]*#',
             'userDescription' => 'required|string',
-            'userIcon' => 'required|string',
+            'userIcon' => 'required|regex:#[a-zA-z]+://[^\s]*#',
             'checkRssJudge' => 'boolean',
-            'userRss' => 'string',
+            'userRss' => 'string|regex:#[a-zA-z]+://[^\s]*#',
             'userLocation' => 'required|int',
             'userSelColor' => 'required|int',
             'userRemark' => 'required|string',
@@ -69,6 +57,12 @@ class Link extends Controller
             $i = 0;
             foreach ($dataCheck->failed() as $valueData) {
                 $errorInfo[$errorType[$i]] = array_keys($valueData);
+                if ($i == 0) {
+                    $errorSingle = [
+                        'info' => $errorType[$i],
+                        'need' => $errorInfo[$errorType[$i]],
+                    ];
+                }
                 $i++;
             }
             $returnData = [
@@ -76,6 +70,7 @@ class Link extends Controller
                 'code' => 403,
                 'data' => [
                     'message' => '输入内容有错误',
+                    'errorSingle' => $errorSingle,
                     'error' => $errorInfo,
                 ],
             ];
@@ -88,9 +83,9 @@ class Link extends Controller
             // 根据数据库检查邮箱用户是否已存在
             $resultBlog = DB::table('blog_link')
                 ->where([
-                    ['blogOwnEmail','=',$request->userEmail,'or'],
-                    ['blogName','=',$request->userBlog,'or'],
-                    ['blogUrl','=',$request->userUrl,'or']
+                    ['blogOwnEmail', '=', $request->userEmail, 'or'],
+                    ['blogName', '=', $request->userBlog, 'or'],
+                    ['blogUrl', '=', $request->userUrl, 'or']
                 ])->get()->toArray();
 
             if (empty($resultBlog)) {
@@ -110,11 +105,11 @@ class Link extends Controller
                     ]);
                 if ($insertData) {
                     // 邮件发送系统
-                    Mail::send('mail.link-custom-add',$request->toArray(),function (Message $mail) {
+                    Mail::send('mail.link-custom-add', $request->toArray(), function (Message $mail) {
                         global $request;
-                        $mail->from(env('MAIL_USERNAME'),env('APP_NAME'));
+                        $mail->from(env('MAIL_USERNAME'), env('APP_NAME'));
                         $mail->to($request->userEmail);
-                        $mail->subject(env('APP_NAME').'-友链等待审核通知');
+                        $mail->subject(env('APP_NAME') . '-友链等待审核通知');
                     });
                     // 消息成功通知
                     $returnData = [
@@ -136,12 +131,46 @@ class Link extends Controller
             }
         }
 
-        return Response::json($returnData,$returnData['code']);
+        return Response::json($returnData, $returnData['code']);
+    }
+
+    protected function viewLink(Request $request): Factory|View|Application
+    {
+        $this->data['webSubTitle'] = '友链';
+        $this->GetFriendsLink($this->data);
+        return view('function.link', $this->data);
     }
 
     private function GetFriendsLink(array &$data): void
     {
-        $data['blogLink'] = DB::table('blog_link')->whereNotIn('blog_link.blogLocation',[0])->get()->toArray();
+        $data['blogLink'] = DB::table('blog_link')->whereNotIn('blog_link.blogLocation', [0])->get()->toArray();
         $data['blogSort'] = DB::table('blog_sort')->orderBy('blog_sort.sort')->get()->toArray();
+    }
+
+    protected function viewMakeFriend(): Factory|View|Application
+    {
+        $this->data['webSubTitle'] = '添加友链';
+        $this->data['blogColor'] = DB::table('blog_color')
+            ->orderBy('id')
+            ->get()
+            ->toArray();
+        $this->data['blogSort'] = DB::table('blog_sort')
+            ->orderBy('sort')
+            ->get()
+            ->toArray();
+        return view('function.make-friend', $this->data);
+    }
+
+    protected function viewEditFriend(): Factory|View|Application
+    {
+        $this->data['webSubTitle'] = '修改友链';
+
+        return view('function.edit-friend', $this->data);
+    }
+
+    protected function viewSearchFriends(): Factory|View|Application
+    {
+        $this->data['webSubTitle'] = '查询列表';
+        return view('function.edit-search', $this->data);
     }
 }
