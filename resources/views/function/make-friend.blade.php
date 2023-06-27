@@ -296,8 +296,10 @@ function ajax() {
         dataType: "json",
         success: function (returnData) {
             if (returnData.output === "Success") {
-                Toast.toggle('友链申请成功','<i class="bi bi-check-circle text-green-500"></i>');
-                location.href = '{{ route('home') }}'
+                Toast.toggle('友链申请成功，即将跳转','<i class="bi bi-check-circle text-green-500"></i>');
+                setTimeout(function () {
+                    location.href = '{{ route('function.link') }}';
+                },3000);
             } else {
                 Toast('未知错误','<i class="bi bi-x-circle text-red-500"></i>');
             }

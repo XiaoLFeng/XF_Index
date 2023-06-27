@@ -48,7 +48,7 @@ class Link extends Controller
             'userRss' => 'string|regex:#[a-zA-z]+://[^\s]*#',
             'userLocation' => 'required|int',
             'userSelColor' => 'required|int',
-            'userRemark' => 'required|string',
+            'userRemark' => 'string',
         ]);
 
         // 检查发现错误
