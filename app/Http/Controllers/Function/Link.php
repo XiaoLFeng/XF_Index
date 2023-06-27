@@ -143,7 +143,7 @@ class Link extends Controller
                     ->where([
                         ['blogName', 'LIKE', '%' . $request->location_search . '%', 'or'],
                         ['blogUrl', 'LIKE', '%' . $request->location_search . '%', 'or'],
-                        ['blogOwnEmail', 'LIKE', '%' . $request->location_search . '%', 'or']])
+                        ['blogOwnEmail', '=', $request->location_search, 'or']])
                     ->select('blogName','blogUrl','blogDescription','blogIcon')
                     ->orderBy('id')
                     ->get()
