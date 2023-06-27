@@ -297,7 +297,7 @@ function ajax() {
         success: function (returnData) {
             if (returnData.output === "Success") {
                 Toast.toggle('友链申请成功','<i class="bi bi-check-circle text-green-500"></i>');
-                location.href = '{{ route('home') }}'
+                location.href = '{{ route('function.link') }}'
             } else {
                 Toast('未知错误','<i class="bi bi-x-circle text-red-500"></i>');
             }

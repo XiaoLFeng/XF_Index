@@ -7,7 +7,7 @@
 </head>
 <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse;border: 1px solid #cccccc;box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175)">
     <tr>
-        <td align="center" bgcolor="#70bbd9" style="padding: 30px 0 30px 0; font-size: 30px;">$G_TitleName</td>
+        <td align="center" bgcolor="#70bbd9" style="padding: 30px 0 30px 0; font-size: 30px;">{{ env('APP_NAME') }}</td>
     </tr>
     <tr>
         <td>
@@ -26,7 +26,7 @@
                     <td style="padding: 0px 5px 5px 0px;color: #000000; font-family: Arial, sans-serif; font-size: 16px;">
                         您好 <a style="text-decoration: none;color: #198754;" href="{{ $userUrl }}"><b>{{ $userBlog }}</b></a> 的站长：<b>{{ $userEmail }}</b><br/>
                         您在本博客（<a style="text-decoration: none;color: #198754;" href="{{ env('APP_BLOG') }}">{{ env('APP_NAME') }}</a>）申请了友链<br/>
-                        <hr style="padding: 0px 5px 5px 0px;"/>
+                        <hr/>
                         请在确认一次您的信息是否正确：<br/>
                         <ul>
                             <li>博主邮箱：{{ $userEmail }}</li>
@@ -35,7 +35,7 @@
                             <li>图片地址：{{ $userIcon }}</li>
                             <li>贵站介绍：{{ $userDescription }}</li>
                             <li>备注内容：{{ $userRemark }}</li>
-                            <li>RSS地址：{{ $userRSS }}</li>
+                            @if(!empty($checkRssJudge))<li>RSS地址：{{ $userRSS }}</li> @endif
                         </ul>
                     </td>
                 </tr>
