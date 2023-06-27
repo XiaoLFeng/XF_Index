@@ -13,10 +13,12 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 
@@ -30,7 +32,7 @@ class Link extends Controller
         $this->data = $data->data;
     }
 
-    public function apiCustomAdd(Request $request): JsonResponse
+    public function apiCustomAdd(HttpRequest $request): JsonResponse
     {
         /** @var array $returnData Json的 return 返回值 */
         /** @var Validator $dataCheck 数据判断 */
@@ -134,7 +136,7 @@ class Link extends Controller
         return Response::json($returnData, $returnData['code']);
     }
 
-    public function apiCustomSearch(Request $request): JsonResponse
+    public function apiCustomSearch(HttpRequest $request): JsonResponse
     {
         /** @var array $returnData Json的 return 返回值 */
         if (!empty($request->location_search)) {
@@ -144,7 +146,7 @@ class Link extends Controller
                         ['blogName', 'LIKE', '%' . $request->location_search . '%', 'or'],
                         ['blogUrl', 'LIKE', '%' . $request->location_search . '%', 'or'],
                         ['blogOwnEmail', '=', $request->location_search, 'or']])
-                    ->select('blogName','blogUrl','blogDescription','blogIcon')
+                    ->select('id', 'blogName', 'blogUrl', 'blogDescription', 'blogIcon')
                     ->orderBy('id')
                     ->get()
                     ->toArray();
@@ -170,7 +172,7 @@ class Link extends Controller
                 if ($request->searchType == 'blogName') {
                     $resultData = DB::table('blog_link')
                         ->where([['blogName', 'LIKE', '%' . $request->location_search . '%']])
-                        ->select('blogName','blogUrl','blogDescription','blogIcon')
+                        ->select('id', 'blogName', 'blogUrl', 'blogDescription', 'blogIcon')
                         ->orderBy('id')
                         ->get()
                         ->toArray();
@@ -195,7 +197,7 @@ class Link extends Controller
                 } elseif ($request->searchType == 'blogUrl') {
                     $resultData = DB::table('blog_link')
                         ->where([['blogUrl', 'LIKE', '%' . $request->location_search . '%']])
-                        ->select('blogName','blogUrl','blogDescription','blogIcon')
+                        ->select('id', 'blogName', 'blogUrl', 'blogDescription', 'blogIcon')
                         ->orderBy('id')
                         ->get()
                         ->toArray();
@@ -236,10 +238,45 @@ class Link extends Controller
                 ],
             ];
         }
-        return Response::json($returnData,$returnData['code']);
+        return Response::json($returnData, $returnData['code']);
     }
 
-    protected function viewLink(Request $request): Factory|View|Application
+    public function viewEditFriend($friendId): Application|Factory|View|RedirectResponse
+    {
+        // 检查内容是否为空
+        if (!empty($friendId)) {
+            $this->data['webSubTitle'] = '修改友链';
+
+            // 检查这个ID是否存在
+            $resultBlog = DB::table('blog_link')
+                ->find($friendId);
+            if (!empty($resultBlog->id)) {
+                // 检查是否存在Cookie作为已验证
+                if (Request::hasCookie('friend_edit')) {
+                    // 检查COOKIE与所验证ID是否匹配
+                    if (password_verify($friendId,Request::cookie('friend_edit'))) {
+                        return view('function.edit-friend', $this->data);
+                    } else {
+                        response()->withCookie(cookie('friend_edit',null,time()-1));
+                        return Response::redirectTo(route('function.edit-search'));
+                    }
+                } else {
+                    // 验证页面
+                    // 加密用户邮箱
+                    $this->data['blog'] = $resultBlog;
+                    return view('function.edit-check', $this->data);
+                }
+            } else {
+                // 不存在这一个ID用户
+                return Response::redirectTo(route('function.edit-search'));
+            }
+        } else {
+            // ID为空的时候就返回数据
+            return Response::redirectTo(route('function.edit-search'));
+        }
+    }
+
+    protected function viewLink(HttpRequest $request): Factory|View|Application
     {
         $this->data['webSubTitle'] = '友链';
         $this->GetFriendsLink($this->data);
@@ -266,16 +303,28 @@ class Link extends Controller
         return view('function.make-friend', $this->data);
     }
 
-    protected function viewEditFriend(): Factory|View|Application
-    {
-        $this->data['webSubTitle'] = '修改友链';
-
-        return view('function.edit-friend', $this->data);
-    }
-
     protected function viewSearchFriends(): Factory|View|Application
     {
         $this->data['webSubTitle'] = '查询列表';
         return view('function.edit-search', $this->data);
+    }
+
+    protected function viewSearchFriend($friendId): Factory|View|Application|RedirectResponse
+    {
+        $this->data['webSubTitle'] = '查询列表';
+        if (!empty($friendId)) {
+            // 检查 friendId 是否存在
+            $resultBlog = DB::table('blog_link')
+                ->select('id','blogOwnEmail')
+                ->find($friendId);
+            if (!empty($resultBlog->id)) {
+                $this->data['blog'] = $resultBlog;
+                return view('function.edit-check', $this->data);
+            } else {
+                return Response::redirectTo(route('function.edit-search'));
+            }
+        } else {
+            return Response::redirectTo(route('function.edit-search'));
+        }
     }
 }
