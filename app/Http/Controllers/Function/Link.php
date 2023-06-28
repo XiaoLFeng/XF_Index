@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Validator;
 class Link extends Controller
 {
     protected array $data;
+    private array $sendEmail;
 
     public function __construct()
     {
@@ -32,6 +33,12 @@ class Link extends Controller
         $this->data = $data->data;
     }
 
+    /**
+     * 添加友链API
+     *
+     * @param HttpRequest $request 获取HTTP中 Request 数据
+     * @return JsonResponse 返回JSON数据
+     */
     public function apiCustomAdd(HttpRequest $request): JsonResponse
     {
         /** @var array $returnData Json的 return 返回值 */
@@ -136,6 +143,12 @@ class Link extends Controller
         return Response::json($returnData, $returnData['code']);
     }
 
+    /**
+     * 搜索友链数据
+     *
+     * @param HttpRequest $request 获取HTTP中 Request 数据
+     * @return JsonResponse 返回JSON数据
+     */
     public function apiCustomSearch(HttpRequest $request): JsonResponse
     {
         /** @var array $returnData Json的 return 返回值 */
@@ -241,6 +254,151 @@ class Link extends Controller
         return Response::json($returnData, $returnData['code']);
     }
 
+    /**
+     * 检查数据验证是否正确
+     *
+     * @param HttpRequest $request 获取HTTP中 Request 数据
+     * @return JsonResponse 返回JSON数据
+     */
+    public function apiCustomBlogCheck(HttpRequest $request): JsonResponse
+    {
+        /** @var array $returnData Json的 return 返回值 */
+        // 验证数据
+        $resultBlog = DB::table('blog_link')
+            ->select('id', 'blogOwnEmail')
+            ->find((int)$request->id);
+        if (!empty($resultBlog->id)) {
+            // 检查输入博客是否对应
+            if (!empty($resultBlog->blogOwnEmail)) {
+                if (strcmp($resultBlog->blogOwnEmail, $request->email) == 0) {
+                    // 生成验证码（筛查内容）
+                    $resultVerifyCode = DB::table('code')
+                        ->where([
+                            ['email', '=', $resultBlog->blogOwnEmail],
+                            ['type', '=', 'CODE-CUSTOM-CHECK'],
+                            ['time', '>', time()]])
+                        ->get()
+                        ->toArray();
+                    // 不存在验证码，生成验证码并存入数据库中
+                    if (empty($resultVerifyCode[0]->id)) {
+                        // 生成6位数验证码
+                        $verifyCode = null;
+                        for ($i = 0; $i < 6; $i++)
+                            $verifyCode .= rand(0, 9);
+
+                        // 存入数据库
+                        DB::table('code')
+                            ->insert([
+                                'email' => $resultBlog->blogOwnEmail,
+                                'code' => $verifyCode,
+                                'type' => 'CODE-CUSTOM-CHECK',
+                                'sendTime' => time(),
+                                'time' => time()+900,
+                            ]);
+                        // 数据整理
+                        $this->sendEmail = [
+                            'userEmail' => $resultBlog->blogOwnEmail,
+                            'verifyCode' => $verifyCode,
+                            'sendTime' => time(),
+                        ];
+                        $this->apiCustomBlogCheckSendEmail();
+                        $returnData = [
+                            'output' => 'Success',
+                            'code' => 200,
+                            'data' => [
+                                'message' => '发送成功',
+                            ],
+                        ];
+                    } else {
+                        // 存在验证码，检查验证码是否需要重新发送
+                        $data = DB::table('code')
+                            ->where([
+                                ['email','=',$resultBlog->blogOwnEmail],
+                                ['type','=','CODE-CUSTOM-CHECK'],
+                                ['time','>',time()]])
+                            ->get()
+                            ->toArray();
+                        $this->sendEmail = [
+                            'userEmail' => $data[0]->email,
+                            'verifyCode' => $data[0]->code,
+                            'sendTime' => time(),
+                        ];
+                        if ($resultVerifyCode[0]->sendTime < time()-60) {
+                            // 发送验证码
+                            DB::table('code')
+                                ->where([
+                                    ['email','=',$resultBlog->blogOwnEmail],
+                                    ['type','=','CODE-CUSTOM-CHECK'],
+                                    ['time','>',time()]])
+                                ->update(['sendTime' => time()]);
+                            $this->apiCustomBlogCheckSendEmail();
+                            $returnData = [
+                                'output' => 'Success',
+                                'code' => 200,
+                                'data' => [
+                                    'message' => '重新发送成功',
+                                ],
+                            ];
+                        } else {
+                            // 避免重复发送
+                            $returnData = [
+                                'output' => 'SendingTimeTooFast',
+                                'code' => 403,
+                                'data' => [
+                                    'message' => '邮件重新发送时间过快',
+                                    'data' => [
+                                        'time' => 60 - (time() - $resultVerifyCode[0]->sendTime),
+                                    ],
+                                ],
+                            ];
+                        }
+                    }
+                } else {
+                    $returnData = [
+                        'output' => 'EmailMismatch',
+                        'code' => 403,
+                        'data' => [
+                            'message' => '邮箱与对应ID不匹配',
+                        ],
+                    ];
+                }
+            } else {
+                $returnData = [
+                    'output' => 'NoEmail',
+                    'code' => 403,
+                    'data' => [
+                        'message' => '对应ID没有绑定邮箱，请联系管理员',
+                    ],
+                ];
+            }
+        } else {
+            $returnData = [
+                'output' => 'NoBlog',
+                'code' => 403,
+                'data' => [
+                    'message' => '没有ID对应博客',
+                ],
+            ];
+        }
+        return Response::json($returnData, $returnData['code']);
+    }
+
+    /**
+     * 站长认证邮件发送模板
+     *
+     * @param array $data
+     * @return void
+     */
+    private function apiCustomBlogCheckSendEmail(): void
+    {
+        // 验证通过发送邮件
+        Mail::send('mail.link-custom-check', $this->sendEmail, function (Message $mail) {
+            $mail->from(env('MAIL_USERNAME'), env('APP_NAME'));
+            $mail->to($this->sendEmail['userEmail']);
+            $mail->subject(env('APP_NAME') . '-验证码（友链自助修改）');
+        });
+    }
+
     public function viewEditFriend($friendId): Application|Factory|View|RedirectResponse
     {
         // 检查内容是否为空
@@ -254,10 +412,10 @@ class Link extends Controller
                 // 检查是否存在Cookie作为已验证
                 if (Request::hasCookie('friend_edit')) {
                     // 检查COOKIE与所验证ID是否匹配
-                    if (password_verify($friendId,Request::cookie('friend_edit'))) {
+                    if (password_verify($friendId, Request::cookie('friend_edit'))) {
                         return view('function.edit-friend', $this->data);
                     } else {
-                        response()->withCookie(cookie('friend_edit',null,time()-1));
+                        response()->withCookie(cookie('friend_edit', null, time() - 1));
                         return Response::redirectTo(route('function.edit-search'));
                     }
                 } else {
