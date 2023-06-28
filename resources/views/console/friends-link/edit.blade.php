@@ -172,7 +172,7 @@
                                 <select id="userSelColor" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                     <option>请选择一个颜色</option>
                                     @if(empty($blogColor[0]))
-                                        <option><a href="{{ route('console.friends-link.color') }}">暂没有模块，点击添加模块</a></option>
+                                        <option>暂没有模块，请去板块添加模块</option>
                                     @else
                                         @foreach($blogColor as $blogValue)
                                             <option value="{{ $blogValue->id }}" @if($blog[0]->blogSetColor == $blogValue->id)selected @endif>{!! $blogValue->comment !!}</option>
