@@ -43,5 +43,5 @@ jobs:
       - name: 生成应用程序密钥
         run: php artisan key:generate
 
-      - name: Execute tests
-        run: /phpunit
+      - name: 执行测试
+        run: vendor/bin/phpunit
