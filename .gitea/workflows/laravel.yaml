@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - name: 检查代码
-        uses: actions/checkout@v3
+        uses: https://github.com/actions/checkout@v3
 
       - name: 配置PHP
         uses: XiaoLFeng/setup-php@v2
@@ -43,5 +43,5 @@ jobs:
       - name: 生成应用程序密钥
         run: php artisan key:generate
 
-#      - name: Execute tests
-#        run: /phpunit
+      - name: Execute tests
+        run: /phpunit
