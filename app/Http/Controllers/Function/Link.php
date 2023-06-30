@@ -15,11 +15,9 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request as HttpRequest;
-use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 
@@ -438,6 +436,7 @@ class Link extends Controller
     public function apiCustomBlogVerify(HttpRequest $request): JsonResponse
     {
         /** @var array $returnData Json的 return 返回值 */
+        /** @var mixed $cookie 保存Cookie数据 */
         //数据验证
         $dataCheck = Validator::make($request->all(), [
             'id' => 'required|int',
@@ -446,6 +445,7 @@ class Link extends Controller
         ]);
         // 验证数据是否合法
         if (!$dataCheck->fails()) {
+            $cookie = cookie('friend_edit', '', -1, '/');
             // 检查内容是否存在
             $resultBlog = DB::table('blog_link')
                 ->select('id', 'blogOwnEmail')
@@ -466,8 +466,7 @@ class Link extends Controller
                             ->toArray();
                         if (!empty($resultCode[0]->id)) {
                             // 配置Cookie
-                            $Response = new HttpResponse();
-                            $Response->withCookie(cookie('friend_edit', password_hash($resultBlog->id, PASSWORD_DEFAULT), 15, '/'));
+                            $cookie = cookie('friend_edit', password_hash($resultBlog->id, PASSWORD_DEFAULT), 15, '/',);
                             // 完成验证删除验证码
                             DB::table('code')
                                 ->delete((int)$resultCode[0]->id);
@@ -540,10 +539,11 @@ class Link extends Controller
                 ],
             ];
         }
-        return Response::json($returnData, $returnData['code']);
+        return Response::json($returnData, $returnData['code'])
+            ->cookie($cookie);
     }
 
-    public function viewEditFriend($friendId): Application|Factory|View|RedirectResponse
+    protected function viewEditFriend(HttpRequest $request, $friendId): Application|Factory|View|RedirectResponse
     {
         // 检查内容是否为空
         if (!empty($friendId)) {
@@ -554,19 +554,27 @@ class Link extends Controller
                 ->find($friendId);
             if (!empty($resultBlog->id)) {
                 // 检查是否存在Cookie作为已验证
-                if (Request::hasCookie('friend_edit')) {
+                if ($request->hasCookie('friend_edit')) {
                     // 检查COOKIE与所验证ID是否匹配
-                    if (password_verify($friendId, Request::cookie('friend_edit'))) {
+                    if (password_verify($resultBlog->id, $request->cookie('friend_edit'))) {
+                        $this->data['blog'] = $resultBlog;
+                        $this->data['blogColor'] = DB::table('blog_color')
+                            ->orderBy('id')
+                            ->get()
+                            ->toArray();
+                        $this->data['blogSort'] = DB::table('blog_sort')
+                            ->orderBy('sort')
+                            ->get()
+                            ->toArray();
                         return view('function.edit-friend', $this->data);
                     } else {
-                        response()->withCookie(cookie('friend_edit', null, time() - 1));
-                        return Response::redirectTo(route('function.edit-search'));
+                        $cookie = cookie('friend_edit', '', -1, '/');
+                        return Response::redirectTo(route('function.edit-search'))
+                            ->cookie($cookie);
                     }
                 } else {
                     // 验证页面
-                    // 加密用户邮箱
-                    $this->data['blog'] = $resultBlog;
-                    return view('function.edit-check', $this->data);
+                    return Response::redirectTo(route('function.edit-searchOnly', $resultBlog->id));
                 }
             } else {
                 // 不存在这一个ID用户
