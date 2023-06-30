@@ -28,6 +28,15 @@ jobs:
           coverage: none
           tools: phpmd
 
-      - name: '运行PHPMD'
+      - name: '检查是否存在未使用代码'
+        run: phpmd ./ text unusedcode
+
+      - name: '检查命名问题'
+        run: phpmd ./ text naming
+
+      - name: '检查设计问题'
+        run: phpmd ./ text naming design
+
+      - name: '检查代码规模是否过大'
         run: phpmd ./ text codesize
         continue-on-error: true
