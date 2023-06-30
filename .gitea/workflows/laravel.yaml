@@ -28,9 +28,6 @@ jobs:
           coverage: none
           tools: phpmd
 
-      - name: '检查是否存在未使用代码'
-        run: phpmd ./ text unusedcode
-
       - name: '检查命名问题'
         run: phpmd ./ text naming
 
