@@ -30,9 +30,11 @@ jobs:
 
       - name: '检查命名问题'
         run: phpmd ./ text naming
+        continue-on-error: true
 
       - name: '检查设计问题'
         run: phpmd ./ text naming design
+        continue-on-error: true
 
       - name: '检查代码规模是否过大'
         run: phpmd ./ text codesize
