@@ -31,12 +31,9 @@ Route::get('about',[Index::class,'ViewAboutMe'])->name('about');
 Route::prefix('function')->group(function () {
     Route::get('link',[UserLink::class, 'viewLink'])->name('function.link');
     Route::get('make-friend',[UserLink::class, 'viewMakeFriend'])->name('function.make-friend');
-    Route::get('edit-search',[UserLink::class, 'viewSearchFriends'])->name('function.edit-search');
+    Route::get  ('edit-search',[UserLink::class, 'viewSearchFriends'])->name('function.edit-search');
     Route::get('edit-search/{friendId}',[UserLink::class,'viewSearchFriend'])->name('function.edit-searchOnly');
-    Route::get('edit-friend/{friendId}',function ($friendId) {
-        $userLink = new UserLink();
-        return $userLink->viewEditFriend($friendId);
-    })->name('function.edit-friend');
+    Route::get('edit-friend/{friendId}',[UserLink::class,'viewEditFriend'])->name('function.edit-friend');
     Route::get('sponsor',function () {
         return view('function.sponsor');
     })->name('function.sponsor');

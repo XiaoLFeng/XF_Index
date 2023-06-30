@@ -1,0 +1,41 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - master
+      - '*.x'
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: centos
+
+    name: PHP
+
+    steps:
+      - name: '检查代码'
+        uses: https://github.com/actions/checkout@v3
+
+      - name: '安装PHP'
+        uses: XiaoLFeng/setup-php@v2
+        with:
+          coverage: none
+          tools: phpmd
+
+      - name: '检查命名问题'
+        run: phpmd ./ text naming
+        continue-on-error: true
+
+      - name: '检查设计问题'
+        run: phpmd ./ text naming design
+        continue-on-error: true
+
+      - name: '检查代码规模是否过大'
+        run: phpmd ./ text codesize
+        continue-on-error: true
