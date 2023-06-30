@@ -264,119 +264,149 @@ class Link extends Controller
     {
         /** @var array $returnData Json的 return 返回值 */
         // 验证数据
-        $resultBlog = DB::table('blog_link')
-            ->select('id', 'blogOwnEmail')
-            ->find((int)$request->id);
-        if (!empty($resultBlog->id)) {
-            // 检查输入博客是否对应
-            if (!empty($resultBlog->blogOwnEmail)) {
-                if (strcmp($resultBlog->blogOwnEmail, $request->email) == 0) {
-                    // 生成验证码（筛查内容）
-                    $resultVerifyCode = DB::table('code')
-                        ->where([
-                            ['email', '=', $resultBlog->blogOwnEmail],
-                            ['type', '=', 'CODE-CUSTOM-CHECK'],
-                            ['time', '>', time()]])
-                        ->get()
-                        ->toArray();
-                    // 不存在验证码，生成验证码并存入数据库中
-                    if (empty($resultVerifyCode[0]->id)) {
-                        // 生成6位数验证码
-                        $verifyCode = null;
-                        for ($i = 0; $i < 6; $i++)
-                            $verifyCode .= rand(0, 9);
+        $dataCheck = Validator::make($request->all(),[
+            'id' => 'required|int',
+            'userEmail' => 'required|email',
+            'userCode' => 'string|min:6|max:64|regex:#^[0-9A-Za-z]+$#',
+        ]);
 
-                        // 存入数据库
-                        DB::table('code')
-                            ->insert([
-                                'email' => $resultBlog->blogOwnEmail,
-                                'code' => $verifyCode,
-                                'type' => 'CODE-CUSTOM-CHECK',
-                                'sendTime' => time(),
-                                'time' => time()+900,
-                            ]);
-                        // 数据整理
-                        $this->sendEmail = [
-                            'userEmail' => $resultBlog->blogOwnEmail,
-                            'verifyCode' => $verifyCode,
-                            'sendTime' => time(),
-                        ];
-                        $this->apiCustomBlogCheckSendEmail();
-                        $returnData = [
-                            'output' => 'Success',
-                            'code' => 200,
-                            'data' => [
-                                'message' => '发送成功',
-                            ],
-                        ];
-                    } else {
-                        // 存在验证码，检查验证码是否需要重新发送
-                        $data = DB::table('code')
+        if ($dataCheck->fails()) {
+            $resultBlog = DB::table('blog_link')
+                ->select('id', 'blogOwnEmail')
+                ->find((int)$request->id);
+            if (!empty($resultBlog->id)) {
+                // 检查输入博客是否对应
+                if (!empty($resultBlog->blogOwnEmail)) {
+                    if (strcmp($resultBlog->blogOwnEmail, $request->email) == 0) {
+                        // 生成验证码（筛查内容）
+                        $resultVerifyCode = DB::table('code')
                             ->where([
-                                ['email','=',$resultBlog->blogOwnEmail],
-                                ['type','=','CODE-CUSTOM-CHECK'],
-                                ['time','>',time()]])
+                                ['email', '=', $resultBlog->blogOwnEmail],
+                                ['type', '=', 'CODE-CUSTOM-CHECK'],
+                                ['time', '>', time()]])
                             ->get()
                             ->toArray();
-                        $this->sendEmail = [
-                            'userEmail' => $data[0]->email,
-                            'verifyCode' => $data[0]->code,
-                            'sendTime' => time(),
-                        ];
-                        if ($resultVerifyCode[0]->sendTime < time()-60) {
-                            // 发送验证码
+                        // 不存在验证码，生成验证码并存入数据库中
+                        if (empty($resultVerifyCode[0]->id)) {
+                            // 生成6位数验证码
+                            $verifyCode = null;
+                            for ($i = 0; $i < 6; $i++)
+                                $verifyCode .= rand(0, 9);
+
+                            // 存入数据库
                             DB::table('code')
-                                ->where([
-                                    ['email','=',$resultBlog->blogOwnEmail],
-                                    ['type','=','CODE-CUSTOM-CHECK'],
-                                    ['time','>',time()]])
-                                ->update(['sendTime' => time()]);
+                                ->insert([
+                                    'email' => $resultBlog->blogOwnEmail,
+                                    'code' => $verifyCode,
+                                    'type' => 'CODE-CUSTOM-CHECK',
+                                    'sendTime' => time(),
+                                    'time' => time() + 900,
+                                ]);
+                            // 数据整理
+                            $this->sendEmail = [
+                                'userEmail' => $resultBlog->blogOwnEmail,
+                                'verifyCode' => $verifyCode,
+                                'sendTime' => time(),
+                            ];
                             $this->apiCustomBlogCheckSendEmail();
                             $returnData = [
                                 'output' => 'Success',
                                 'code' => 200,
                                 'data' => [
-                                    'message' => '重新发送成功',
+                                    'message' => '发送成功',
                                 ],
                             ];
                         } else {
-                            // 避免重复发送
-                            $returnData = [
-                                'output' => 'SendingTimeTooFast',
-                                'code' => 403,
-                                'data' => [
-                                    'message' => '邮件重新发送时间过快',
-                                    'data' => [
-                                        'time' => 60 - (time() - $resultVerifyCode[0]->sendTime),
-                                    ],
-                                ],
+                            // 存在验证码，检查验证码是否需要重新发送
+                            $data = DB::table('code')
+                                ->where([
+                                    ['email', '=', $resultBlog->blogOwnEmail],
+                                    ['type', '=', 'CODE-CUSTOM-CHECK'],
+                                    ['time', '>', time()]])
+                                ->get()
+                                ->toArray();
+                            $this->sendEmail = [
+                                'userEmail' => $data[0]->email,
+                                'verifyCode' => $data[0]->code,
+                                'sendTime' => time(),
                             ];
+                            if ($resultVerifyCode[0]->sendTime < time() - 60) {
+                                // 发送验证码
+                                DB::table('code')
+                                    ->where([
+                                        ['email', '=', $resultBlog->blogOwnEmail],
+                                        ['type', '=', 'CODE-CUSTOM-CHECK'],
+                                        ['time', '>', time()]])
+                                    ->update(['sendTime' => time()]);
+                                $this->apiCustomBlogCheckSendEmail();
+                                $returnData = [
+                                    'output' => 'Success',
+                                    'code' => 200,
+                                    'data' => [
+                                        'message' => '重新发送成功',
+                                    ],
+                                ];
+                            } else {
+                                // 避免重复发送
+                                $returnData = [
+                                    'output' => 'SendingTimeTooFast',
+                                    'code' => 403,
+                                    'data' => [
+                                        'message' => '邮件重新发送时间过快',
+                                        'data' => [
+                                            'time' => 60 - (time() - $resultVerifyCode[0]->sendTime),
+                                        ],
+                                    ],
+                                ];
+                            }
                         }
+                    } else {
+                        $returnData = [
+                            'output' => 'EmailMismatch',
+                            'code' => 403,
+                            'data' => [
+                                'message' => '邮箱与对应ID不匹配',
+                            ],
+                        ];
                     }
                 } else {
                     $returnData = [
-                        'output' => 'EmailMismatch',
+                        'output' => 'NoEmail',
                         'code' => 403,
                         'data' => [
-                            'message' => '邮箱与对应ID不匹配',
+                            'message' => '对应ID没有绑定邮箱，请联系管理员',
                         ],
                     ];
                 }
             } else {
                 $returnData = [
-                    'output' => 'NoEmail',
+                    'output' => 'NoBlog',
                     'code' => 403,
                     'data' => [
-                        'message' => '对应ID没有绑定邮箱，请联系管理员',
+                        'message' => '没有ID对应博客',
                     ],
                 ];
             }
         } else {
+            $errorType = array_keys($dataCheck->failed());
+            $i = 0;
+            foreach ($dataCheck->failed() as $valueData) {
+                $errorInfo[$errorType[$i]] = array_keys($valueData);
+                if ($i == 0) {
+                    $errorSingle = [
+                        'info' => $errorType[$i],
+                        'need' => $errorInfo[$errorType[$i]],
+                    ];
+                }
+                $i++;
+            }
             $returnData = [
-                'output' => 'NoBlog',
+                'output' => 'DataFormatError',
                 'code' => 403,
                 'data' => [
-                    'message' => '没有ID对应博客',
+                    'message' => '输入内容有错误',
+                    'errorSingle' => $errorSingle,
+                    'error' => $errorInfo,
                 ],
             ];
         }
