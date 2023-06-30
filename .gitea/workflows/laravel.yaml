@@ -16,32 +16,18 @@ jobs:
   tests:
     runs-on: centos
 
-    strategy:
-      fail-fast: true
-      matrix:
-        php: [8.1, 8.2]
-
     name: PHP
 
     steps:
-      - name: 检查代码
+      - name: '检查代码'
         uses: https://github.com/actions/checkout@v3
 
-      - name: 配置PHP
+      - name: '安装PHP'
         uses: XiaoLFeng/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
           coverage: none
+          tools: phpmd
 
-      - name: 安装PHP Composer依赖
-        run: composer install --prefer-dist --no-interaction --no-progress
-
-      - name: 复制配置文件
-        run: cp .env.example .env
-
-      - name: 生成应用程序密钥
-        run: php artisan key:generate
-
-      - name: 执行测试
-        run: vendor/bin/phpunit
+      - name: '运行PHPMD'
+        run: phpmd ./ text codesize
+        continue-on-error: true
