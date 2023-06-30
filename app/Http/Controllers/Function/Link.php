@@ -15,6 +15,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -264,7 +265,7 @@ class Link extends Controller
     {
         /** @var array $returnData Json的 return 返回值 */
         // 验证数据
-        $dataCheck = Validator::make($request->all(),[
+        $dataCheck = Validator::make($request->all(), [
             'id' => 'required|int',
             'userEmail' => 'required|email',
             'userCode' => 'string|min:6|max:64|regex:#^[0-9A-Za-z]+$#',
@@ -428,6 +429,120 @@ class Link extends Controller
         });
     }
 
+    /**
+     * 验证是否为站长
+     *
+     * @param HttpRequest $request 获取HTTP中 Request 数据
+     * @return JsonResponse 返回JSON数据
+     */
+    public function apiCustomBlogVerify(HttpRequest $request): JsonResponse
+    {
+        /** @var array $returnData Json的 return 返回值 */
+        //数据验证
+        $dataCheck = Validator::make($request->all(), [
+            'id' => 'required|int',
+            'userEmail' => 'required|email',
+            'userCode' => 'required|string|min:6|max:64|regex:#^[0-9A-Za-z]+$#',
+        ]);
+        // 验证数据是否合法
+        if (!$dataCheck->fails()) {
+            // 检查内容是否存在
+            $resultBlog = DB::table('blog_link')
+                ->select('id', 'blogOwnEmail')
+                ->find((int)$request->id);
+            if (!empty($resultBlog->id)) {
+                if (!empty($resultBlog->blogOwnEmail)) {
+                    // 验证此邮箱是否与该博客一致
+                    if (strcmp($resultBlog->blogOwnEmail, $request->userEmail) == 0) {
+                        // 检查验证码是否存在
+                        $resultCode = DB::table('code')
+                            ->select('id')
+                            ->where([
+                                ['code.code', '=', $request->userCode],
+                                ['email', '=', $request->userEmail],
+                                ['type', '=', 'CODE-CUSTOM-CHECK'],
+                                ['time', '>', time()]])
+                            ->get()
+                            ->toArray();
+                        if (!empty($resultCode[0]->id)) {
+                            // 配置Cookie
+                            $Response = new HttpResponse();
+                            $Response->withCookie(cookie('friend_edit', password_hash($resultBlog->id, PASSWORD_DEFAULT), 15, '/'));
+                            // 完成验证删除验证码
+                            DB::table('code')
+                                ->delete((int)$resultCode[0]->id);
+                            // Json
+                            $returnData = [
+                                'output' => 'Success',
+                                'code' => 200,
+                                'data' => [
+                                    'message' => '验证成功',
+                                    'id' => $resultBlog->id
+                                ],
+                            ];
+                        } else {
+                            // 验证码验证失败
+                            $returnData = [
+                                'output' => 'NoVerifyCode',
+                                'code' => 403,
+                                'data' => [
+                                    'message' => '没有这个验证码',
+                                ],
+                            ];
+                        }
+                    } else {
+                        $returnData = [
+                            'output' => 'EmailMismatch',
+                            'code' => 403,
+                            'data' => [
+                                'message' => '邮箱与对应ID不匹配',
+                            ],
+                        ];
+                    }
+                } else {
+                    $returnData = [
+                        'output' => 'NoEmail',
+                        'code' => 403,
+                        'data' => [
+                            'message' => '对应ID没有绑定邮箱，请联系管理员',
+                        ],
+                    ];
+                }
+            } else {
+                $returnData = [
+                    'output' => 'NoBlog',
+                    'code' => 403,
+                    'data' => [
+                        'message' => '没有ID对应博客',
+                    ],
+                ];
+            }
+        } else {
+            $errorType = array_keys($dataCheck->failed());
+            $i = 0;
+            foreach ($dataCheck->failed() as $valueData) {
+                $errorInfo[$errorType[$i]] = array_keys($valueData);
+                if ($i == 0) {
+                    $errorSingle = [
+                        'info' => $errorType[$i],
+                        'need' => $errorInfo[$errorType[$i]],
+                    ];
+                }
+                $i++;
+            }
+            $returnData = [
+                'output' => 'DataFormatError',
+                'code' => 403,
+                'data' => [
+                    'message' => '输入内容有错误',
+                    'errorSingle' => $errorSingle,
+                    'error' => $errorInfo,
+                ],
+            ];
+        }
+        return Response::json($returnData, $returnData['code']);
+    }
+
     public function viewEditFriend($friendId): Application|Factory|View|RedirectResponse
     {
         // 检查内容是否为空
@@ -498,13 +613,29 @@ class Link extends Controller
 
     protected function viewSearchFriend($friendId): Factory|View|Application|RedirectResponse
     {
+        /** @var $dataEmail array 获取修改邮箱后的值 */
         $this->data['webSubTitle'] = '查询列表';
         if (!empty($friendId)) {
             // 检查 friendId 是否存在
             $resultBlog = DB::table('blog_link')
-                ->select('id','blogOwnEmail')
+                ->select('id', 'blogOwnEmail', 'blogName')
                 ->find($friendId);
             if (!empty($resultBlog->id)) {
+                // 处理加密邮箱
+                $strlenEmail = strlen($resultBlog->blogOwnEmail);
+                ($strlenEmail > 4) ? $j = 1 : $j = 0;
+                for ($i = 0; $i < $strlenEmail; $i++) {
+                    if ($resultBlog->blogOwnEmail[$i] != '@') {
+                        if ($i > $j && $i < $strlenEmail - ($j + 1)) {
+                            $dataEmail[$i] = '*';
+                        } else {
+                            $dataEmail[$i] = $resultBlog->blogOwnEmail[$i];
+                        }
+                    } else {
+                        $dataEmail[$i] = $resultBlog->blogOwnEmail[$i];
+                    }
+                }
+                $resultBlog->blogOwnEmail = implode($dataEmail);
                 $this->data['blog'] = $resultBlog;
                 return view('function.edit-check', $this->data);
             } else {
