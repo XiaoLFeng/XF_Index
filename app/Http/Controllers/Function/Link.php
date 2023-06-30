@@ -386,8 +386,7 @@ class Link extends Controller
     /**
      * 站长认证邮件发送模板
      *
-     * @param array $data
-     * @return void
+     * @return void 发送链接，不做返回内容
      */
     private function apiCustomBlogCheckSendEmail(): void
     {
