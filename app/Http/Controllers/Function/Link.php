@@ -270,14 +270,14 @@ class Link extends Controller
             'userCode' => 'string|min:6|max:64|regex:#^[0-9A-Za-z]+$#',
         ]);
 
-        if ($dataCheck->fails()) {
+        if (!$dataCheck->fails()) {
             $resultBlog = DB::table('blog_link')
                 ->select('id', 'blogOwnEmail')
                 ->find((int)$request->id);
             if (!empty($resultBlog->id)) {
                 // 检查输入博客是否对应
                 if (!empty($resultBlog->blogOwnEmail)) {
-                    if (strcmp($resultBlog->blogOwnEmail, $request->email) == 0) {
+                    if (strcmp($resultBlog->blogOwnEmail, $request->userEmail) == 0) {
                         // 生成验证码（筛查内容）
                         $resultVerifyCode = DB::table('code')
                             ->where([
