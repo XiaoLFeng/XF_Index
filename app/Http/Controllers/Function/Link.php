@@ -629,23 +629,29 @@ class Link extends Controller
                 ->select('id', 'blogOwnEmail', 'blogName')
                 ->find($friendId);
             if (!empty($resultBlog->id)) {
-                // 处理加密邮箱
-                $strlenEmail = strlen($resultBlog->blogOwnEmail);
-                ($strlenEmail > 4) ? $j = 1 : $j = 0;
-                for ($i = 0; $i < $strlenEmail; $i++) {
-                    if ($resultBlog->blogOwnEmail[$i] != '@') {
-                        if ($i > $j && $i < $strlenEmail - ($j + 1)) {
-                            $dataEmail[$i] = '*';
+                if (!empty($resultBlog->blogOwnEmail)) {
+                    // 处理加密邮箱
+                    $strlenEmail = strlen($resultBlog->blogOwnEmail);
+                    ($strlenEmail > 4) ? $j = 1 : $j = 0;
+                    for ($i = 0; $i < $strlenEmail; $i++) {
+                        if ($resultBlog->blogOwnEmail[$i] != '@') {
+                            if ($i > $j && $i < $strlenEmail - ($j + 1)) {
+                                $dataEmail[$i] = '*';
+                            } else {
+                                $dataEmail[$i] = $resultBlog->blogOwnEmail[$i];
+                            }
                         } else {
                             $dataEmail[$i] = $resultBlog->blogOwnEmail[$i];
                         }
-                    } else {
-                        $dataEmail[$i] = $resultBlog->blogOwnEmail[$i];
                     }
+                    $resultBlog->blogOwnEmail = implode($dataEmail);
+                    $this->data['blog'] = $resultBlog;
+                    return view('function.edit-check', $this->data);
+                } else {
+                    $resultBlog->blogOwnEmail = null;
+                    $this->data['blog'] = $resultBlog;
+                    return view('function.edit-unemail', $this->data);
                 }
-                $resultBlog->blogOwnEmail = implode($dataEmail);
-                $this->data['blog'] = $resultBlog;
-                return view('function.edit-check', $this->data);
             } else {
                 return Response::redirectTo(route('function.edit-search'));
             }
