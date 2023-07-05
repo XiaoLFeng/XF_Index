@@ -109,18 +109,6 @@
 <script src="{{ asset('js/jquery.js') }}"></script>
 <script type="text/javascript">
     class Check {
-        static searchType = 'all';
-
-        static Click(type) {
-            if (type === 1) {
-                $('#search-data').html('<i class="bi bi-1-circle pe-1"></i>博客名字');
-                this.searchType = 'blogName';
-            } else if (type === 2) {
-                $('#search-data').html('<i class="bi bi-2-circle pe-1"></i>博客地址');
-                this.searchType = 'blogUrl';
-            }
-        }
-
         static ajaxSendCode() {
             $.ajax({
                 async: true,
