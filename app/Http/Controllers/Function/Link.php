@@ -445,7 +445,6 @@ class Link extends Controller
         ]);
         // 验证数据是否合法
         if (!$dataCheck->fails()) {
-            $cookie = cookie('friend_edit', '', -1, '/');
             // 检查内容是否存在
             $resultBlog = DB::table('blog_link')
                 ->select('id', 'blogOwnEmail')
@@ -479,6 +478,8 @@ class Link extends Controller
                                     'id' => $resultBlog->id
                                 ],
                             ];
+                            return Response::json($returnData, $returnData['code'])
+                                ->cookie($cookie);
                         } else {
                             // 验证码验证失败
                             $returnData = [
@@ -539,8 +540,7 @@ class Link extends Controller
                 ],
             ];
         }
-        return Response::json($returnData, $returnData['code'])
-            ->cookie($cookie);
+        return Response::json($returnData, $returnData['code']);
     }
 
     protected function viewEditFriend(HttpRequest $request, $friendId): Application|Factory|View|RedirectResponse
