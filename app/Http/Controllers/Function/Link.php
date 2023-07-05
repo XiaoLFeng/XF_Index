@@ -40,10 +40,12 @@ class Link extends Controller
      */
     public function apiCustomAdd(HttpRequest $request): JsonResponse
     {
-        /** @var array $returnData Json的 return 返回值 */
-        /** @var Validator $dataCheck 数据判断 */
-        /** @var array $errorInfo 错误信息 */
-        /** @var array $errorSingle 输出单个错误信息 */
+        /**
+         * @var array $returnData Json的 return 返回值
+         * @var Validator $dataCheck 数据判断
+         * @var array $errorInfo 错误信息
+         * @var array $errorSingle 输出单个错误信息
+         */
         // 检查数据
         $dataCheck = Validator::make($request->all(), [
             'userEmail' => 'required|email',
@@ -435,8 +437,10 @@ class Link extends Controller
      */
     public function apiCustomBlogVerify(HttpRequest $request): JsonResponse
     {
-        /** @var array $returnData Json的 return 返回值 */
-        /** @var mixed $cookie 保存Cookie数据 */
+        /**
+         * @var array $returnData Json的 return 返回值
+         * @var mixed $cookie 保存Cookie数据
+         */
         //数据验证
         $dataCheck = Validator::make($request->all(), [
             'id' => 'required|int',
@@ -586,14 +590,14 @@ class Link extends Controller
         }
     }
 
-    protected function viewLink(HttpRequest $request): Factory|View|Application
+    protected function viewLink(): Factory|View|Application
     {
         $this->data['webSubTitle'] = '友链';
-        $this->GetFriendsLink($this->data);
+        $this->getFriendsLink($this->data);
         return view('function.link', $this->data);
     }
 
-    private function GetFriendsLink(array &$data): void
+    private function getFriendsLink(array &$data): void
     {
         $data['blogLink'] = DB::table('blog_link')->whereNotIn('blog_link.blogLocation', [0])->get()->toArray();
         $data['blogSort'] = DB::table('blog_sort')->orderBy('blog_sort.sort')->get()->toArray();
