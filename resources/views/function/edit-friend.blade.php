@@ -21,6 +21,14 @@
                 style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
         </div>
         <div class="mx-auto my-10 max-w-4xl py-8 sm:py-16 lg:py-16">
+            <div class="py-6">
+                <a href="{{ route('function.edit-search') }}" class="focus:outline-none text-white bg-blue-700
+                        hover:bg-blue-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600
+                        dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <i class="bi bi-arrow-return-left"></i>
+                    <span class="ps-1">返回友链搜索</span>
+                </a>
+            </div>
             <div class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow-lg sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                 <h1 class="text-center mb-4 text-3xl font-bold leading-none tracking-tight text-gray-900 md:text-3xl lg:text-4xl dark:text-white mt-5">
                     自助友链修改系统</h1>
