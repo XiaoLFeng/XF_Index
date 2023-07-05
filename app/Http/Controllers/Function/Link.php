@@ -112,6 +112,7 @@ class Link extends Controller
                         'blogUserLocation' => $request->userLocation,
                         'blogSetColor' => $request->userSelColor,
                         'blogRemark' => $request->userRemark,
+                        'blogServerHost' => $request->userServerHost,
                     ]);
                 if ($insertData) {
                     // 邮件发送系统
