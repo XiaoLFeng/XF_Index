@@ -164,7 +164,7 @@
                                 </div>
                                 <input type="text" name="userRss" id="userRss" value="{{ $blog->blogRSS }}" placeholder="https://blog.x-lf.com/atom.xml"
                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                       disabled>
+                                       @if($blog->blogRssJudge == 0)disabled @endif>
                             </div>
                         </div>
                     </div>
@@ -361,7 +361,7 @@
             async: true,
             method: "POST",
             data: $('#FormData').serialize(),
-            url: '{{ route('api.link.custom.add') }}',
+            url: '{{ route('api.link.custom.edit', $blog->id) }}',
             dataType: "json",
             success: function (returnData) {
                 if (returnData.output === "Success") {
