@@ -152,13 +152,14 @@
                                 </div>
                                 <div class="tooltip-arrow" data-popper-arrow></div>
                             </div>
-                            <select id="userSelColor" name="userSelColor" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <select id="userSelColor" name="userSelColor"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option>请选择一个颜色</option>
                                 @if(empty($blogColor[0]))
                                     <option>站长没有设置可用颜色呢</option>
                                 @else
                                     @foreach($blogColor as $blogValue)
-                                        <option value="{{ $blogValue->id }}">{!! $blogValue->comment !!}</option>
+                                        <option value="{{ $blogValue->id }}" @if($blogValue->onlyAdminUse)disabled @endif>{!! $blogValue->comment !!}</option>
                                     @endforeach
                                 @endif
                             </select>
