@@ -21,58 +21,14 @@
                 style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
         </div>
         <div class="mx-auto my-10 max-w-4xl py-8 sm:py-16 lg:py-16">
-            <div class="flex">
-                <label for="location_search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Your
-                    Email</label>
-                <button id="dropdown-button-2" data-dropdown-toggle="dropdown-search-city"
-                        class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-500 bg-gray-100 border border-gray-300 rounded-l-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
-                        type="button">
-                    <span id="search-data">
-                        <i class="bi bi-arrow-up-circle pe-1"></i>综合搜索
-                    </span>
-                    <svg aria-hidden="true" class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                              clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-                <div id="dropdown-search-city"
-                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-button-2">
-                        <li>
-                            <button type="button" onclick="Check.Click(1)"
-                                    class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white"
-                                    role="menuitem">
-                                <div class="inline-flex items-center">
-                                    <i class="bi bi-1-circle pe-1"></i>博客名字
-                                </div>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" onclick="Check.Click(2)"
-                                    class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white"
-                                    role="menuitem">
-                                <div class="inline-flex items-center">
-                                    <i class="bi bi-2-circle pe-1"></i>博客地址
-                                </div>
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-                <div class="relative w-full">
-                    <input type="search" id="location_search" name="location_search"
-                           class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
-                           placeholder="输入内容进行友链筛查" required>
-                    <button onclick="Search.ajax()"
-                            class="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-blue-700 rounded-r-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        <i class="bi bi-search"></i>
-                        <span class="sr-only">搜索</span>
-                    </button>
-                </div>
+            <div class="py-6">
+                <a href="{{ route('function.edit-search') }}" class="focus:outline-none text-white bg-blue-700
+                        hover:bg-blue-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600
+                        dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <i class="bi bi-arrow-return-left"></i>
+                    <span class="ps-1">返回友链搜索</span>
+                </a>
             </div>
-        </div>
-        <div class="mx-auto my-10 max-w-4xl pb-8 sm:pb-16 lg:pb-16">
             <form id="FormData" action="#" onsubmit="return false" method="POST">
                 <div
                     class="col-span-10 lg:col-span-7 items-center justify-center rounded bg-gray-50 dark:bg-gray-800 shadow">
@@ -161,18 +117,6 @@
 <script src="{{ asset('js/jquery.js') }}"></script>
 <script type="text/javascript">
     class Check {
-        static searchType = 'all';
-
-        static Click(type) {
-            if (type === 1) {
-                $('#search-data').html('<i class="bi bi-1-circle pe-1"></i>博客名字');
-                this.searchType = 'blogName';
-            } else if (type === 2) {
-                $('#search-data').html('<i class="bi bi-2-circle pe-1"></i>博客地址');
-                this.searchType = 'blogUrl';
-            }
-        }
-
         static ajaxSendCode() {
             $.ajax({
                 async: true,
@@ -250,6 +194,9 @@
                 success: function (returnData) {
                     if (returnData.output === "Success") {
                         Toast.toggle(returnData.data.message, '<i class="bi bi-check-circle text-green-500"></i>');
+                        $('#sendCheckCode').prop('disabled', true);
+                        $('#sendCheckCode').removeClass('bg-green-700').addClass('bg-green-800');
+                        $('#sendCheckCode').html('<i class="bi bi-check-circle"></i><span class="ps-1">验证通过</span>');
 
                         setTimeout(function () {
                             location.href = '{{ route('function.edit-friend','') }}/' + returnData.data.id
@@ -261,7 +208,12 @@
                     }
                 },
                 error: function (returnData) {
-                    Toast.toggle(returnData.responseJSON.data.message, '<i class="bi bi-x-circle text-red-500"></i>')
+                    Toast.set('其他错误', '<i class="bi bi-x-circle text-red-500"></i>');
+                    if (returnData.responseJSON.output !== 'SendingTimeTooFast') {
+                        Toast.toggle(returnData.responseJSON.data.message, '<i class="bi bi-x-circle text-red-500"></i>');
+                        $('#sendCheckCode').prop('disabled', false);
+                        $('#sendCheckCode').html('<i class="bi bi-send"></i><span class="ps-1">验证</span>');
+                    }
                 }
             });
         }

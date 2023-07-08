@@ -35,6 +35,9 @@ class UpdateInfoTable extends Migration
             DB::table('info')->insert(['value' => 'author', 'created_at' => date('Y-m-d H:i:s')]);
             DB::table('info')->insert(['value' => 'copyRightYear', 'created_at' => date('Y-m-d H:i:s')]);
             DB::table('info')->insert(['value' => 'blog', 'created_at' => date('Y-m-d H:i:s')]);
+            DB::table('info')->insert(['value' => 'applicationRule', 'created_at' => date('Y-m-d H:i:s')]);
+            DB::table('info')->insert(['value' => 'applicationInfo', 'created_at' => date('Y-m-d H:i:s')]);
+            DB::table('info')->insert(['value' => 'email', 'created_at' => date('Y-m-d H:i:s')]);
         });
     }
 

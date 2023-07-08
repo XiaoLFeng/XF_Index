@@ -30,6 +30,7 @@ class Index extends Controller
             'webFooter' => DB::table('info')->find(8)->data,
             'webKeyword' => empty($tempStorage = DB::table('info')->find(6)->data) ? '筱锋,凌中的锋雨,xiao_lfeng' : $tempStorage,
             'sqlAuthor' => empty($tempStorage = DB::table('info')->find(12)->data) ? '筱锋xiao_lfeng' : $tempStorage,
+            'sqlEmail' => empty($tempStorage = DB::table('info')->find(17)->data) ? 'gm@x-lf.cn' : $tempStorage,
             'sqlCopyRightYear' => DB::table('info')->find(13)->data,
             'sqlIcp' => DB::table('info')->find(10)->data,
             'sqlGongan' => DB::table('info')->find(11)->data,
