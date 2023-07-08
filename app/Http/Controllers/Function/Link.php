@@ -784,14 +784,19 @@ class Link extends Controller
     protected function viewLink(): Factory|View|Application
     {
         $this->data['webSubTitle'] = '友链';
-        $this->getFriendsLink($this->data);
+        $this->data['blogLink'] = DB::table('blog_link')
+            ->whereNotIn('blog_link.blogLocation', [0])
+            ->get()
+            ->toArray();
+        $this->data['blogSort'] = DB::table('blog_sort')
+            ->orderBy('blog_sort.sort')
+            ->get()
+            ->toArray();
+        $this->data['blogColor'] = DB::table('blog_color')
+            ->orderBy('id')
+            ->get()
+            ->toArray();
         return view('function.link', $this->data);
-    }
-
-    private function getFriendsLink(array &$data): void
-    {
-        $data['blogLink'] = DB::table('blog_link')->whereNotIn('blog_link.blogLocation', [0])->get()->toArray();
-        $data['blogSort'] = DB::table('blog_sort')->orderBy('blog_sort.sort')->get()->toArray();
     }
 
     protected function viewMakeFriend(): Factory|View|Application

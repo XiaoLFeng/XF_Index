@@ -23,14 +23,19 @@
         @foreach($blogSort as $valueSort)
             <div class="mx-auto mt-28 mb-3 max-w-4xl grid grid-cols-1 px-2">
                 <div class="text-2xl text-bold">{!! $valueSort->title !!}</div>
-                @if(!empty($valueSort->description))<div class="text-gray-500">{{ $valueSort->description }}</div> @endif
+                @if(!empty($valueSort->description))
+                    <div class="text-gray-500">{{ $valueSort->description }}</div>
+                @endif
             </div>
             <div class="mx-auto max-w-4xl mb-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
                 @foreach($blogLink as $valueLink)
                     @if($valueLink->blogLocation == $valueSort->id)
                         <a href="{{ $valueLink->blogUrl }}" target="_blank">
                             <div
-                                class="flex p-2 hover:bg-gray-100 bg-white border border-grey-200 rounded-lg shadow-lg sm:p-4 dark:bg-gray-800 dark:hover:bg-gray-700 dark:border-gray-700 grid-cols-2 m-1">
+                                class="flex p-2 hover:bg-gray-100 bg-white border-2 {{ $blogColor[$valueLink->blogSetColor-1]->colorLightType }} rounded-lg
+                                shadow-lg sm:p-4
+                                dark:bg-gray-800
+                                dark:hover:bg-gray-700 dark:border-gray-700 grid-cols-2 m-1">
                                 <img id="Lazy"
                                      class="w-16 h-16 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500 me-2 sm:me-4"
                                      src="{{ asset('images/avatar.png') }}" data-src="{{ $valueLink->blogIcon }}"
