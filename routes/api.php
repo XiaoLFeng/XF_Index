@@ -43,8 +43,9 @@ Route::prefix('link')->group(function () {
 
     });
     Route::prefix('custom')->group(function () {
-        Route::post('add',[Link::class,'apiCustomAdd'])->name('api.link.custom.add');
-        Route::get('search',[Link::class, 'apiCustomSearch'])->name('api.link.custom.search');
+        Route::post('add', [Link::class, 'apiCustomAdd'])->name('api.link.custom.add');
+        Route::post('edit/{friendId}', [Link::class, 'apiCustomEdit'])->name('api.link.custom.edit');
+        Route::get('search', [Link::class, 'apiCustomSearch'])->name('api.link.custom.search');
         Route::post('blogCheck',[Link::class,'apiCustomBlogCheck'])->name('api.link.custom.blogCheck');
         Route::post('blogVerify',[Link::class,'apiCustomBlogVerify'])->name('api.link.custom.blogVerify');
     });

@@ -548,6 +548,196 @@ class Link extends Controller
         return Response::json($returnData, $returnData['code']);
     }
 
+    /**
+     * 修改友链API
+     *
+     * @param HttpRequest $request 获取HTTP中 Request 数据
+     * @return JsonResponse 返回JSON数据
+     */
+    public function apiCustomEdit(HttpRequest $request, string $friendId): JsonResponse
+    {
+        /**
+         * @var array $returnData Json的 return 返回值
+         * @var Validator $dataCheck 数据判断
+         * @var array $errorInfo 错误信息
+         * @var array $errorSingle 输出单个错误信息
+         */
+        // 验证Cookie是否有效
+        if ($request->hasCookie('friend_edit')) {
+            // 检查Cookie解析是否为此博客
+            if (password_verify($friendId, $request->cookie('friend_edit'))) {
+                // 获取数据库
+                $resultBlog = DB::table('blog_link')
+                    ->find($friendId);
+                if (!empty($resultBlog->id)) {
+                    // 检查数据
+                    $dataCheck = Validator::make($request->all(), [
+                        'userEmail' => 'required|email',
+                        'userServerHost' => 'required|string',
+                        'userBlog' => 'required|string',
+                        'userUrl' => 'required|regex:#[a-zA-z]+://[^\s]*#',
+                        'userDescription' => 'required|string',
+                        'userIcon' => 'required|regex:#[a-zA-z]+://[^\s]*#',
+                        'checkRssJudge' => 'boolean',
+                        'userRss' => 'string|regex:#[a-zA-z]+://[^\s]*#',
+                        'userSelColor' => 'required|int',
+                        'userRemark' => 'string',
+                    ]);// 检查发现错误
+                    if ($dataCheck->fails()) {
+                        $errorType = array_keys($dataCheck->failed());
+                        $i = 0;
+                        foreach ($dataCheck->failed() as $valueData) {
+                            $errorInfo[$errorType[$i]] = array_keys($valueData);
+                            if ($i == 0) {
+                                $errorSingle = [
+                                    'info' => $errorType[$i],
+                                    'need' => $errorInfo[$errorType[$i]],
+                                ];
+                            }
+                            $i++;
+                        }
+                        $returnData = [
+                            'output' => 'DataFormatError',
+                            'code' => 403,
+                            'data' => [
+                                'message' => '输入内容有错误',
+                                'errorSingle' => $errorSingle,
+                                'error' => $errorInfo,
+                            ],
+                        ];
+                    } else {
+                        // 检查数据
+                        if (empty($request->checkRssJudge)) {
+                            $request->checkRssJudge = 0;
+                        }
+                        // 数据载入数组
+                        $this->data['oldBlog'] = (object)[
+                            'blogOwnEmail' => $resultBlog->blogOwnEmail,
+                            'blogUrl' => $resultBlog->blogUrl,
+                            'blogName' => $resultBlog->blogName,
+                            'blogDescription' => $resultBlog->blogDescription,
+                            'blogIcon' => $resultBlog->blogIcon,
+                            'blogRssJudge' => $resultBlog->blogRssJudge,
+                            'blogRSS' => $resultBlog->blogRSS,
+                            'blogSetColor' => $resultBlog->blogSetColor,
+                            'blogRemark' => $resultBlog->blogRemark,
+                            'blogServerHost' => $resultBlog->blogServerHost,
+                        ];
+                        $this->data['blog'] = (object)[
+                            'blogOwnEmail' => $request->userEmail,
+                            'blogUrl' => $request->userUrl,
+                            'blogName' => $request->userBlog,
+                            'blogDescription' => $request->userDescription,
+                            'blogIcon' => $request->userIcon,
+                            'blogRssJudge' => $request->checkRssJudge,
+                            'blogRSS' => $request->userRss,
+                            'blogSetColor' => $request->userSelColor,
+                            'blogRemark' => $request->userRemark,
+                            'blogServerHost' => $request->userServerHost,
+                        ];
+
+                        // 修改数据
+                        $updateData = DB::table('blog_link')
+                            ->where('id', $resultBlog->id)
+                            ->update([
+                                'blogOwnEmail' => $request->userEmail,
+                                'blogUrl' => $request->userUrl,
+                                'blogName' => $request->userBlog,
+                                'blogDescription' => $request->userDescription,
+                                'blogIcon' => $request->userIcon,
+                                'blogRssJudge' => $request->checkRssJudge,
+                                'blogRSS' => $request->userRss,
+                                'blogSetColor' => $request->userSelColor,
+                                'blogRemark' => $request->userRemark,
+                                'blogServerHost' => $request->userServerHost,
+                                'updated_at' => date('Y-m-d H:i:s'),
+                            ]);
+
+                        if ($updateData) {
+                            // 邮件发送系统
+                            // 新用户
+                            if ($this->data['oldBlog']->blogOwnEmail != $this->data['blog']->blogOwnEmail) {
+                                $this->data['sendEmail'] = [
+                                    'userEmail' => $this->data['blog']->blogOwnEmail,
+                                    'userBlog' => $this->data['blog']->blogName,
+                                    'userUrl' => $this->data['blog']->blogUrl,
+                                ];
+                                Mail::send('mail.link-custom-edit', $this->data, function (Message $mail) {
+                                    $mail->from(env('MAIL_USERNAME'), env('APP_NAME'));
+                                    $mail->to($this->data['sendEmail']['userEmail']);
+                                    $mail->subject(env('APP_NAME') . '-友链自主修改通知');
+                                });
+                            }
+                            $this->data['sendEmail'] = [
+                                'userEmail' => $this->data['oldBlog']->blogOwnEmail,
+                                'userBlog' => $this->data['oldBlog']->blogName,
+                                'userUrl' => $this->data['oldBlog']->blogUrl,
+                            ];
+                            // 用户
+                            Mail::send('mail.link-custom-edit', $this->data, function (Message $mail) {
+                                $mail->from(env('MAIL_USERNAME'), env('APP_NAME'));
+                                $mail->to($this->data['sendEmail']['userEmail']);
+                                $mail->subject(env('APP_NAME') . '-友链自主修改通知');
+                            });
+                            // 站长
+                            Mail::send('mail.link-custom-edit-admin', $this->data, function (Message $mail) {
+                                $mail->from(env('MAIL_USERNAME'), env('APP_NAME'));
+                                $mail->to($this->data['sqlEmail']);
+                                $mail->subject(env('APP_NAME') . '-友链自主修改通知');
+                            });
+
+                            // 消息成功通知
+                            $returnData = [
+                                'output' => 'Success',
+                                'code' => 200,
+                                'data' => [
+                                    'message' => '您已成功修改',
+                                ],
+                            ];
+                            $cookie = cookie('friend_edit', '', -1, '/');
+                            return Response::json($returnData, $returnData['code'])
+                                ->cookie($cookie);
+                        } else {
+                            $returnData = [
+                                'output' => 'UpdateFail',
+                                'code' => 403,
+                                'data' => [
+                                    'message' => '更新失败请联系管理员',
+                                ],
+                            ];
+                        }
+                    }
+                } else {
+                    $returnData = [
+                        'output' => 'NoBlog',
+                        'code' => 403,
+                        'data' => [
+                            'message' => '没有对应博客',
+                        ],
+                    ];
+                }
+            } else {
+                $returnData = [
+                    'output' => 'Mismatch',
+                    'code' => 403,
+                    'data' => [
+                        'message' => '不匹配',
+                    ],
+                ];
+            }
+        } else {
+            $returnData = [
+                'output' => 'InvalidValidation',
+                'code' => 403,
+                'data' => [
+                    'message' => '无效验证',
+                ],
+            ];
+        }
+
+        return Response::json($returnData, $returnData['code']);
+    }
+
     protected function viewEditFriend(HttpRequest $request, $friendId): Application|Factory|View|RedirectResponse
     {
         // 检查内容是否为空
