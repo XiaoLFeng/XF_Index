@@ -26,7 +26,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [Index::class,'ViewIndex'])->name('home');
-Route::get('about',[Index::class,'ViewAboutMe'])->name('about');
+Route::get('about', [Index::class, 'ViewAboutMe'])->name('about');
+Route::get('backup', [\App\Http\Controllers\DataBase::class, '__construct']);
 
 Route::prefix('function')->group(function () {
     Route::get('link',[UserLink::class, 'viewLink'])->name('function.link');
