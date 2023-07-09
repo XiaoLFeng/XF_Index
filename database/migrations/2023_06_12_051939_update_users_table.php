@@ -21,6 +21,7 @@ class UpdateUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->integer('linkId')->unique()->nullable()->default(null)->after('remember_token');
             $table->string('icon')->default('https://api.x-lf.cn/avatar/?uid=1')->after('remember_token');
+            $table->boolean('admin')->default(0)->after('email')->comment('判别用户是否是管理员');
         });
     }
 
