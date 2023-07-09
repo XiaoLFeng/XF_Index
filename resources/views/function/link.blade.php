@@ -30,7 +30,12 @@
             <div class="mx-auto max-w-4xl mb-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
                 @foreach($blogLink as $valueLink)
                     @if($valueLink->blogLocation == $valueSort->id)
-                        <a href="{{ $valueLink->blogUrl }}" target="_blank">
+                        <a href="{{ $valueLink->blogUrl }}" target="_blank" data-tooltip-target="friend-{{ $valueLink->id }}">
+                            <div id="friend-{{ $valueLink->id }}" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium
+                            text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                {{ $valueLink->blogDescription }}
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                            </div>
                             <div
                                 class="flex p-2 hover:bg-gray-100 bg-white border-2 {{ $blogColor[$valueLink->blogSetColor-1]->colorLightType }} rounded-lg
                                 shadow-lg sm:p-4
