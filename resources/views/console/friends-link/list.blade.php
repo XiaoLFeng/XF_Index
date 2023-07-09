@@ -51,7 +51,7 @@
                                         <div class="flex-shrink-0">
                                             <img id="Lazy"
                                                  class="w-10 h-10 p-1 rounded-full ring-2 {{ $blogColor[$blogValue->blogSetColor-1]->colorLightType }}
-                                             {{ $blogColor[$blogValue->blogSetColor-1]->colorDarkType }} sm:me-4"
+                                                {{ $blogColor[$blogValue->blogSetColor-1]->colorDarkType }} sm:me-4"
                                                  src="{{ asset('images/avatar.png') }}" data-src="{{ $blogValue->blogIcon }}"
                                                  alt="Bordered avatar">
                                         </div>
@@ -108,24 +108,30 @@
                             </ul>
                         </div>
                     @elseif(!empty($request->search))
-                        <a href="{{ route('console.friends-link.list') }}" type="button" class="text-white mt-4 mb-10 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-3 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="bi bi-box-arrow-left me-1"></i> 返回友链列表</a>
+                        <a href="{{ route('console.friends-link.list') }}" type="button"
+                           class="text-white mt-4 mb-10 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-3 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i
+                                class="bi bi-box-arrow-left me-1"></i> 返回友链列表</a>
                         @if(!empty($blog))
                             <ul class="divide-y divide-gray-200 dark:divide-gray-700">
-                            @foreach($blog as $blogValue)
-                                <li class="py-3 sm:py-4">
-                                    <div class="flex items-center space-x-4">
-                                        <div class="flex-shrink-0">
-                                            <img id="Lazy" class="w-10 h-10 rounded-full" src="{{ asset('images/avatar.png') }}" data-src="{{ $blogValue->blogIcon }}" alt="Neil image">
-                                        </div>
-                                        <div class="flex-1 min-w-0">
-                                            <p class="text-sm font-bold text-gray-900 truncate dark:text-white">
-                                                {{ $blogValue->blogName }}
-                                            </p>
-                                            <p class="text-sm text-gray-400 truncate dark:text-gray-300">
-                                                <a href="{{ $blogValue->blogUrl }}" target="_blank">{{ $blogValue->blogUrl }}</a>
-                                            </p>
-                                        </div>
-                                        <a href="?" type="button" class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                @foreach($blog as $blogValue)
+                                    <li class="py-3 sm:py-4">
+                                        <div class="flex items-center space-x-4">
+                                            <div class="flex-shrink-0">
+                                                <img id="Lazy"
+                                                     class="w-10 h-10 p-1 rounded-full ring-2 {{ $blogColor[$blogValue->blogSetColor-1]->colorLightType }}
+                                                {{ $blogColor[$blogValue->blogSetColor-1]->colorDarkType }} sm:me-4"
+                                                     src="{{ asset('images/avatar.png') }}" data-src="{{ $blogValue->blogIcon }}"
+                                                     alt="Bordered avatar">
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-sm font-bold text-gray-900 truncate dark:text-white">
+                                                    {{ $blogValue->blogName }}
+                                                </p>
+                                                <p class="text-sm text-gray-400 truncate dark:text-gray-300">
+                                                    <a href="{{ $blogValue->blogUrl }}" target="_blank">{{ $blogValue->blogUrl }}</a>
+                                                </p>
+                                            </div>
+                                            <a href="?" type="button" class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
                                             <a href="{{ route('console.friends-link.edit',$blogValue->id) }}" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-3 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                                 <i class="bi bi-pencil"></i>
                                                 <span class="ps-1">编辑</span>
