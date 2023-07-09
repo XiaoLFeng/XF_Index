@@ -41,10 +41,11 @@ class Index extends Controller
             $this->data = array_merge($this->data, ['GonganCode' => $data[0]]);
         }
         if (Auth::check()) {
-            $this->data = array_merge($this->data,[
+            $this->data = array_merge($this->data, [
                 'userName' => Auth::user()->username,
                 'userEmail' => Auth::user()->email,
-                'userIcon' => Auth::user()->icon]);
+                'userIcon' => Auth::user()->icon,
+                'userAdmin' => Auth::user()->admin]);
         }
     }
 
@@ -61,6 +62,18 @@ class Index extends Controller
         ];
         $this->data = array_merge($this->data, $data);
         return view('about', $this->data);
+    }
+
+    protected function viewPageNotFounded(): Factory|View|Application
+    {
+        $this->data['webSubTitle'] = '页面未找到';
+        return view('modules.404', $this->data);
+    }
+
+    protected function viewNoPermission(): Factory|View|Application
+    {
+        $this->data['webSubTitle'] = '没有权限';
+        return view('modules.no-permission', $this->data);
     }
 
     private function MarkdownToStringReplace(string $dataBase): string
