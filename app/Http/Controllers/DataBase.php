@@ -21,6 +21,10 @@ class DataBase extends Controller
             ->toArray();
         foreach ($result as $value) {
             $value->blog_rss_judge ? $value->blog_rss_judge = 1 : $value->blog_rss_judge = 0;
+            if ($value->blog_sel_color == 8) $value->blog_sel_color = 6;
+            if ($value->blog_sel_color == 2) $value->blog_sel_color = 8;
+            if ($value->blog_sel_color == 7) $value->blog_sel_color = 4;
+            if ($value->blog_sel_color == 5) $value->blog_sel_color = 3;
             DB::table('blog_link')
                 ->insert([
                     'blogName' => $value->blog_name,
