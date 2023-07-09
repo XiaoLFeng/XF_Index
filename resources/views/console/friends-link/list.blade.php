@@ -33,20 +33,27 @@
         <div class="grid grid-cols-10 gap-4 mb-4">
             <div class="col-span-10 lg:hidden gird grid-cols-1">
                 <div class="items-center justify-center rounded bg-gray-50 dark:bg-gray-800 shadow grid grid-cols-1">
-                    <p class="text-2xl text-center text-gray-400 dark:text-gray-500 pt-3"><i class="bi bi-person-check"></i> 当前友链 <b class="text-black dark:text-white">{{ $blogFriendsTotal }}</b> 条</p>
-                    <p class="text-2xl text-center text-gray-400 dark:text-gray-500"><i class="bi bi-person-hearts"></i> 超级友链 <b class="text-black dark:text-white">{{ $blogFriendsBest }}</b> 条</p>
-                    <p class="text-2xl text-center text-gray-400 dark:text-gray-500 pb-3"><i class="bi bi-person-check-fill"></i> 待审友链 <b class="text-black dark:text-white">{{ $blogFriendsCheck }}</b> 条</p>
+                    <p class="text-2xl text-center text-gray-400 dark:text-gray-500 pt-3"><i class="bi bi-person-check"></i> 当前友链 <b
+                            class="text-black dark:text-white">{{ $blogFriendsTotal }}</b> 条</p>
+                    <p class="text-2xl text-center text-gray-400 dark:text-gray-500"><i class="bi bi-person-hearts"></i> 超级友链 <b
+                            class="text-black dark:text-white">{{ $blogFriendsBest }}</b> 条</p>
+                    <p class="text-2xl text-center text-gray-400 dark:text-gray-500 pb-3"><i class="bi bi-person-check-fill"></i> 待审友链 <b
+                            class="text-black dark:text-white">{{ $blogFriendsCheck }}</b> 条</p>
                 </div>
             </div>
             <div class="col-span-10 lg:col-span-7 items-center justify-center rounded bg-gray-50 dark:bg-gray-800 shadow">
                 <div class="px-10 py-5">
                     @if(!empty($blog) && empty($request->search))
                         <ul class="divide-y divide-gray-200 dark:divide-gray-700">
-                        @foreach($blog as $blogValue)
+                            @foreach($blog as $blogValue)
                                 <li class="py-3 sm:py-4">
                                     <div class="flex items-center space-x-4">
                                         <div class="flex-shrink-0">
-                                            <img id="Lazy" class="w-10 h-10 rounded-full" src="{{ asset('images/avatar.png') }}" data-src="{{ $blogValue->blogIcon }}" alt="Neil image">
+                                            <img id="Lazy"
+                                                 class="w-10 h-10 p-1 rounded-full ring-2 {{ $blogColor[$blogValue->blogSetColor-1]->colorLightType }}
+                                             {{ $blogColor[$blogValue->blogSetColor-1]->colorDarkType }} sm:me-4"
+                                                 src="{{ asset('images/avatar.png') }}" data-src="{{ $blogValue->blogIcon }}"
+                                                 alt="Bordered avatar">
                                         </div>
                                         <div class="flex-1 min-w-0">
                                             <p class="text-sm font-bold text-gray-900 truncate dark:text-white">
@@ -57,21 +64,27 @@
                                             </p>
                                         </div>
                                         <a href="?" type="button" class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                            <a href="{{ route('console.friends-link.edit',$blogValue->id) }}" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-3 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                            <a href="{{ route('console.friends-link.edit',$blogValue->id) }}" type="button"
+                                               class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-3 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                                 <i class="bi bi-pencil"></i>
                                                 <span class="ps-1">编辑</span>
                                             </a>
                                         </a>
                                     </div>
                                 </li>
-                        @endforeach
+                            @endforeach
                         </ul>
                         <div class="justify-center items-center text-center">
                             <ul class="inline-flex items-center -space-x-px py-3">
                                 <li>
-                                    <a @if($request->page != 0)href="{{ route('console.friends-link.list','page='.$request->page-1) }}" @endif class="block px-3 py-2 ml-0 leading-tight text-gray-500 border border-gray-300 @if($request->page != 0)bg-white @else bg-gray-100 @endif rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                    <a @if($request->page != 0)href="{{ route('console.friends-link.list','page='.$request->page-1) }}"
+                                       @endif class="block px-3 py-2 ml-0 leading-tight text-gray-500 border border-gray-300 @if($request->page != 0)bg-white @else bg-gray-100 @endif rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                                         <span class="sr-only">Previous</span>
-                                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                                  clip-rule="evenodd"></path>
+                                        </svg>
                                     </a>
                                 </li>
                                 @if($blogCount == 0)

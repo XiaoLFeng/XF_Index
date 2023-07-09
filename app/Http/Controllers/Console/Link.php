@@ -39,10 +39,14 @@ class Link extends Controller
             ->orderBy('sort')
             ->get()
             ->toArray();
-        $this->data['blogColor'] = DB::table('blog_color')
+        $blogColor = DB::table('blog_color')
             ->orderBy('id')
             ->get()
             ->toArray();
+        for ($i = 0; !empty($blogColor[$i]->id); $i++) {
+            $blogColor[$i]->colorDarkType = str_replace('dark:', '', $blogColor[$i]->colorDarkType);
+        }
+        $this->data['blogColor'] = $blogColor;
         // 没有查询到执行删除
         if ($this->data['blog'][0] == null) return Response::redirectTo(route('console.friends-link.list'));
         return view('console.friends-link.edit', $this->data);
@@ -86,6 +90,15 @@ class Link extends Controller
             $this->data['blog'] = DB::select("SELECT * FROM xf_index.blog_link WHERE blogName LIKE '%$request->search%' OR blogUrl LIKE '%$request->search%' ORDER BY id");
         }
         $this->data = array_merge($this->data, $dataMarge);
+        $blogColor = DB::table('blog_color')
+            ->orderBy('id')
+            ->get()
+            ->toArray();
+        for ($i = 0; !empty($blogColor[$i]->id); $i++) {
+            $blogColor[$i]->colorLightType = str_replace('border-', 'ring-', $blogColor[$i]->colorLightType);
+            $blogColor[$i]->colorDarkType = str_replace('border-', 'ring-', $blogColor[$i]->colorDarkType);
+        }
+        $this->data['blogColor'] = $blogColor;
         return view('console.friends-link.list', $this->data);
     }
 

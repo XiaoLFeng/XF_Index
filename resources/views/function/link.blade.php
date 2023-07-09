@@ -38,9 +38,8 @@
                             </div>
                             <div
                                 class="flex p-2 hover:bg-gray-100 bg-white border-2 {{ $blogColor[$valueLink->blogSetColor-1]->colorLightType }} rounded-lg
-                                shadow-lg sm:p-4
-                                dark:bg-gray-800
-                                dark:hover:bg-gray-700 dark:border-gray-700 grid-cols-2 m-1">
+                                shadow-lg sm:p-4 dark:bg-gray-800 dark:hover:bg-gray-700 {{ $blogColor[$valueLink->blogSetColor-1]->colorDarkType }}
+                                grid-cols-2 m-1">
                                 <img id="Lazy"
                                      class="w-16 h-16 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500 me-2 sm:me-4"
                                      src="{{ asset('images/avatar.png') }}" data-src="{{ $valueLink->blogIcon }}"

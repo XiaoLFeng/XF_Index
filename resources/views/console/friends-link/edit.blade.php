@@ -33,9 +33,28 @@
         <div class="grid grid-cols-10 gap-4 mb-4">
             <div class="col-span-10 lg:hidden gird grid-cols-1">
                 <div class="items-center justify-center rounded bg-gray-50 dark:bg-gray-800 shadow grid grid-cols-1">
-                    <p class="text-2xl text-center text-gray-400 dark:text-gray-500 pt-3"><i class="bi bi-person-check"></i> 当前友链 <b class="text-black dark:text-white"></b> 条</p>
-                    <p class="text-2xl text-center text-gray-400 dark:text-gray-500"><i class="bi bi-person-hearts"></i> 超级友链 <b class="text-black dark:text-white"></b> 条</p>
-                    <p class="text-2xl text-center text-gray-400 dark:text-gray-500 pb-3"><i class="bi bi-person-check-fill"></i> 待审友链 <b class="text-black dark:text-white"></b> 条</p>
+                    <p class="text-2xl text-center text-gray-400 dark:text-gray-500 pt-3"><i class="bi bi-person-check"></i> 当前友链 <b
+                            class="text-black dark:text-white"></b> 条</p>
+                    <p class="text-2xl text-center text-gray-400 dark:text-gray-500"><i class="bi bi-person-hearts"></i> 超级友链 <b
+                            class="text-black dark:text-white"></b> 条</p>
+                    <p class="text-2xl text-center text-gray-400 dark:text-gray-500 pb-3"><i class="bi bi-person-check-fill"></i> 待审友链 <b
+                            class="text-black dark:text-white"></b> 条</p>
+                </div>
+            </div>
+            <div class="block lg:hidden col-span-10">
+                <div class="items-center justify-center rounded bg-gray-50 dark:bg-gray-800 shadow grid grid-cols-1">
+                    <div class="p-2 xl:p-8 grid grid-cols-2">
+                        <button type="submit" class="m-2 text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-blue-300
+                        font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-blue-800">
+                            <i class="bi bi-send"></i>
+                            <span class="ps-1">提交修改</span>
+                        </button>
+                        <button type="submit" class="m-2 text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-blue-300
+                        font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-blue-800">
+                            <i class="bi bi-trash3"></i>
+                            <span class="ps-1">删除友链</span>
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="col-span-10 lg:col-span-7 items-center justify-center rounded bg-gray-50 dark:bg-gray-800 shadow">
@@ -186,26 +205,34 @@
             </div>
             <div class="sm:hidden lg:block col-span-3">
                 <div class="items-center justify-center rounded bg-gray-50 dark:bg-gray-800 shadow grid grid-cols-1 mb-4">
-                    <div class="p-8 grid grid-cols-2">
-                        <button type="submit" class="m-2 text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-blue-800">
+                    <div class="p-2 xl:p-8 grid grid-cols-2">
+                        <button type="submit" class="m-2 text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-blue-300
+                        font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-blue-800">
                             <i class="bi bi-send"></i>
                             <span class="ps-1">提交修改</span>
                         </button>
-                        <button type="submit" class="m-2 text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-blue-800">
+                        <button type="submit" class="m-2 text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-blue-300
+                        font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-blue-800">
                             <i class="bi bi-trash3"></i>
                             <span class="ps-1">删除友链</span>
                         </button>
                     </div>
                 </div>
                 <div class="items-center justify-center rounded bg-gray-50 dark:bg-gray-800 shadow grid grid-cols-1 mb-4">
-                    <div class="p-8 grid grid-cols-1">
+                    <div class="p-2 md:p-6 xl:p-8 grid grid-cols-1">
                         <div class="text-lg font-bold mb-3">
                             <i class="bi bi-eye"></i>
                             <span class="ps-1">参考样式</span>
                         </div>
-                        <div class="max-w-4xl mb-3">
+                        <div class="max-w-4xl mb-3" data-tooltip-target="friend-{{ $blog[0]->id }}">
+                            <div id="friend-{{ $blog[0]->id }}" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium
+                                            text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                {{ $blog[0]->blogDescription }}
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                            </div>
                             <div
-                                class="flex p-2 hover:bg-gray-100 bg-white border border-grey-200 rounded-lg shadow-lg sm:p-4 dark:bg-gray-800 dark:border-gray-700 grid-cols-2 m-1">
+                                class="flex p-2 hover:bg-gray-100 bg-white border-2 {{ $blogColor[$blog[0]->blogSetColor-1]->colorLightType }} rounded-lg
+                                shadow-lg sm:p-4 grid-cols-2 m-1">
                                 <img id="Lazy"
                                      class="w-16 h-16 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500 me-2 sm:me-4"
                                      src="{{ $blog[0]->blogIcon }}" alt="Bordered avatar">
@@ -215,9 +242,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="max-w-4xl">
+                        <div class="max-w-4xl" data-tooltip-target="friend-{{ $blog[0]->id }}">
+                            <div id="friend-{{ $blog[0]->id }}" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium
+                                            text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                {{ $blog[0]->blogDescription }}
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                            </div>
                             <div
-                                class="flex p-2 hover:bg-gray-700 border rounded-lg shadow-lg sm:p-4 bg-gray-800 border-gray-700 grid-cols-2 m-1">
+                                class="flex p-2 hover:bg-gray-700 border-2 rounded-lg shadow-lg sm:p-4 bg-gray-800
+                                {{ $blogColor[$blog[0]->blogSetColor-1]->colorDarkType }} grid-cols-2 m-1">
                                 <img id="LazyDark"
                                      class="w-16 h-16 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500 me-2 sm:me-4"
                                      src="{{ $blog[0]->blogIcon }}" alt="Bordered avatar">
