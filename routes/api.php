@@ -43,6 +43,7 @@ Route::prefix('link')->group(function () {
     Route::prefix('console')->group(function () {
         Route::post('add', [ConsoleLink::class, 'apiConsoleAdd'])->name('api.link.console.add');
         Route::post('edit', [ConsoleLink::class, 'apiConsoleEdit'])->name('api.link.console.edit');
+        Route::post('check', [ConsoleLink::class, 'apiConsoleCheck'])->name('api.link.console.check');
     });
     Route::prefix('custom')->group(function () {
         Route::post('add', [Link::class, 'apiCustomAdd'])->name('api.link.custom.add');

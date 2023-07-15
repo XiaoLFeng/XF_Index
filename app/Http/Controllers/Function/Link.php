@@ -113,6 +113,7 @@ class Link extends Controller
                         'blogSetColor' => $request->userSelColor,
                         'blogRemark' => $request->userRemark,
                         'blogServerHost' => $request->userServerHost,
+                        'created_at' => date('Y-m-d H:i:s'),
                     ]);
                 if ($insertData) {
                     // 邮件发送系统

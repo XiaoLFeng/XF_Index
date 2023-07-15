@@ -9,7 +9,6 @@ use App\Http\Controllers\Console\Dashboard;
 use App\Http\Controllers\Console\Link as ConsoleLink;
 use App\Http\Controllers\Function\Link as UserLink;
 use App\Http\Controllers\Index;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
@@ -59,11 +58,8 @@ Route::prefix('console')->middleware('authConsole')->group(function () {
         Route::redirect('list', 'list/1');
         Route::get('list', [ConsoleLink::class, 'ViewList'])->name('console.friends-link.list');
         Route::get('check', [ConsoleLink::class, 'ViewCheck'])->name('console.friends-link.check');
-        Route::get('edit/{userId}', function ($userId) {
-            $ConsoleLink = new ConsoleLink();
-            $request = new Request();
-            return $ConsoleLink->ViewEdit($request, $userId);
-        })->name('console.friends-link.edit');
+        Route::get('edit/{userId}', [ConsoleLink::class, 'viewEdit'])->name('console.friends-link.edit');
+        Route::get('check/{userId}', [ConsoleLink::class, 'viewCheckAdmin'])->name('console.friends-link.check-admin');
         Route::get('add', [ConsoleLink::class, 'ViewAdd'])->name('console.friends-link.add');
         Route::get('sort', [ConsoleLink::class, 'ViewSort'])->name('console.friends-link.sort');
         Route::get('color', [ConsoleLink::class, 'ViewColor'])->name('console.friends-link.color');
