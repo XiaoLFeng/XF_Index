@@ -6,6 +6,7 @@
  */
 
 use App\Http\Controllers\Authme;
+use App\Http\Controllers\Console\Link as ConsoleLink;
 use App\Http\Controllers\Function\Link;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,7 +41,8 @@ Route::prefix('auth')->group(function () {
 // 友链类
 Route::prefix('link')->group(function () {
     Route::prefix('console')->group(function () {
-
+        Route::post('add', [ConsoleLink::class, 'apiConsoleAdd'])->name('api.link.console.add');
+        Route::post('edit', [ConsoleLink::class, 'apiConsoleEdit'])->name('api.link.console.edit');
     });
     Route::prefix('custom')->group(function () {
         Route::post('add', [Link::class, 'apiCustomAdd'])->name('api.link.custom.add');

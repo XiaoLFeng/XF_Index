@@ -44,8 +44,9 @@
             <div class="block lg:hidden col-span-10">
                 <div class="items-center justify-center rounded bg-gray-50 dark:bg-gray-800 shadow grid grid-cols-1">
                     <div class="p-2 xl:p-8 grid grid-cols-2">
-                        <button type="submit" class="m-2 text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-blue-300
-                        font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-blue-800">
+                        <button onclick="ajax()" type="submit" class="m-2 text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none
+                        focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700
+                         dark:focus:ring-blue-800">
                             <i class="bi bi-send"></i>
                             <span class="ps-1">提交修改</span>
                         </button>
@@ -59,7 +60,7 @@
             </div>
             <div class="col-span-10 lg:col-span-7 items-center justify-center rounded bg-gray-50 dark:bg-gray-800 shadow">
                 <div class="px-10 py-5">
-                    <form>
+                    <form id="FormData" action="#" onsubmit="return false" method="POST">
                         <div class="grid gap-6 mb-6 md:grid-cols-2">
                             <div>
                                 <label for="userEmail" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">博主邮箱 <span class="text-red-700">*</span></label>
@@ -165,7 +166,8 @@
                         <div class="mb-6 grid grid-cols-1 md:grid-cols-3 items-end">
                             <div class="col-span-1 mb-3 md:mb-0">
                                 <label class="relative inline-flex">
-                                    <input type="checkbox" id="checkRssJudge" value="1" @if($blog[0]->blogRssJudge) checked @endif class="sr-only peer">
+                                    <input type="checkbox" name="checkRssJudge" id="checkRssJudge" value="1" @if($blog[0]->blogRssJudge) checked @endif
+                                    class="sr-only peer">
                                     <div
                                         class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                                     <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">我的博客拥有 RSS 地址</span>
@@ -187,7 +189,7 @@
                                     </div>
                                     <input type="text" name="userRss" id="userRss" value="{{ $blog[0]->blogRSS }}" placeholder="https://blog.x-lf.com/atom.xml"
                                            class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                           disabled>
+                                           @if($blog[0]->blogRssJudge == 0)disabled @endif>
                                 </div>
                             </div>
                         </div>
@@ -196,7 +198,7 @@
                             <div>
                                 <label for="userLocation" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">所属板块 <span
                                         class="text-red-700">*</span></label>
-                                <select id="userLocation"
+                                <select id="userLocation" name="userLocation"
                                         class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                     <option>请选择一个板块</option>
                                     @if(empty($blogSort[0]))
@@ -229,7 +231,7 @@
                                     </div>
                                     <div class="tooltip-arrow" data-popper-arrow></div>
                                 </div>
-                                <select id="userSelColor"
+                                <select id="userSelColor" name="userSelColor"
                                         class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                     <option>请选择一个颜色</option>
                                     @if(empty($blogColor[0]))
@@ -242,6 +244,9 @@
                                     @endif
                                 </select>
                             </div>
+                            <label>
+                                <input name="userId" id="userId" value="{{ $blog[0]->id }}" hidden="hidden"/>
+                            </label>
                         </div>
                     </form>
                 </div>
@@ -249,8 +254,9 @@
             <div class="sm:hidden lg:block col-span-3">
                 <div class="items-center justify-center rounded bg-gray-50 dark:bg-gray-800 shadow grid grid-cols-1 mb-4">
                     <div class="p-2 xl:p-8 grid grid-cols-2">
-                        <button type="submit" class="m-2 text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-blue-300
-                        font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-blue-800">
+                        <button onclick="ajax()" type="submit" class="m-2 text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none
+                        focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700
+                         dark:focus:ring-blue-800">
                             <i class="bi bi-send"></i>
                             <span class="ps-1">提交修改</span>
                         </button>
@@ -307,6 +313,15 @@
         </div>
     </div>
 </div>
+<!-- Toast -->
+<div id="toast"
+     class="z-[9999] fixed top-5 left-5 hidden items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded-lg shadow dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800"
+     role="alert">
+    <div class="pl-4 text-sm font-normal">
+        <span id="toast-icon" class="pe-1"><i class="bi bi-info-circle text-blue-500"></i></span>
+        <span id="toast-info">Message sent successfully.</span>
+    </div>
+</div>
 </body>
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/jquery.js') }}"></script>
@@ -348,5 +363,65 @@
         $('#colorLight').addClass(colorLight);
         $('#colorDark').addClass(colorDark);
     });
+
+    class Toast {
+        static toggle(data, icon) {
+            this.set(data, icon);
+            $('#toast').fadeIn(300);
+            setTimeout(function () {
+                $('#toast').fadeOut(300);
+            }, 3000);
+        }
+
+        static set(data, icon) {
+            $('#toast-icon').html(icon);
+            $('#toast-info').text(data);
+        }
+    }
+
+    class Enum {
+        static userEmail = '用户邮箱';
+        static userServerHost = '服务商';
+        static userBlog = '博客名字';
+        static userUrl = '博客地址';
+        static userDescription = '博客描述';
+        static userIcon = '图片地址';
+        static checkRssJudge = 'RSS选项';
+        static userRss = 'RSS地址';
+        static userLocation = '所属位置';
+        static userSelColor = '选择颜色';
+    }
+
+    function ajax() {
+        $.ajax({
+            async: true,
+            method: "POST",
+            data: $('#FormData').serialize(),
+            url: '{{ route('api.link.console.edit') }}',
+            dataType: "json",
+            success: function (returnData) {
+                if (returnData.output === "Success") {
+                    Toast.toggle('友链修改成功', '<i class="bi bi-check-circle text-green-500"></i>');
+                    setTimeout(function () {
+                        location.href = '{{ route('console.friends-link.list') }}';
+                    }, 3000);
+                } else {
+                    Toast('未知错误', '<i class="bi bi-x-circle text-red-500"></i>');
+                }
+            },
+            error: function (returnData) {
+                Toast.set('其他错误', '<i class="bi bi-x-circle text-red-500"></i>');
+                if (returnData.responseJSON.output === 'DataFormatError') {
+                    for (let key in Enum) {
+                        if (returnData.responseJSON.data.errorSingle.info === key) {
+                            Toast.toggle(Enum[key] + '错误，注意格式', '<i class="bi bi-x-circle text-red-500"></i>');
+                        }
+                    }
+                } else {
+                    Toast.toggle('未知错误', '<i class="bi bi-x-circle text-red-500"></i>');
+                }
+            }
+        });
+    }
 </script>
 </html>
