@@ -67,12 +67,17 @@
                                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                         <i class="bi bi-envelope"></i>
                                     </div>
-                                    <input type="email" name="userEmail" value="{{ $blog[0]->blogOwnEmail }}" id="userEmail" placeholder="gm@x-lf.cn" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                                    <input type="email" name="userEmail" value="{{ $blog[0]->blogOwnEmail }}" id="userEmail" placeholder="gm@x-lf.cn"
+                                           class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                           required>
                                 </div>
                             </div>
                             <div>
-                                <label for="userServerHost" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">所用主机服务商<span data-tooltip-target="userServerHost-Tooltip" class="bi bi-info-circle mx-1 text-blue-700"></span> <span class="text-red-700">*</span></label>
-                                <div id="userServerHost-Tooltip" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                <label for="userServerHost" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">所用主机服务商<span
+                                        data-tooltip-target="userServerHost-Tooltip" class="bi bi-info-circle mx-1 text-blue-700"></span> <span
+                                        class="text-red-700">*</span></label>
+                                <div id="userServerHost-Tooltip" role="tooltip"
+                                     class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                                     这个我只是想确定能否贵站确认长久开下去（如果不是大型服务商填写地址嗷），如果是“跑路”云会麻烦网友访问~
                                     <div class="tooltip-arrow" data-popper-arrow></div>
                                 </div>
@@ -80,24 +85,32 @@
                                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                         <i class="bi bi-hdd-network"></i>
                                     </div>
-                                    <input type="text" name="userServerHost" id="userServerHost" value="{{ $blog[0]->blogServerHost }}" placeholder="阿里云" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                                    <input type="text" name="userServerHost" id="userServerHost" value="{{ $blog[0]->blogServerHost }}" placeholder="阿里云"
+                                           class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                           required>
                                 </div>
                             </div>
                         </div>
                         <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-6 dark:bg-gray-700">
                         <div class="grid gap-6 mb-6 md:grid-cols-2">
                             <div>
-                                <label for="userBlog" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">博客名称 <span class="text-red-700">*</span></label>
+                                <label for="userBlog" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">博客名称 <span
+                                        class="text-red-700">*</span></label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                         <i class="bi bi-person"></i>
                                     </div>
-                                    <input type="text" name="userBlog" id="userBlog" value="{{ $blog[0]->blogName }}" placeholder="凌中的锋雨" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                                    <input type="text" name="userBlog" id="userBlog" value="{{ $blog[0]->blogName }}" placeholder="凌中的锋雨"
+                                           class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                           required>
                                 </div>
                             </div>
                             <div>
-                                <label for="userUrl" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">博客地址<span data-tooltip-target="userUrl-Tooltip" class="bi bi-info-circle mx-1 text-blue-700"></span> <span class="text-red-700">*</span></label>
-                                <div id="userUrl-Tooltip" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                <label for="userUrl" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">博客地址<span
+                                        data-tooltip-target="userUrl-Tooltip" class="bi bi-info-circle mx-1 text-blue-700"></span> <span
+                                        class="text-red-700">*</span></label>
+                                <div id="userUrl-Tooltip" role="tooltip"
+                                     class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                                     携带”http(s)://“
                                     <div class="tooltip-arrow" data-popper-arrow></div>
                                 </div>
@@ -105,13 +118,18 @@
                                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                         <i class="bi bi-link-45deg"></i>
                                     </div>
-                                    <input type="text" name="userUrl" id="userUrl" value="{{ $blog[0]->blogUrl }}" placeholder="https://www.x-lf.com/" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                                    <input type="text" name="userUrl" id="userUrl" value="{{ $blog[0]->blogUrl }}" placeholder="https://www.x-lf.com/"
+                                           class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                           required>
                                 </div>
                             </div>
                         </div>
                         <div class="mb-6">
-                            <label for="userDescription" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">博客介绍<span data-tooltip-target="userDescription-Tooltip" class="bi bi-info-circle mx-1 text-blue-700"></span> <span class="text-red-700">*</span></label>
-                            <div id="userDescription-Tooltip" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                            <label for="userDescription" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">博客介绍<span
+                                    data-tooltip-target="userDescription-Tooltip" class="bi bi-info-circle mx-1 text-blue-700"></span> <span
+                                    class="text-red-700">*</span></label>
+                            <div id="userDescription-Tooltip" role="tooltip"
+                                 class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                                 博客的一句话表述（例如）：“不为如何，只为在茫茫人海中有自己的一片天空”
                                 <div class="tooltip-arrow" data-popper-arrow></div>
                             </div>
@@ -119,12 +137,18 @@
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <i class="bi bi-chat-left-text"></i>
                                 </div>
-                                <input type="text" name="userDescription" id="userDescription" value="{{ $blog[0]->blogDescription }}" placeholder="不为如何，只为在茫茫人海中有自己的一片天空~" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                                <input type="text" name="userDescription" id="userDescription" value="{{ $blog[0]->blogDescription }}"
+                                       placeholder="不为如何，只为在茫茫人海中有自己的一片天空~"
+                                       class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                       required>
                             </div>
                         </div>
                         <div class="mb-6">
-                            <label for="userIcon" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">博客图片<span data-tooltip-target="userIcon-Tooltip" class="bi bi-info-circle mx-1 text-blue-700"></span> <span class="text-red-700">*</span></label>
-                            <div id="userIcon-Tooltip" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                            <label for="userIcon" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">博客图片<span
+                                    data-tooltip-target="userIcon-Tooltip" class="bi bi-info-circle mx-1 text-blue-700"></span> <span
+                                    class="text-red-700">*</span></label>
+                            <div id="userIcon-Tooltip" role="tooltip"
+                                 class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                                 携带”http(s)://“
                                 <div class="tooltip-arrow" data-popper-arrow></div>
                             </div>
@@ -132,20 +156,27 @@
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <i class="bi bi-image"></i>
                                 </div>
-                                <input type="text" name="userIcon" id="userIcon" value="{{ $blog[0]->blogIcon }}" placeholder="https://api.x-lf.cn/avatar/?uid=1" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                                <input type="text" name="userIcon" id="userIcon" value="{{ $blog[0]->blogIcon }}"
+                                       placeholder="https://api.x-lf.cn/avatar/?uid=1"
+                                       class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                       required>
                             </div>
                         </div>
                         <div class="mb-6 grid grid-cols-1 md:grid-cols-3 items-end">
                             <div class="col-span-1 mb-3 md:mb-0">
                                 <label class="relative inline-flex">
                                     <input type="checkbox" id="checkRssJudge" value="1" @if($blog[0]->blogRssJudge) checked @endif class="sr-only peer">
-                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                    <div
+                                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                                     <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">我的博客拥有 RSS 地址</span>
                                 </label>
                             </div>
                             <div class="col-span-2">
-                                <label for="userRss" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">RSS 地址 <a target="_blank" href="https://blog.x-lf.com/atom.xml"><span data-tooltip-target="userRss-Tooltip" class="bi bi-info-circle mx-1 text-blue-700"></span></a></label>
-                                <div id="userRss-Tooltip" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                <label for="userRss" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">RSS 地址 <a target="_blank"
+                                                                                                                                      href="https://blog.x-lf.com/atom.xml"><span
+                                            data-tooltip-target="userRss-Tooltip" class="bi bi-info-circle mx-1 text-blue-700"></span></a></label>
+                                <div id="userRss-Tooltip" role="tooltip"
+                                     class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                                     例如（可点击）：https://blog.x-lf.com/atom.xml<br/>
                                     （注：下框内容需要选择后才可填写）
                                     <div class="tooltip-arrow" data-popper-arrow></div>
@@ -154,28 +185,38 @@
                                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                         <i class="bi bi-link-45deg"></i>
                                     </div>
-                                    <input type="text" name="userRss" id="userRss" value="{{ $blog[0]->blogRSS }}" placeholder="https://blog.x-lf.com/atom.xml" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" disabled>
+                                    <input type="text" name="userRss" id="userRss" value="{{ $blog[0]->blogRSS }}" placeholder="https://blog.x-lf.com/atom.xml"
+                                           class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                           disabled>
                                 </div>
                             </div>
                         </div>
                         <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-6 dark:bg-gray-700">
                         <div class="grid gap-6 mb-6 md:grid-cols-2">
                             <div>
-                                <label for="userLocation" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">期望板块 <span class="text-red-700">*</span></label>
-                                <select id="userLocation" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <label for="userLocation" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">所属板块 <span
+                                        class="text-red-700">*</span></label>
+                                <select id="userLocation"
+                                        class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                     <option>请选择一个板块</option>
                                     @if(empty($blogSort[0]))
                                         <option><a href="{{ route('console.friends-link.sort') }}">暂没有模块，点击添加模块</a></option>
                                     @else
                                         @foreach($blogSort as $blogValue)
-                                            <option value="{{ $blogValue->id }}" @if($blog[0]->blogLocation == $blogValue->id)selected @endif>{!! $blogValue->title !!}</option>
+                                            <option value="{{ $blogValue->id }}"
+                                                    @if($blog[0]->blogLocation == $blogValue->id)selected @endif>{!! $blogValue->title !!}</option>
                                         @endforeach
                                     @endif
                                 </select>
                             </div>
                             <div>
-                                <label for="userSelColor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">期望颜色<span id="DemoCheck" data-tooltip-target="userSelColor-Tooltip" class="bi bi-info-circle mx-1 text-blue-700"></span> <span class="text-red-700">*</span></label>
-                                <div id="userSelColor-Tooltip" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                <label for="userSelColor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    所属颜色
+                                    <span id="DemoCheck"
+                                          data-tooltip-target="userSelColor-Tooltip" class="bi bi-info-circle mx-1 text-blue-700"></span>
+                                    <span class="text-red-700">*</span></label>
+                                <div id="userSelColor-Tooltip" role="tooltip"
+                                     class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                                     <div
                                         class="flex p-2 hover:bg-gray-100 bg-white border-4 border-blue-500 rounded-lg shadow-lg sm:p-4 dark:bg-gray-800 dark:border-gray-700 grid-cols-2 m-1">
                                         <img id="userDemo"
@@ -188,13 +229,15 @@
                                     </div>
                                     <div class="tooltip-arrow" data-popper-arrow></div>
                                 </div>
-                                <select id="userSelColor" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <select id="userSelColor"
+                                        class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                     <option>请选择一个颜色</option>
                                     @if(empty($blogColor[0]))
                                         <option>暂没有模块，请去板块添加模块</option>
                                     @else
                                         @foreach($blogColor as $blogValue)
-                                            <option value="{{ $blogValue->id }}" @if($blog[0]->blogSetColor == $blogValue->id)selected @endif>{!! $blogValue->comment !!}</option>
+                                            <option value="{{ $blogValue->id }}"
+                                                    @if($blog[0]->blogSetColor == $blogValue->id)selected @endif>{!! $blogValue->comment !!}</option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -230,9 +273,8 @@
                                 {{ $blog[0]->blogDescription }}
                                 <div class="tooltip-arrow" data-popper-arrow></div>
                             </div>
-                            <div
-                                class="flex p-2 hover:bg-gray-100 bg-white border-2 {{ $blogColor[$blog[0]->blogSetColor-1]->colorLightType }} rounded-lg
-                                shadow-lg sm:p-4 grid-cols-2 m-1">
+                            <div id="colorLight"
+                                 class="flex p-2 hover:bg-gray-100 bg-white border-2 rounded-lg shadow-lg sm:p-4 grid-cols-2 m-1">
                                 <img id="Lazy"
                                      class="w-16 h-16 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500 me-2 sm:me-4"
                                      src="{{ $blog[0]->blogIcon }}" alt="Bordered avatar">
@@ -248,9 +290,8 @@
                                 {{ $blog[0]->blogDescription }}
                                 <div class="tooltip-arrow" data-popper-arrow></div>
                             </div>
-                            <div
-                                class="flex p-2 hover:bg-gray-700 border-2 rounded-lg shadow-lg sm:p-4 bg-gray-800
-                                {{ $blogColor[$blog[0]->blogSetColor-1]->colorDarkType }} grid-cols-2 m-1">
+                            <div id="colorDark"
+                                 class="flex p-2 hover:bg-gray-700 border-2 rounded-lg shadow-lg sm:p-4 bg-gray-800 grid-cols-2 m-1">
                                 <img id="LazyDark"
                                      class="w-16 h-16 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500 me-2 sm:me-4"
                                      src="{{ $blog[0]->blogIcon }}" alt="Bordered avatar">
@@ -271,16 +312,41 @@
 <script src="{{ asset('js/jquery.js') }}"></script>
 <script type="text/javascript">
     $('#userIcon').blur(function () {
-        $('#Lazy').prop('src',$('#userIcon').val())
-        $('#LazyDark').prop('src',$('#userIcon').val())
+        $('#Lazy').prop('src', $('#userIcon').val())
+        $('#LazyDark').prop('src', $('#userIcon').val())
     });
     $('#userBlog').blur(function () {
         $('#DemoName').text($('#userBlog').val())
         $('#DemoNameDark').text($('#userBlog').val())
-    })
+    });
     $('#userDescription').blur(function () {
         $('#DemoDesc').text($('#userDescription').val())
         $('#DemoDescDark').text($('#userDescription').val())
-    })
+    });
+    let colorLight_Num = [
+        @foreach($blogColor as $blogValue)
+            "{{ $blogValue->colorLightType }}",
+        @endforeach
+    ];
+
+    let colorDark_Num = [
+        @foreach($blogColor as $blogValue)
+            "{{ $blogValue->colorDarkType }}",
+        @endforeach
+    ];
+
+    let colorLight = '{{ $blogColor[$blog[0]->blogSetColor-1]->colorLightType }}';
+    let colorDark = '{{ $blogColor[$blog[0]->blogSetColor-1]->colorDarkType }}';
+    $('#colorLight').addClass(colorLight);
+    $('#colorDark').addClass(colorDark);
+    $('#userSelColor').blur(function () {
+        let colorNumber = $('#userSelColor').val() - 1;
+        $('#colorLight').removeClass(colorLight);
+        $('#colorDark').removeClass(colorDark);
+        colorLight = colorLight_Num[colorNumber];
+        colorDark = colorDark_Num[colorNumber];
+        $('#colorLight').addClass(colorLight);
+        $('#colorDark').addClass(colorDark);
+    });
 </script>
 </html>
