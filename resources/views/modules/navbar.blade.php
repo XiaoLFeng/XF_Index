@@ -59,7 +59,8 @@
                                         <span class="flex-1 ml-3 whitespace-nowrap">管理员</span>
                                     </a>
                                 @endif
-                                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                <a href="{{ route('account.dashboard') }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600
+                                dark:hover:text-white">
                                     <i class="bi bi-person-rolodex"></i>
                                     <span class="flex-1 ml-3 whitespace-nowrap">个人设置</span>
                                 </a>

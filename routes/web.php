@@ -46,6 +46,7 @@ Route::prefix('function')->group(function () {
 });
 
 Route::prefix('account')->middleware('auth')->group(function () {
+    Route::get('dashboard')->name('account.dashboard');
     Route::prefix('friend')->group(function () {
         Route::get('link')->name('account.friend.link');
         Route::get('edit')->name('account.friend.edit');
