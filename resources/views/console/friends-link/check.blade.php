@@ -35,32 +35,38 @@
                 <div class="px-10 py-5">
                     @if(!empty($blog))
                         <ul class="divide-y divide-gray-200 dark:divide-gray-700">
-                        @foreach($blog as $blogValue)
-                            <li class="py-3 sm:py-4">
-                                <div class="flex items-center space-x-4">
-                                    <div class="flex-shrink-0">
-                                        <img id="Lazy" class="w-10 h-10 rounded-full" src="{{ asset('images/avatar.png') }}" data-src="{{ $blogValue->blogIcon }}" alt="Neil image">
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-bold text-gray-900 truncate dark:text-white">
-                                            {{ $blogValue->blogName }}
-                                        </p>
-                                        <p class="text-sm text-gray-400 truncate dark:text-gray-300">
-                                            <a href="{{ $blogValue->blogUrl }}" target="_blank">{{ $blogValue->blogUrl }}</a>
-                                        </p>
-                                    </div>
-                                    <a href="?" type="button" class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                        <a href="{{ route('console.friends-link.edit',$blogValue->id) }}" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-3 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                            <i class="bi bi-pencil"></i>
-                                            <span class="ps-1">编辑</span>
+                            @foreach($blog as $blogValue)
+                                <li class="py-3 sm:py-4">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="flex-shrink-0">
+                                            <img id="Lazy"
+                                                 class="w-10 h-10 p-1 rounded-full ring-2 {{ $blogColor[$blogValue->blogSetColor-1]->colorLightType }}
+                                                {{ $blogColor[$blogValue->blogSetColor-1]->colorDarkType }} sm:me-4"
+                                                 src="{{ asset('images/avatar.png') }}" data-src="{{ $blogValue->blogIcon }}"
+                                                 alt="Bordered avatar">
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm font-bold text-gray-900 truncate dark:text-white">
+                                                {{ $blogValue->blogName }}
+                                            </p>
+                                            <p class="text-sm text-gray-400 truncate dark:text-gray-300">
+                                                <a href="{{ $blogValue->blogUrl }}" target="_blank">{{ $blogValue->blogUrl }}</a>
+                                            </p>
+                                        </div>
+                                        <a href="?" type="button" class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                            <a href="{{ route('console.friends-link.check-admin',$blogValue->id) }}" type="button"
+                                               class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-3 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                                <i class="bi bi-pencil"></i>
+                                                <span class="ps-1">编辑</span>
+                                            </a>
                                         </a>
-                                    </a>
-                                </div>
-                            </li>
-                        @endforeach
+                                    </div>
+                                </li>
+                            @endforeach
                         </ul>
                     @else
-                        <h1 class="text-center mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white mt-5">暂无待审核用户</h1>
+                        <h1 class="text-center mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white mt-5">
+                            暂无待审核用户</h1>
                         <p class="mb-6 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400 text-center">去去其他地方逛逛吧</p>
                     @endif
                 </div>
@@ -85,17 +91,18 @@
 </body>
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/jquery.js') }}"></script>
+<script async src="{{ asset('js/lazyload.js') }}"></script>
 <script type="text/javascript">
-document.addEventListener('DOMContentLoaded', function () {
-    const lazyLoadInstance = new LazyLoad({
-        elements_selector: '#Lazy', // 指定要延迟加载的元素选择器
-        loaded: function (element) {
-            element.classList.add('fade');
-        },
-        callback_error: function (element) {
-            element.src = '{{ asset('images/avatar.png') }}'; // 图像加载失败时替换为占位图像
-        }
+    document.addEventListener('DOMContentLoaded', function () {
+        const lazyLoadInstance = new LazyLoad({
+            elements_selector: '#Lazy', // 指定要延迟加载的元素选择器
+            loaded: function (element) {
+                element.classList.add('fade');
+            },
+            callback_error: function (element) {
+                element.src = '{{ asset('images/avatar.png') }}'; // 图像加载失败时替换为占位图像
+            }
+        });
     });
-});
 </script>
 </html>

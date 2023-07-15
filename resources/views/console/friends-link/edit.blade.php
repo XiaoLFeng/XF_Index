@@ -28,7 +28,7 @@
     <div class="p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
         @include('console.modules.personal')
         <div class="grid grid-cols-1 gap-4 mb-4">
-            <div class="text-2xl text-gray-400 dark:text-gray-500"><i class="bi bi-link-45deg"></i> 友链修改</div>
+            <div class="text-2xl text-gray-400 dark:text-gray-500"><i class="bi bi-link-45deg"></i> {{ $subDescriptionForLine }}</div>
         </div>
         <div class="grid grid-cols-10 gap-4 mb-4">
             <div class="col-span-10 lg:hidden gird grid-cols-1">
@@ -194,7 +194,7 @@
                             </div>
                         </div>
                         <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-6 dark:bg-gray-700">
-                        <div class="grid gap-6 mb-6 md:grid-cols-2">
+                        <div class="grid gap-6 md:grid-cols-2">
                             <div>
                                 <label for="userLocation" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">所属板块 <span
                                         class="text-red-700">*</span></label>
@@ -248,6 +248,19 @@
                                 <input name="userId" id="userId" value="{{ $blog[0]->id }}" hidden="hidden"/>
                             </label>
                         </div>
+                        <div class="mb-6">
+                            <label for="userRemark" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">留言备注</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <i class="bi bi-chat-left-text"></i>
+                                </div>
+                                <input type="text" name="userRemark" id="userRemark" value="{{ $blog[0]->blogRemark }}" placeholder="多多关照哦~" class="bg-gray-100
+                                border
+                                border-gray-300
+                                text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700
+                                dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" disabled>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -258,12 +271,20 @@
                         focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700
                          dark:focus:ring-blue-800">
                             <i class="bi bi-send"></i>
-                            <span class="ps-1">提交修改</span>
+                            <span class="ps-1">@if($subDescriptionForLine == '友链修改')
+                                    提交修改
+                                @else
+                                    审核通过
+                                @endif</span>
                         </button>
                         <button type="submit" class="m-2 text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-blue-300
                         font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-blue-800">
                             <i class="bi bi-trash3"></i>
-                            <span class="ps-1">删除友链</span>
+                            <span class="ps-1">@if($subDescriptionForLine == '友链修改')
+                                    删除友链
+                                @else
+                                    审核拒绝
+                                @endif</span>
                         </button>
                     </div>
                 </div>
@@ -397,11 +418,11 @@
             async: true,
             method: "POST",
             data: $('#FormData').serialize(),
-            url: '{{ route('api.link.console.edit') }}',
+            url: '@if($subDescriptionForLine == '友链修改') {{ route('api.link.console.edit') }} @else {{ route('api.link.console.check') }} @endif',
             dataType: "json",
             success: function (returnData) {
                 if (returnData.output === "Success") {
-                    Toast.toggle('友链修改成功', '<i class="bi bi-check-circle text-green-500"></i>');
+                    Toast.toggle('操作成功', '<i class="bi bi-check-circle text-green-500"></i>');
                     setTimeout(function () {
                         location.href = '{{ route('console.friends-link.list') }}';
                     }, 3000);
