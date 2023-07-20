@@ -52,7 +52,7 @@ class Link extends Controller
         return view('console.friends-link.edit', $this->data);
     }
 
-    protected function ViewList(Request $request): Factory|View|Application|RedirectResponse
+    protected function viewList(Request $request): Factory|View|Application|RedirectResponse
     {
         $this->data['request'] = $request;
         $dataMarge = [
@@ -102,7 +102,7 @@ class Link extends Controller
         return view('console.friends-link.list', $this->data);
     }
 
-    protected function ViewCheck(Request $request): Factory|View|Application
+    protected function viewCheck(): Factory|View|Application
     {
         // 检查是否存在含有未在本站分配位置
         $this->data['blog'] = DB::table('blog_link')
@@ -121,17 +121,29 @@ class Link extends Controller
         return view('console.friends-link.check', $this->data);
     }
 
-    protected function ViewAdd(Request $request): Factory|View|Application
+    protected function viewAdd(): Factory|View|Application
     {
+        $this->data['blogSort'] = DB::table('blog_sort')
+            ->orderBy('sort')
+            ->get()
+            ->toArray();
+        $blogColor = DB::table('blog_color')
+            ->orderBy('id')
+            ->get()
+            ->toArray();
+        for ($i = 0; !empty($blogColor[$i]->id); $i++) {
+            $blogColor[$i]->colorDarkType = str_replace('dark:', '', $blogColor[$i]->colorDarkType);
+        }
+        $this->data['blogColor'] = $blogColor;
         return view('console.friends-link.add', $this->data);
     }
 
-    protected function ViewSort(): Factory|View|Application
+    protected function viewSort(): Factory|View|Application
     {
-        return view('console.friends-link.sort',$this->data);
+        return view('console.friends-link.sort', $this->data);
     }
 
-    protected function ViewColor(): Factory|View|Application
+    protected function viewColor(): Factory|View|Application
     {
         return view('console.friends-link.color', $this->data);
     }

@@ -357,7 +357,9 @@
     });
     $('#userDescription').blur(function () {
         $('#DemoDesc').text($('#userDescription').val())
+        $('#friend-light').html($('#userDescription').val() + '<div class="tooltip-arrow" data-popper-arrow></div>')
         $('#DemoDescDark').text($('#userDescription').val())
+        $('#friend-dark').html($('#userDescription').val() + '<div class="tooltip-arrow" data-popper-arrow></div>')
     });
     let colorLight_Num = [
         @foreach($blogColor as $blogValue)
