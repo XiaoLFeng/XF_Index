@@ -99,6 +99,8 @@ class Link extends Controller
                 ])->get()->toArray();
 
             if (empty($resultBlog)) {
+                if (empty($request->checkRssJudge)) $request->checkRssJudge = 0;
+                if (empty($request->userRss)) $request->userRss = null;
                 // 数据写入数据库
                 $insertData = DB::table('blog_link')
                     ->insert([

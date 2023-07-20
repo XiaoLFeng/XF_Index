@@ -148,21 +148,14 @@ class Link extends Controller
         return view('console.friends-link.color', $this->data);
     }
 
-    public function apiConsoleAdd()
+    public function apiConsoleAdd(Request $request): JsonResponse
     {
         // 检查数据
-
-    }
-
-    public function apiConsoleEdit(Request $request): JsonResponse
-    {
-        // 检查用户是否登录
         if (Auth::check()) {
             if (Auth::user()->admin) {
                 // 处理获取数据
                 $dataCheck = Validator::make($request->all(), [
-                    'userId' => 'required|int',
-                    'userEmail' => 'required|email',
+                    'userEmail' => 'email',
                     'userServerHost' => 'required|string',
                     'userBlog' => 'required|string',
                     'userUrl' => 'required|regex:#[a-zA-z]+://[^\s]*#',
@@ -196,6 +189,98 @@ class Link extends Controller
                         ],
                     ];
                 } else {
+                    if (empty($request->userEmail)) $request->userEmail = null;
+                    if (empty($request->checkRssJudge)) $request->checkRssJudge = 0;
+                    if (empty($request->userRss)) $request->userRss = null;
+                    // 更新数据库
+                    DB::table('blog_link')
+                        ->insert([
+                            'blogOwnEmail' => $request->userEmail,
+                            'blogServerHost' => $request->userServerHost,
+                            'blogName' => $request->userBlog,
+                            'blogUrl' => $request->userUrl,
+                            'blogDescription' => $request->userDescription,
+                            'blogIcon' => $request->userIcon,
+                            'blogRssJudge' => $request->checkRssJudge,
+                            'blogRSS' => $request->userRss,
+                            'blogSetColor' => $request->userSelColor,
+                            'blogLocation' => $request->userLocation,
+                            'created_at' => date('Y-m-d H:i:s'),
+                        ]);
+                    $returnData = [
+                        'output' => 'Success',
+                        'code' => 200,
+                        'data' => [
+                            'message' => '数据插入成功',
+                        ],
+                    ];
+                }
+            } else {
+                $returnData = [
+                    'output' => 'NoPermission',
+                    'code' => 403,
+                    'data' => [
+                        'message' => '没有权限',
+                    ],
+                ];
+            }
+        } else {
+            $returnData = [
+                'output' => 'PleaseLogin',
+                'code' => 403,
+                'data' => [
+                    'message' => '请登录',
+                ],
+            ];
+        }
+        return Response::json($returnData, $returnData['code']);
+    }
+
+    public function apiConsoleEdit(Request $request): JsonResponse
+    {
+        // 检查用户是否登录
+        if (Auth::check()) {
+            if (Auth::user()->admin) {
+                // 处理获取数据
+                $dataCheck = Validator::make($request->all(), [
+                    'userId' => 'required|int',
+                    'userEmail' => 'email',
+                    'userServerHost' => 'required|string',
+                    'userBlog' => 'required|string',
+                    'userUrl' => 'required|regex:#[a-zA-z]+://[^\s]*#',
+                    'userDescription' => 'required|string',
+                    'userIcon' => 'required|regex:#[a-zA-z]+://[^\s]*#',
+                    'checkRssJudge' => 'boolean',
+                    'userRss' => 'string|regex:#[a-zA-z]+://[^\s]*#',
+                    'userSelColor' => 'required|int',
+                    'userLocation' => 'required|string',
+                ]);
+                if ($dataCheck->fails()) {
+                    $errorType = array_keys($dataCheck->failed());
+                    $i = 0;
+                    foreach ($dataCheck->failed() as $valueData) {
+                        $errorInfo[$errorType[$i]] = array_keys($valueData);
+                        if ($i == 0) {
+                            $errorSingle = [
+                                'info' => $errorType[$i],
+                                'need' => $errorInfo[$errorType[$i]],
+                            ];
+                        }
+                        $i++;
+                    }
+                    $returnData = [
+                        'output' => 'DataFormatError',
+                        'code' => 403,
+                        'data' => [
+                            'message' => '输入内容有错误',
+                            'errorSingle' => $errorSingle,
+                            'error' => $errorInfo,
+                        ],
+                    ];
+                } else {
+                    if (empty($request->userEmail)) $request->userEmail = null;
+                    if (empty($request->checkRssJudge)) $request->checkRssJudge = 0;
+                    if (empty($request->userRss)) $request->userRss = null;
                     // 更新数据库
                     DB::table('blog_link')
                         ->where([['id', '=', $request->userId]])

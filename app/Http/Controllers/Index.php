@@ -25,7 +25,7 @@ class Index extends Controller
             'webDescription' => empty($tempStorage = DB::table('info')->find(2)->data) ? '未定义副标题' : $tempStorage,
             'webSubTitle' => empty($tempStorage = DB::table('info')->find(3)->data) ? '未定义小标题' : $tempStorage,
             'webSubTitleDescription' => empty($tempStorage = DB::table('info')->find(4)->data) ? '未定义小标题内容' : $tempStorage,
-            'webIcon' => empty($tempStorage = DB::table('info')->find(5)->data) ? asset('images/logo.jpg') : $tempStorage,
+            'webIcon' => empty($tempStorage = DB::table('info')->find(5)->data) ? asset('images/favicon.png') : $tempStorage,
             'webHeader' => DB::table('info')->find(7)->data,
             'webFooter' => DB::table('info')->find(8)->data,
             'webKeyword' => empty($tempStorage = DB::table('info')->find(6)->data) ? '筱锋,凌中的锋雨,xiao_lfeng' : $tempStorage,
