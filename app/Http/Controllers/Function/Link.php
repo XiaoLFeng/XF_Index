@@ -121,6 +121,12 @@ class Link extends Controller
                         global $request;
                         $mail->from(env('MAIL_USERNAME'), env('APP_NAME'));
                         $mail->to($request->userEmail);
+                        $mail->subject(env('APP_NAME') . '-友链申请成功');
+                    });
+                    Mail::send('mail.link-console-add', $request->toArray(), function (Message $mail) {
+                        global $request;
+                        $mail->from(env('MAIL_USERNAME'), env('APP_NAME'));
+                        $mail->to($this->data['sqlEmail']);
                         $mail->subject(env('APP_NAME') . '-友链等待审核通知');
                     });
                     // 消息成功通知
