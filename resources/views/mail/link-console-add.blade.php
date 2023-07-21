@@ -20,7 +20,7 @@
                 </tr>
                 <tr>
                     <td style="padding: 0px 0px 10px 0px;color: #000000; font-family: Arial, sans-serif; font-size: 24px;">
-                        Dear. <a style="text-decoration: none;color: #198754;" href="mailto:{{ $userEmail }}">{{ $userEmail }}</a>
+                        Dear. 站长</a>
                     </td>
                 </tr>
                 <tr>

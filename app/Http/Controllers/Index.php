@@ -76,7 +76,7 @@ class Index extends Controller
         return view('modules.no-permission', $this->data);
     }
 
-    private function MarkdownToStringReplace(string $dataBase): string
+    public function MarkdownToStringReplace(string $dataBase): string
     {
         $decodeText = MarkdownExtra::defaultTransform($dataBase);
         $decodeText = str_replace('<h1>', '<p class="text-4xl font-extrabold text-gray-900 dark:text-white mb-4"><i class="bi bi-link-45deg"></i>', $decodeText);

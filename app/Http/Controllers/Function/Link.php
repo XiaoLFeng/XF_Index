@@ -819,6 +819,8 @@ class Link extends Controller
             ->orderBy('sort')
             ->get()
             ->toArray();
+        $this->data['applicationRule'] = DB::table('info')->find(15)->data;
+        $this->data['applicationInfo'] = (new Index())->MarkdownToStringReplace(DB::table('info')->find(16)->data);
         return view('function.make-friend', $this->data);
     }
 
