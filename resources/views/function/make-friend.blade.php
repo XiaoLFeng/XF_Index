@@ -152,13 +152,14 @@
                                 </div>
                                 <div class="tooltip-arrow" data-popper-arrow></div>
                             </div>
-                            <select id="userSelColor" name="userSelColor" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <select id="userSelColor" name="userSelColor"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option>请选择一个颜色</option>
                                 @if(empty($blogColor[0]))
                                     <option>站长没有设置可用颜色呢</option>
                                 @else
                                     @foreach($blogColor as $blogValue)
-                                        <option value="{{ $blogValue->id }}">{!! $blogValue->comment !!}</option>
+                                        <option value="{{ $blogValue->id }}" @if($blogValue->onlyAdminUse)disabled @endif>{!! $blogValue->comment !!}</option>
                                     @endforeach
                                 @endif
                             </select>
@@ -170,17 +171,29 @@
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                 <i class="bi bi-chat-left-text"></i>
                             </div>
-                            <input type="text" name="userRemark" id="userRemark" placeholder="多多关照哦~" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <input type="text" name="userRemark" id="userRemark" placeholder="多多关照哦~"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         </div>
                     </div>
                     <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
                     <div class="flex items-start mb-6">
                         <div class="flex items-center h-5">
-                            <input id="remember" type="checkbox" value="1" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800" required>
+                            <input id="remember" type="checkbox" value="1"
+                                   class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800"
+                                   required>
                         </div>
-                        <label for="remember" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">我满足 <a href="#" class="text-blue-600 hover:underline dark:text-blue-500">《凌中的锋雨-友链申请要求》</a></label>
+                        <label for="remember" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                            我满足
+                            <a data-modal-target="Modal" data-modal-toggle="Modal" class="text-blue-600 hover:underline
+                            dark:text-blue-500">《{{ $applicationRule }}》</a>
+                        </label>
                     </div>
-                    <button onclick="buttonSubmit()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="bi bi-send me-1"></i>发送申请</button>
+                    <button onclick="buttonSubmit()" id="sendButton" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none
+                    focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700
+                    dark:focus:ring-blue-800">
+                        <i class="bi bi-send"></i>
+                        <span class="ps-1">发送申请</span>
+                    </button>
                 </form>
             </div>
         </div>
@@ -235,17 +248,50 @@
         </button>
     </div>
 </div>
-
+<!-- Modal -->
+<div id="Modal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc
+(100%-1rem)] max-h-full">
+    <div class="relative w-full max-w-2xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    {{ $applicationRule }}
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto
+                inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="Modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-6 space-y-6">
+                {!! $applicationInfo !!}
+            </div>
+            <!-- Modal footer -->
+            <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <button data-modal-hide="Modal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none
+                focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700
+                dark:focus:ring-blue-800">
+                    我知道了
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/jquery.js') }}"></script>
 <script type="text/javascript">
-$(document).ready(function () {
-    let userIcon = $('#userIcon').val();
+    $(document).ready(function () {
+        let userIcon = $('#userIcon').val();
 
-    $('#checkRssJudge').change(function () {
-        if ($(this).is(':checked')) {
-            $('#userRss').prop('disabled',false);
+        $('#checkRssJudge').change(function () {
+            if ($(this).is(':checked')) {
+                $('#userRss').prop('disabled', false);
         } else {
             $('#userRss').prop('disabled',true);
         }
@@ -303,33 +349,44 @@ function ajax() {
         data: $('#FormData').serialize(),
         url: '{{ route('api.link.custom.add') }}',
         dataType: "json",
+        beforeSend: function () {
+            $('#sendButton').prop('disabled', true).removeClass('text-blue-500').addClass('text-blue-600')
+                .html('<svg aria-hidden="true" role="status" class="inline w-4 h-4 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/> <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/></svg>' +
+                    '<span class="ps-1">正在操作</span>');
+        },
         success: function (returnData) {
             if (returnData.output === "Success") {
-                Toast.toggle('友链申请成功，即将跳转','<i class="bi bi-check-circle text-green-500"></i>');
+                $('#sendButton').html('<i class="bi bi-check2-circle"></i><span class="ps-1">申请成功</span>');
+
+                Toast.toggle('友链申请成功，即将跳转', '<i class="bi bi-check-circle text-green-500"></i>');
                 setTimeout(function () {
                     location.href = '{{ route('function.link') }}';
-                },3000);
+                }, 3000);
             } else {
-                Toast('未知错误','<i class="bi bi-x-circle text-red-500"></i>');
+                Toast('未知错误', '<i class="bi bi-x-circle text-red-500"></i>');
+                $('#sendButton').html('<i class="bi bi-send"></i><span class="ps-1">发送申请</span>')
+                    .removeClass('text-blue-600').addClass('text-blue-500').prop('disabled', false);
             }
         },
         error: function (returnData) {
-            Toast.set('其他错误','<i class="bi bi-x-circle text-red-500"></i>');
+            Toast.set('其他错误', '<i class="bi bi-x-circle text-red-500"></i>');
             if (returnData.responseJSON.output === 'DataFormatError') {
                 for (let key in Enum) {
                     if (returnData.responseJSON.data.errorSingle.info === key) {
-                        Toast.toggle(Enum[key]+'错误，注意格式','<i class="bi bi-x-circle text-red-500"></i>');
+                        Toast.toggle(Enum[key] + '错误，注意格式', '<i class="bi bi-x-circle text-red-500"></i>');
                     }
                 }
             } else if (returnData.responseJSON.output === "AlreadyUser") {
                 $('#toast-interactive').fadeIn(300);
-                $('#edit-friend').attr('href',"{{ route('function.edit-search') }}?searchName="+$('#userBlog').val()+"&searchUrl="+$('#userUrl').val());
+                $('#edit-friend').attr('href',"{{ route('function.edit-search') }}?searchName=" + $('#userBlog').val() + "&searchUrl=" + $('#userUrl').val());
                 setTimeout(function () {
                     $('#toast-interactive').fadeOut(300);
                 }, 10000);
             } else {
-                Toast.toggle('未知错误','<i class="bi bi-x-circle text-red-500"></i>');
+                Toast.toggle('未知错误', '<i class="bi bi-x-circle text-red-500"></i>');
             }
+            $('#sendButton').html('<i class="bi bi-send"></i><span class="ps-1">发送申请</span>')
+                .removeClass('text-blue-600').addClass('text-blue-500').prop('disabled', false);
         }
     });
 }

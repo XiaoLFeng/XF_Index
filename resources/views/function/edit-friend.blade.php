@@ -213,7 +213,8 @@
                                 @else
                                     @foreach($blogColor as $blogValue)
                                         <option value="{{ $blogValue->id }}"
-                                                @if($blogValue->id == $blog->blogSetColor)selected @endif>{!! $blogValue->comment !!}</option>
+                                                @if($blogValue->id == $blog->blogSetColor)selected @endif @if($blogValue->onlyAdminUse)disabled @endif>
+                                            {!! $blogValue->comment !!}</option>
                                     @endforeach
                                 @endif
                             </select>

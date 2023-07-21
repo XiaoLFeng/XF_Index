@@ -9,7 +9,6 @@ use App\Http\Controllers\Console\Dashboard;
 use App\Http\Controllers\Console\Link as ConsoleLink;
 use App\Http\Controllers\Function\Link as UserLink;
 use App\Http\Controllers\Index;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
@@ -25,63 +24,63 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [Index::class,'ViewIndex'])->name('home');
+Route::get('/', [Index::class, 'ViewIndex'])->name('home');
 Route::get('about', [Index::class, 'ViewAboutMe'])->name('about');
+Route::get('404', [Index::class, 'viewPageNotFounded'])->name('404');
+Route::get('no-permission', [Index::class, 'viewNoPermission'])->name('no-permission');
 Route::get('backup', [\App\Http\Controllers\DataBase::class, '__construct']);
 
 Route::prefix('function')->group(function () {
-    Route::get('link',[UserLink::class, 'viewLink'])->name('function.link');
+    Route::get('link', [UserLink::class, 'viewLink'])->name('function.link');
     Route::get('make-friend', [UserLink::class, 'viewMakeFriend'])->name('function.make-friend');
     Route::get('edit-search', [UserLink::class, 'viewSearchFriends'])->name('function.edit-search');
     Route::get('edit-search/{friendId}', [UserLink::class, 'viewSearchFriend'])->name('function.edit-searchOnly');
-    Route::get('edit-friend/{friendId}',[UserLink::class,'viewEditFriend'])->name('function.edit-friend');
-    Route::get('sponsor',function () {
+    Route::get('edit-friend/{friendId}', [UserLink::class, 'viewEditFriend'])->name('function.edit-friend');
+    Route::get('sponsor', function () {
         return view('function.sponsor');
     })->name('function.sponsor');
-    Route::get('music',function () {
+    Route::get('music', function () {
         return view('function.music');
     })->name('function.music');
 });
 
 Route::prefix('account')->middleware('auth')->group(function () {
+    Route::get('dashboard')->name('account.dashboard');
     Route::prefix('friend')->group(function () {
         Route::get('link')->name('account.friend.link');
         Route::get('edit')->name('account.friend.edit');
     });
 });
 
-Route::prefix('console')->middleware('auth')->group(function () {
-    Route::get('dashboard', [Dashboard::class,'ViewDashboard'])->name('console.dashboard');
+Route::prefix('console')->middleware('authConsole')->group(function () {
+    Route::get('dashboard', [Dashboard::class, 'ViewDashboard'])->name('console.dashboard');
     Route::prefix('friends-link')->group(function () {
-        Route::redirect('list','list/1');
-        Route::get('list',[ConsoleLink::class,'ViewList'])->name('console.friends-link.list');
-        Route::get('check',[ConsoleLink::class,'ViewCheck'])->name('console.friends-link.check');
-        Route::get('edit/{userId}',function ($userId) {
-            $ConsoleLink = new ConsoleLink();
-            $request = new Request();
-            return $ConsoleLink->ViewEdit($request,$userId);
-        })->name('console.friends-link.edit');
-        Route::get('add',[ConsoleLink::class,'ViewAdd'])->name('console.friends-link.add');
-        Route::get('sort',[ConsoleLink::class,'ViewSort'])->name('console.friends-link.sort');
-        Route::get('color',[ConsoleLink::class,'ViewColor'])->name('console.friends-link.color');
+        Route::redirect('list', 'list/1');
+        Route::get('list', [ConsoleLink::class, 'viewList'])->name('console.friends-link.list');
+        Route::get('check', [ConsoleLink::class, 'viewCheck'])->name('console.friends-link.check');
+        Route::get('edit/{userId}', [ConsoleLink::class, 'viewEdit'])->name('console.friends-link.edit');
+        Route::get('check/{userId}', [ConsoleLink::class, 'viewCheckAdmin'])->name('console.friends-link.check-admin');
+        Route::get('add', [ConsoleLink::class, 'viewAdd'])->name('console.friends-link.add');
+        Route::get('sort', [ConsoleLink::class, 'viewSort'])->name('console.friends-link.sort');
+        Route::get('color', [ConsoleLink::class, 'viewColor'])->name('console.friends-link.color');
     });
 });
 
 Route::prefix('auth')->group(function () {
-    Route::redirect('','auth/login');
+    Route::redirect('', 'auth/login');
     Route::get('login', function () {
         $data = (new Index())->data;
-        return view('auth.login',$data);
+        return view('auth.login', $data);
     })->name('login');
-    Route::get('register',function () {
+    Route::get('register', function () {
         $data = (new Index())->data;
-        return view('auth.register',$data);
+        return view('auth.register', $data);
     })->name('register');
-    Route::get('forgotpassword',function () {
+    Route::get('forgotpassword', function () {
         $data = (new Index())->data;
-        return view('auth.forgotpassword',$data);
+        return view('auth.forgotpassword', $data);
     })->name('forgotpassword');
-    Route::match(['get','post'],'logout',function () {
+    Route::match(['get', 'post'], 'logout', function () {
         Auth::logout();
         return Response::redirectTo('');
     })->name('logout');

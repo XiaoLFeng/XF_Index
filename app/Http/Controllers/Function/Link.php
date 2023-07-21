@@ -99,6 +99,8 @@ class Link extends Controller
                 ])->get()->toArray();
 
             if (empty($resultBlog)) {
+                if (empty($request->checkRssJudge)) $request->checkRssJudge = 0;
+                if (empty($request->userRss)) $request->userRss = null;
                 // 数据写入数据库
                 $insertData = DB::table('blog_link')
                     ->insert([
@@ -113,6 +115,7 @@ class Link extends Controller
                         'blogSetColor' => $request->userSelColor,
                         'blogRemark' => $request->userRemark,
                         'blogServerHost' => $request->userServerHost,
+                        'created_at' => date('Y-m-d H:i:s'),
                     ]);
                 if ($insertData) {
                     // 邮件发送系统
@@ -120,6 +123,12 @@ class Link extends Controller
                         global $request;
                         $mail->from(env('MAIL_USERNAME'), env('APP_NAME'));
                         $mail->to($request->userEmail);
+                        $mail->subject(env('APP_NAME') . '-友链申请成功');
+                    });
+                    Mail::send('mail.link-console-add', $request->toArray(), function (Message $mail) {
+                        global $request;
+                        $mail->from(env('MAIL_USERNAME'), env('APP_NAME'));
+                        $mail->to($this->data['sqlEmail']);
                         $mail->subject(env('APP_NAME') . '-友链等待审核通知');
                     });
                     // 消息成功通知
@@ -784,14 +793,19 @@ class Link extends Controller
     protected function viewLink(): Factory|View|Application
     {
         $this->data['webSubTitle'] = '友链';
-        $this->getFriendsLink($this->data);
+        $this->data['blogLink'] = DB::table('blog_link')
+            ->whereNotIn('blog_link.blogLocation', [0])
+            ->get()
+            ->toArray();
+        $this->data['blogSort'] = DB::table('blog_sort')
+            ->orderBy('blog_sort.sort')
+            ->get()
+            ->toArray();
+        $this->data['blogColor'] = DB::table('blog_color')
+            ->orderBy('id')
+            ->get()
+            ->toArray();
         return view('function.link', $this->data);
-    }
-
-    private function getFriendsLink(array &$data): void
-    {
-        $data['blogLink'] = DB::table('blog_link')->whereNotIn('blog_link.blogLocation', [0])->get()->toArray();
-        $data['blogSort'] = DB::table('blog_sort')->orderBy('blog_sort.sort')->get()->toArray();
     }
 
     protected function viewMakeFriend(): Factory|View|Application
@@ -805,6 +819,8 @@ class Link extends Controller
             ->orderBy('sort')
             ->get()
             ->toArray();
+        $this->data['applicationRule'] = DB::table('info')->find(15)->data;
+        $this->data['applicationInfo'] = (new Index())->MarkdownToStringReplace(DB::table('info')->find(16)->data);
         return view('function.make-friend', $this->data);
     }
 

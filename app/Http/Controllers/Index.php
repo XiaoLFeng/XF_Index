@@ -25,7 +25,7 @@ class Index extends Controller
             'webDescription' => empty($tempStorage = DB::table('info')->find(2)->data) ? '未定义副标题' : $tempStorage,
             'webSubTitle' => empty($tempStorage = DB::table('info')->find(3)->data) ? '未定义小标题' : $tempStorage,
             'webSubTitleDescription' => empty($tempStorage = DB::table('info')->find(4)->data) ? '未定义小标题内容' : $tempStorage,
-            'webIcon' => empty($tempStorage = DB::table('info')->find(5)->data) ? asset('images/logo.jpg') : $tempStorage,
+            'webIcon' => empty($tempStorage = DB::table('info')->find(5)->data) ? asset('images/favicon.png') : $tempStorage,
             'webHeader' => DB::table('info')->find(7)->data,
             'webFooter' => DB::table('info')->find(8)->data,
             'webKeyword' => empty($tempStorage = DB::table('info')->find(6)->data) ? '筱锋,凌中的锋雨,xiao_lfeng' : $tempStorage,
@@ -41,10 +41,11 @@ class Index extends Controller
             $this->data = array_merge($this->data, ['GonganCode' => $data[0]]);
         }
         if (Auth::check()) {
-            $this->data = array_merge($this->data,[
+            $this->data = array_merge($this->data, [
                 'userName' => Auth::user()->username,
                 'userEmail' => Auth::user()->email,
-                'userIcon' => Auth::user()->icon]);
+                'userIcon' => Auth::user()->icon,
+                'userAdmin' => Auth::user()->admin]);
         }
     }
 
@@ -63,7 +64,19 @@ class Index extends Controller
         return view('about', $this->data);
     }
 
-    private function MarkdownToStringReplace(string $dataBase): string
+    protected function viewPageNotFounded(): Factory|View|Application
+    {
+        $this->data['webSubTitle'] = '页面未找到';
+        return view('modules.404', $this->data);
+    }
+
+    protected function viewNoPermission(): Factory|View|Application
+    {
+        $this->data['webSubTitle'] = '没有权限';
+        return view('modules.no-permission', $this->data);
+    }
+
+    public function MarkdownToStringReplace(string $dataBase): string
     {
         $decodeText = MarkdownExtra::defaultTransform($dataBase);
         $decodeText = str_replace('<h1>', '<p class="text-4xl font-extrabold text-gray-900 dark:text-white mb-4"><i class="bi bi-link-45deg"></i>', $decodeText);

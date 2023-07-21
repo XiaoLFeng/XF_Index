@@ -46,23 +46,29 @@
                     <div class="font-medium dark:text-white">
                         <div class="text-right">{{ $userName }}</div>
                     </div>
-                    <img id="avatarButton" type="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" class="w-8 h-8 rounded-full cursor-pointer" src="{{ $userIcon }}" alt="">
+                    <img id="avatarButton" type="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start"
+                         class="w-8 h-8 rounded-full cursor-pointer" src="{{ $userIcon }}" alt="">
                     <!-- Dropdown menu -->
                     <div id="userDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                         <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
                             <li>
-                                <a href="{{ route('console.dashboard') }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                    <i class="bi bi-person-rolodex"></i>
-                                    <span class="flex-1 ml-3 whitespace-nowrap">管理员</span>
-                                </a>
-                                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                @if($userAdmin)
+                                    <a href="{{ route('console.dashboard') }}"
+                                       class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                        <i class="bi bi-person-circle"></i>
+                                        <span class="flex-1 ml-3 whitespace-nowrap">管理员</span>
+                                    </a>
+                                @endif
+                                <a href="{{ route('account.dashboard') }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600
+                                dark:hover:text-white">
                                     <i class="bi bi-person-rolodex"></i>
                                     <span class="flex-1 ml-3 whitespace-nowrap">个人设置</span>
                                 </a>
                             </li>
                         </ul>
                         <div class="py-1">
-                            <a href="{{ route('logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                            <a href="{{ route('logout') }}"
+                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
                                 <i class="bi bi-box-arrow-left"></i>
                                 <span class="flex-1 ml-3 whitespace-nowrap">登出</span>
                             </a>

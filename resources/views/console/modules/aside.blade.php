@@ -2,13 +2,26 @@
        class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
        aria-label="Sidebar">
     <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+        <div class="text-xl text-center font-bold mt-2 my-5">
+            <span>
+                <i class="bi bi-caret-right-fill"></i>
+                {{ $webTitle }}
+                <i class="bi bi-caret-left-fill"></i>
+            </span>
+        </div>
         <ul class="space-y-2 font-medium">
+            <li>
+                <hr/>
+            </li>
             <li>
                 <a href="{{ route('home') }}"
                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                     <i class="bi bi-house"></i>
                     <span class="ml-3">返回主页</span>
                 </a>
+            </li>
+            <li>
+                <hr/>
             </li>
             <li>
                 <a href="{{ route('console.dashboard') }}"
@@ -86,6 +99,16 @@
                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                     <i class="bi bi-gear-fill"></i>
                     <span class="flex-1 ml-3 whitespace-nowrap">系统设置</span>
+                </a>
+            </li>
+            <li>
+                <hr/>
+            </li>
+            <li>
+                <a href="#"
+                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <i class="bi bi-person"></i>
+                    <span class="flex-1 ml-3 whitespace-nowrap">个人设置</span>
                 </a>
             </li>
         </ul>
