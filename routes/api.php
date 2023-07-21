@@ -8,7 +8,6 @@
 use App\Http\Controllers\Authme;
 use App\Http\Controllers\Console\Link as ConsoleLink;
 use App\Http\Controllers\Function\Link;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
@@ -23,10 +22,6 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
 // 登陆类
 Route::prefix('auth')->group(function () {
@@ -44,6 +39,8 @@ Route::prefix('link')->group(function () {
         Route::post('add', [ConsoleLink::class, 'apiConsoleAdd'])->name('api.link.console.add');
         Route::post('edit', [ConsoleLink::class, 'apiConsoleEdit'])->name('api.link.console.edit');
         Route::post('check', [ConsoleLink::class, 'apiConsoleCheck'])->name('api.link.console.check');
+        Route::post('check-fail', [ConsoleLink::class, 'apiConsoleCheckFail'])->name('api.link.console.check-fail');
+        Route::post('delete', [ConsoleLink::class, 'apiConsoleDelete'])->name('api.link.console.delete');
     });
     Route::prefix('custom')->group(function () {
         Route::post('add', [Link::class, 'apiCustomAdd'])->name('api.link.custom.add');
