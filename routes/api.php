@@ -8,6 +8,7 @@
 use App\Http\Controllers\Authme;
 use App\Http\Controllers\Console\Link as ConsoleLink;
 use App\Http\Controllers\Function\Link;
+use App\Http\Controllers\Function\Sponsor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
@@ -25,9 +26,9 @@ use Illuminate\Support\Facades\Route;
 
 // 登陆类
 Route::prefix('auth')->group(function () {
-    Route::post('login',[Authme::class,'Login'])->name('api.auth.login');
-    Route::post('register',[Authme::class,'Register'])->name('api.auth.register');
-    Route::match(['get','post'],'logout',function () {
+    Route::post('login', [Authme::class, 'Login'])->name('api.auth.login');
+    Route::post('register', [Authme::class, 'Register'])->name('api.auth.register');
+    Route::match(['get', 'post'], 'logout', function () {
         Auth::logout();
         return Response::redirectTo('');
     })->name('logout');
@@ -46,7 +47,11 @@ Route::prefix('link')->group(function () {
         Route::post('add', [Link::class, 'apiCustomAdd'])->name('api.link.custom.add');
         Route::post('edit/{friendId}', [Link::class, 'apiCustomEdit'])->name('api.link.custom.edit');
         Route::get('search', [Link::class, 'apiCustomSearch'])->name('api.link.custom.search');
-        Route::post('blogCheck',[Link::class,'apiCustomBlogCheck'])->name('api.link.custom.blogCheck');
-        Route::post('blogVerify',[Link::class,'apiCustomBlogVerify'])->name('api.link.custom.blogVerify');
+        Route::post('blogCheck', [Link::class, 'apiCustomBlogCheck'])->name('api.link.custom.blogCheck');
+        Route::post('blogVerify', [Link::class, 'apiCustomBlogVerify'])->name('api.link.custom.blogVerify');
     });
+});
+
+Route::prefix('sponsor')->group(function () {
+    Route::get('get-type', [Sponsor::class, 'apiSponsorType'])->name('api.sponsor.get-type');
 });
