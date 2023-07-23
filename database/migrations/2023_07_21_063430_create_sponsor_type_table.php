@@ -21,7 +21,9 @@ class CreateSponsorTypeTable extends Migration
         Schema::create('sponsor_type', function (Blueprint $table) {
             $table->id();
             $table->string('name')->comment('赞助类型名称');
+            $table->text('url')->comment('图片或跳转地址');
             $table->boolean('include')->default(true)->comment('是否计入总数');
+            $table->boolean('link')->default(false)->comment('是否是跳转链接');
             $table->timestamps();
         });
     }
