@@ -7,6 +7,7 @@
 
 use App\Http\Controllers\Authme;
 use App\Http\Controllers\Console\Link as ConsoleLink;
+use App\Http\Controllers\Console\Sponsor as ConsoleSponsor;
 use App\Http\Controllers\Function\Link;
 use App\Http\Controllers\Function\Sponsor;
 use Illuminate\Support\Facades\Auth;
@@ -54,4 +55,14 @@ Route::prefix('link')->group(function () {
 
 Route::prefix('sponsor')->group(function () {
     Route::get('get-type', [Sponsor::class, 'apiSponsorType'])->name('api.sponsor.get-type');
+    Route::post('add', [ConsoleSponsor::class, 'apiAdd'])->name('api.sponsor.add');
+    Route::post('edit/{sponsorId}', [ConsoleSponsor::class, 'apiEdit'])->name('api.sponsor.edit');
+    Route::post('delete/{sponsorId}', [ConsoleSponsor::class, 'apiDelete'])->name('api.sponsor.delete');
+    Route::prefix('type')->group(function () {
+        Route::post('add', [ConsoleSponsor::class, 'apiTypeAdd'])->name('api.sponsor.type.add');
+        Route::post('edit/{typeId}', [ConsoleSponsor::class, 'apiTypeEdit'])->name('api.sponsor.type.edit-number');
+        Route::post('edit', [ConsoleSponsor::class, 'apiTypeEdit'])->name('api.sponsor.type.edit');
+        Route::post('delete/{typeId}', [ConsoleSponsor::class, 'apiTypeDelete'])->name('api.sponsor.type.delete');
+        Route::get('select/{typeId}', [ConsoleSponsor::class, 'apiTypeSelect'])->name('api.sponsor.type.select');
+    });
 });

@@ -113,7 +113,7 @@ class Sponsor extends Controller
                     'url' => $sponsor[$i]->url,
                     'type' => $sponsor[$i]->type,
                     'money' => $sponsor[$i]->money,
-                    'time' => $sponsor[$i]->time,
+                    'time' => date('Y-m-d', strtotime($sponsor[$i]->time)),
                 ];
             }
         } catch (ErrorException $e) {
@@ -153,7 +153,7 @@ class Sponsor extends Controller
                 'url' => null,
                 'type' => 5,
                 'money' => (double)$value->all_sum_amount,
-                'time' => date('Y-m-d H:i:s', $value->last_pay_time),
+                'time' => date('Y-m-d', $value->last_pay_time),
             ];
             $j++;
         }

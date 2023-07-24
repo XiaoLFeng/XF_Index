@@ -7,6 +7,7 @@
 
 use App\Http\Controllers\Console\Dashboard;
 use App\Http\Controllers\Console\Link as ConsoleLink;
+use App\Http\Controllers\Console\Sponsor as ConsoleSponsor;
 use App\Http\Controllers\DataBase;
 use App\Http\Controllers\Function\Link as UserLink;
 use App\Http\Controllers\Function\Sponsor;
@@ -63,6 +64,11 @@ Route::prefix('console')->middleware('authConsole')->group(function () {
         Route::get('add', [ConsoleLink::class, 'viewAdd'])->name('console.friends-link.add');
         Route::get('sort', [ConsoleLink::class, 'viewSort'])->name('console.friends-link.sort');
         Route::get('color', [ConsoleLink::class, 'viewColor'])->name('console.friends-link.color');
+    });
+    Route::prefix('sponsor')->group(function () {
+        Route::get('dashboard', [ConsoleSponsor::class, 'viewSponsorDashboard'])->name('console.sponsor.dashboard');
+        Route::get('edit/{sponsorId}', [ConsoleSponsor::class, 'viewEdit'])->name('console.sponsor.edit');
+        Route::get('mode', [ConsoleSponsor::class, 'viewMode'])->name('console.sponsor.mode');
     });
 });
 
