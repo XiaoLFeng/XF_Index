@@ -10,6 +10,7 @@ use App\Http\Controllers\Console\Link as ConsoleLink;
 use App\Http\Controllers\Console\Sponsor as ConsoleSponsor;
 use App\Http\Controllers\DataBase;
 use App\Http\Controllers\Function\Link as UserLink;
+use App\Http\Controllers\Function\Music;
 use App\Http\Controllers\Function\Sponsor;
 use App\Http\Controllers\Index;
 use Illuminate\Support\Facades\Auth;
@@ -40,9 +41,7 @@ Route::prefix('function')->group(function () {
     Route::get('edit-search/{friendId}', [UserLink::class, 'viewSearchFriend'])->name('function.edit-searchOnly');
     Route::get('edit-friend/{friendId}', [UserLink::class, 'viewEditFriend'])->name('function.edit-friend');
     Route::get('sponsor', [Sponsor::class, 'viewSponsor'])->name('function.sponsor');
-    Route::get('music', function () {
-        return view('function.music');
-    })->name('function.music');
+    Route::get('music', [Music::class, 'viewMusic'])->name('function.music');
 });
 
 Route::prefix('account')->middleware('auth')->group(function () {
