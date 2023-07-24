@@ -41,7 +41,7 @@ class DataBase extends Controller
                     'blogServerHost' => $value->blog_serverhost,
                     'blogLocation' => $value->blog_location,
                     'blogSetColor' => $value->blog_sel_color,
-                    'created_at' => date('Y-m-d H:i:s'),
+                    'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'),
                 ]);
         }
 
@@ -65,5 +65,45 @@ class DataBase extends Controller
                     'time' => $value->time,
                 ]);
         }
+
+        DB::statement("TRUNCATE TABLE `xf_index`.`sponsor_type`");
+        DB::table('sponsor_type')
+            ->insert([
+                [
+                    'name' => '支付宝',
+                    'url' => 'https://i-cdn.akass.cn/2023/07/64ba859272bc9.jpg',
+                    'include' => 1,
+                    'link' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')],
+                [
+                    'name' => '微信',
+                    'url' => 'https://i-cdn.akass.cn/2023/07/64ba67c9d08ab.jpg',
+                    'include' => 1,
+                    'link' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')],
+                [
+                    'name' => '扣扣',
+                    'url' => 'https://i-cdn.akass.cn/2023/07/64ba8817b179b.png',
+                    'include' => 1,
+                    'link' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')],
+                [
+                    'name' => 'PayPal',
+                    'url' => 'https://www.paypal.com/paypalme/xiaolfeng',
+                    'include' => 1,
+                    'link' => 1,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')],
+                [
+                    'name' => '爱发电',
+                    'url' => 'https://afdian.net/a/xiao_lfeng',
+                    'include' => 1,
+                    'link' => 1,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')],
+            ]);
     }
 }
