@@ -43,6 +43,9 @@ class UpdateInfoTable extends Migration
             DB::table('info')->insert(['value' => 'sponsorInfo', 'created_at' => date('Y-m-d H:i:s')]);
             DB::table('info')->insert(['value' => 'afadianUserId', 'created_at' => date('Y-m-d H:i:s')]);
             DB::table('info')->insert(['value' => 'afadianToken', 'created_at' => date('Y-m-d H:i:s')]);
+            DB::table('info')->insert(['value' => 'neteaseUserId', 'created_at' => date('Y-m-d H:i:s')]);
+            DB::table('info')->insert(['value' => 'neteaseArtistsId', 'created_at' => date('Y-m-d H:i:s')]);
+            DB::table('info')->insert(['value' => 'neteaseApi', 'created_at' => date('Y-m-d H:i:s')]);
         });
     }
 
