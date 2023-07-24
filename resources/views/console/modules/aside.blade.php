@@ -63,7 +63,7 @@
                 </ul>
             </li>
             <li>
-                <a href="#"
+                <a href="{{ route('console.sponsor.dashboard') }}"
                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                     <i class="bi bi-piggy-bank"></i>
                     <span class="flex-1 ml-3 whitespace-nowrap">赞助管理</span>

@@ -86,9 +86,9 @@ class Link extends Controller
             ];
         } else {
             // 检查数据
-            if (empty($request->checkRssJudge)) {
-                $request->checkRssJudge = 0;
-            }
+            if (empty($request->checkRssJudge)) $request->checkRssJudge = 0;
+            if (empty($request->userRemark)) $request->userRemark = null;
+            if (empty($request->userRss)) $request->userRss = null;
 
             // 根据数据库检查邮箱用户是否已存在
             $resultBlog = DB::table('blog_link')
@@ -616,9 +616,10 @@ class Link extends Controller
                         ];
                     } else {
                         // 检查数据
-                        if (empty($request->checkRssJudge)) {
-                            $request->checkRssJudge = 0;
-                        }
+                        if (empty($request->checkRssJudge)) $request->checkRssJudge = 0;
+                        if (empty($request->userRemark)) $request->userRemark = null;
+                        if (empty($request->userRss)) $request->userRss = null;
+
                         // 数据载入数组
                         $this->data['oldBlog'] = (object)[
                             'blogOwnEmail' => $resultBlog->blogOwnEmail,

@@ -75,6 +75,7 @@ class Link extends Controller
                 } else {
                     if (empty($request->userEmail)) $request->userEmail = null;
                     if (empty($request->checkRssJudge)) $request->checkRssJudge = 0;
+                    if (empty($request->userRemark)) $request->userRemark = null;
                     if (empty($request->userRss)) $request->userRss = null;
                     // 更新数据库
                     DB::table('blog_link')
@@ -164,6 +165,7 @@ class Link extends Controller
                 } else {
                     if (empty($request->userEmail)) $request->userEmail = null;
                     if (empty($request->checkRssJudge)) $request->checkRssJudge = 0;
+                    if (empty($request->userRemark)) $request->userRemark = null;
                     if (empty($request->userRss)) $request->userRss = null;
                     // 更新数据库
                     DB::table('blog_link')
@@ -252,6 +254,9 @@ class Link extends Controller
                         ],
                     ];
                 } else {
+                    if (empty($request->checkRssJudge)) $request->checkRssJudge = 0;
+                    if (empty($request->userRemark)) $request->userRemark = null;
+                    if (empty($request->userRss)) $request->userRss = null;
                     // 更新数据库
                     DB::table('blog_link')
                         ->where([['id', '=', $request->userId]])

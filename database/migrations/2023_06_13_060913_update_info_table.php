@@ -38,6 +38,11 @@ class UpdateInfoTable extends Migration
             DB::table('info')->insert(['value' => 'applicationRule', 'created_at' => date('Y-m-d H:i:s')]);
             DB::table('info')->insert(['value' => 'applicationInfo', 'created_at' => date('Y-m-d H:i:s')]);
             DB::table('info')->insert(['value' => 'email', 'created_at' => date('Y-m-d H:i:s')]);
+            DB::table('info')->insert(['value' => 'sponsorPayCodeType', 'created_at' => date('Y-m-d H:i:s')]);
+            DB::table('info')->insert(['value' => 'sponsorPayAll', 'created_at' => date('Y-m-d H:i:s')]);
+            DB::table('info')->insert(['value' => 'sponsorInfo', 'created_at' => date('Y-m-d H:i:s')]);
+            DB::table('info')->insert(['value' => 'afadianUserId', 'created_at' => date('Y-m-d H:i:s')]);
+            DB::table('info')->insert(['value' => 'afadianToken', 'created_at' => date('Y-m-d H:i:s')]);
         });
     }
 
